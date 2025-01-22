@@ -1,0 +1,120 @@
+.profile-container {
+    max-inline-size: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+
+    h1,
+    h2 {
+        text-align: center;
+        margin-block-end: 20px;
+        font-family: "Arial", sans-serif;
+        color: #333;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="file"],
+    button {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    input:disabled {
+        background-color: #e9e9e9;
+        cursor: not-allowed;
+    }
+
+    img {
+        inline-size: 100px;
+        block-size: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto;
+        display: block;
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: #0056b3;
+        }
+
+        &:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+    }
+
+    .section {
+        margin-block-end: 30px;
+        padding: 20px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        background-color: #fff;
+    }
+
+    .section-title {
+        font-size: 18px;
+        margin-block-end: 10px;
+        border-block-end: 1px solid #ddd;
+        padding-block-end: 5px;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 14px;
+    }
+
+    .success-message {
+        color: green;
+        font-size: 14px;
+    }
+
+    .flash-message {
+        text-align: center;
+        padding: 10px;
+        border-radius: 5px;
+        margin-block-end: 20px;
+        font-weight: bold;
+
+        &.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        &.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    }
+}

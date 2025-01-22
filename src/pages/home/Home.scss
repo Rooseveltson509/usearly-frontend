@@ -1,0 +1,749 @@
+.landing-page {
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+
+  .story-section {
+    position: relative;
+    text-align: center;
+    margin: 20px 0;
+
+    .story-container {
+      position: relative;
+
+      .story-image {
+        inline-size: 100%;
+        block-size: auto;
+        display: block;
+        block-size: 600px;
+
+      }
+
+      .header-image {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: auto;
+      }
+/*       .header-image {
+        position: relative;
+        width: 770px; 
+        height: 645px;
+        margin: auto;
+      } */
+      
+/*       .particles-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      
+      .u-shape-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+      
+      #particles-js {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        clip-path: url(#u-clip-path); 
+        z-index: 2; 
+      } */
+      
+      .story-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+      
+        .story-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          max-inline-size: 800px; /* Limite la largeur de la vidéo */
+          inline-size: 100%; /* La vidéo occupe toute la largeur disponible */
+          margin: 0 auto;
+      
+
+          
+      
+          .story-text {
+            margin-block-start: 1rem;
+            text-align: center;
+            font-size: 1rem;
+            color: #333;
+            p {
+              margin-block-end: 1rem;
+              color: white;
+            }
+          }
+        }
+      
+        .app-buttons {
+          margin-block-start: 2rem;
+          text-align: center;
+      
+          p {
+            margin-block-end: 1rem;
+            color: white;
+          }
+      
+          img {
+            max-inline-size: 150px;
+            margin: 0 0.5rem;
+          }
+        }
+      }
+      
+
+      .story-text {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        font-size: 18px;
+        text-align: justify;
+        padding: 10px;
+        max-inline-size: 80%;
+      }
+    }
+
+    .app-buttons {
+      text-align: center;
+      /* Centre le texte et les images */
+      margin-block-start: 20px;
+
+      p {
+        margin: 10px 0;
+        /* Ajoute un espacement entre les paragraphes */
+        font-size: 16px;
+        line-height: 1.5;
+        color: #333;
+      }
+
+      img {
+        inline-size: 150px;
+        /* Largeur des boutons */
+        margin: 0 10px;
+        /* Espacement horizontal entre les images */
+        transition: transform 0.3s ease-in-out;
+        /* Animation pour le survol */
+
+        &:hover {
+          transform: scale(1.1);
+          /* Agrandit légèrement au survol */
+        }
+      }
+
+      /* Responsiveness */
+      @media screen and (max-width: 768px) {
+        img {
+          width: 120px;
+          /* Réduit la largeur sur les écrans moyens */
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        img {
+          inline-size: 100px;
+          /* Réduit encore plus la largeur sur les petits écrans */
+        }
+      }
+    }
+
+  }
+
+
+  section {
+    background: white;
+    //max-inline-size: 100%;
+    //text-align: center;
+    justify-content: center;
+  }
+
+  .brand-logos {
+    display: flex;
+    /* Affiche les éléments en ligne */
+    flex-wrap: wrap;
+    /* Permet de passer à la ligne si l'espace manque */
+    justify-content: center;
+    /* Centre les éléments horizontalement */
+    align-items: center;
+    /* Centre les éléments verticalement */
+    gap: 20px;
+    /* Espacement entre les logos */
+    padding: 20px;
+
+    img {
+      max-inline-size: 100px;
+      /* Taille maximale des logos */
+      block-size: auto;
+      /* Préserve le ratio des images */
+      transition: transform 0.2s ease-in-out;
+
+      &:hover {
+        transform: scale(1.1);
+        /* Agrandit légèrement l'image au survol */
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      img {
+        max-inline-size: 70px;
+        /* Réduit la taille des logos sur petits écrans */
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      img {
+        max-inline-size: 50px;
+        /* Taille encore plus petite sur très petits écrans */
+      }
+    }
+  }
+
+
+
+  .landing-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding-inline-start: 50px;
+    padding-block-start: 30px;
+
+    h1 {
+      font-size: 36px;
+      color: #5c0d91;
+    }
+
+    p {
+      margin: 20px 0;
+      font-size: 18px;
+    }
+
+    .header-content {
+      flex: 1;
+      max-inline-size: 60%;
+      text-align: center;
+    }
+
+    .header-image {
+      flex: 1;
+      max-inline-size: 25%;
+      text-align: center;
+    }
+
+    .header-image img {
+      inline-size: 300px;
+      max-inline-size: 100%;
+      block-size: auto;
+      object-fit: contain;
+    }
+
+
+    .header-content {
+
+      h1 {
+        font-size: 30px;
+        color: #2D1E2C;
+        text-align: justify;
+      }
+
+      p {
+        font-size: 18px;
+        text-align: justify;
+      }
+
+      .cta-button {
+        padding: 15px 20px;
+        background-color: #2D1E2C;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #450b6d;
+        }
+      }
+    }
+
+  }
+
+  
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #880e4f;
+    /* Couleur des flèches */
+    font-size: 24px;
+    /* Taille des flèches */
+  }
+
+  .swiper-pagination-bullet {
+    background: #880e4f;
+    /* Couleur des points de pagination */
+    opacity: 0.7;
+  }
+
+  .swiper-pagination-bullet-active {
+    opacity: 1;
+  }
+
+  .swiper {
+    inline-size: 100%;
+    block-size: auto;
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+  }
+
+  .carousel-section {
+    margin: 30px auto;
+
+    .carousel-slide {
+      img {
+        block-size: auto;
+        border-radius: 10px;
+      }
+    }
+  }
+
+  .carousel-slide {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    /* Espacement entre l'image et le texte */
+
+    .carousel-image-container {
+      position: relative;
+      /* Nécessaire pour positionner la petite image */
+
+      .carousel-image {
+        inline-size: 300px;
+        /* Largeur de l'image principale */
+        border-radius: 8px;
+      }
+
+      .carousel-small-image {
+        position: absolute;
+        inset-block-end: -10px;
+        /* Ajustez selon vos besoins */
+        inset-inline-end: -10px;
+        /* Ajustez selon vos besoins */
+        inline-size: 80px;
+        /* Largeur de la petite image */
+        block-size: auto;
+        z-index: 2;
+        /* Assure que l'image reste visible */
+      }
+    }
+
+    .carousel-text {
+      max-inline-size: 600px;
+      /* Limite la largeur du texte */
+      text-align: start;
+
+      h2 {
+        font-size: 24px;
+        color: #333;
+
+        .highlight {
+          color: #880E4F;
+          /* Couleur mise en évidence */
+        }
+      }
+
+      p {
+        margin: 10px 0;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #555;
+      }
+    }
+  }
+
+  /* Responsiveness */
+  @media screen and (max-width: 768px) {
+    .carousel-slide {
+      flex-direction: column;
+
+      .carousel-image-container {
+        .carousel-image {
+          inline-size: 100%;
+          /* S'adapte à la largeur de l'écran */
+        }
+      }
+
+      .carousel-text {
+        max-inline-size: 100%;
+        text-align: center;
+        /* Centre le texte sur les petits écrans */
+      }
+    }
+  }
+
+
+  .features-section {
+    text-align: center;
+    padding: 30px 20px;
+    background-color: #f9f9f9;
+
+    h2 {
+      font-size: 28px;
+      margin-block-end: 10px;
+    }
+
+    .cta-button {
+      margin-block-start: 20px;
+    }
+  }
+
+  .grid-section {
+    display: flex;
+    justify-content: space-around;
+    padding: 40px 20px;
+
+    .grid-item {
+      flex: 1;
+      margin: 0 10px;
+      text-align: center;
+
+      h3 {
+        font-size: 20px;
+        color: #5c0d91;
+      }
+
+      p {
+        margin-block-start: 10px;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .viu-section {
+    position: relative;
+    //block-size: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    .viu-background {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      inline-size: 100%;
+      block-size: 100%;
+
+      .viu-image {
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .viu-title {
+      position: absolute;
+      z-index: 1;
+    }
+
+    .viu-content-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-inline-size: 1200px;
+      inline-size: 100%;
+      gap: 20px;
+      /* Espacement entre le contenu et l'image */
+      padding: 20px;
+
+      .viu-content {
+        flex: 1;
+        z-index: 1;
+
+        h2 {
+          font-size: 36px;
+          font-weight: bold;
+          color: white;
+        }
+
+        p {
+          font-size: 18px;
+          margin-block-start: 10px;
+          color: white;
+        }
+
+        .custom-list {
+          list-style: none;
+          /* Supprime les puces par défaut */
+          padding: 0;
+          margin: 0;
+
+          li {
+            margin-block-end: 15px;
+            /* Espacement entre les éléments */
+            font-size: 18px;
+            color: #fff;
+            text-align: justify;
+
+            /* Style pour l'icône du cercle */
+            &:before {
+              content: '';
+              display: inline-flex;
+              justify-content: center;
+              align-items: center;
+              inline-size: 24px;
+              /* Taille du cercle */
+              block-size: 24px;
+              margin-inline-end: 15px;
+              /* Espacement entre le cercle et le texte */
+              background-color: #fff;
+              border-radius: 50%;
+              /* Rend le cercle arrondi */
+
+              /* Ajoutez l'icône de validation */
+              background-image: url('../../assets/images/check_list.svg');
+              /* Chemin de l'icône */
+              background-position: center;
+              background-repeat: no-repeat;
+            }
+          }
+        }
+
+        .cta-button {
+          background-color: #880e4f;
+          color: #fff;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 16px;
+          transition: background-color 0.3s;
+
+          &:hover {
+            background-color: #5c0d91;
+          }
+        }
+      }
+
+      .big-u-wrapper {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1;
+
+        .big-u {
+          max-inline-size: 80%;
+          block-size: auto;
+        }
+      }
+    }
+  }
+
+}
+
+.footer-cgpu {
+  list-style: none;
+  display: flex;
+
+  li {
+    list-style: none;
+    color: #000;
+    margin-inline-end: 10px;
+
+    p>a {
+      color: #000;
+      text-decoration: none;
+    }
+  }
+
+}
+
+.landing-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px;
+  max-inline-size: 1200px;
+  margin: 0 auto;
+
+  .text-content {
+    flex: 1;
+    margin-inline-end: 20px;
+
+    h2 {
+
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin: 20px 0;
+      color: #666;
+    }
+
+    .cta-button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #5c0d91;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #450b6d;
+      }
+    }
+  }
+
+  .image-content {
+    flex: 1;
+    text-align: center;
+    max-inline-size: 25%;
+
+    img {
+      max-inline-size: 100%;
+      block-size: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    .text-content {
+      margin-inline-end: 0;
+      text-align: center;
+      margin-block-end: 20px;
+    }
+  }
+}
+
+.carousel-container {
+  inline-size: 100%;
+  max-inline-size: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/*  .carousel-slide {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+    }
+  } */
+
+.carousel-image {
+  inline-size: 40%;
+  border-radius: 10px;
+  object-fit: cover;
+
+  @media (max-width: 768px) {
+    inline-size: 100%;
+  }
+}
+
+.carousel-text {
+  inline-size: 60%;
+
+  h2 {
+    font-size: 1.8rem;
+    margin-block-end: 10px;
+
+    .highlight {
+      color: #880E4F;
+    }
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+
+    strong {
+      color: #000;
+    }
+  }
+
+  @media (max-width: 768px) {
+    inline-size: 100%;
+  }
+}
+
+.background-text {
+  //position: absolute;
+  inset-block-end: -100px;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  text-align: center;
+  font-size: 120px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.05);
+  z-index: -1;
+
+  .background-image {
+    inline-size: 100%; // Ajustez cette valeur selon vos besoins
+    max-inline-size: 1200px;
+    opacity: 0.5; // Rend l'image discrète
+    margin: 30px auto;
+  }
+
+  .background-list {
+    //position: absolute;
+    inset-block-end: -30px; // Ajustez cette valeur pour la position
+    inset-inline-start: 20px;
+    text-align: start;
+    font-size: 14px;
+    font-weight: normal;
+    color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    list-style-type: none;
+    list-style-type: disc;
+
+    li {
+      margin-block-end: 5px;
+    }
+  }
+}
+
+.carousel-image-error {
+  position: absolute;
+  margin-inline-end: 260px;
+  margin-block-start: 280px;
+
+  img {
+    inline-size: 100px;
+  }
+}
+
+.story-video {
+  inline-size: 100%; /* Compatibilité avec tous les navigateurs */
+  inline-size: -webkit-fill-available; /* Spécifique pour les navigateurs basés sur WebKit */
+ // max-inline-size: 800px; /* Limite la largeur maximale de la vidéo */
+  block-size: auto; /* Maintient les proportions de la vidéo */
+  border-radius: 8px; /* Coins arrondis */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optionnel : ajout d'une ombre */
+  margin: 0 auto; /* Centre la vidéo dans son conteneur */
+}

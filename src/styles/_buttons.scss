@@ -1,0 +1,39 @@
+@use "sass:color";
+@use './_variables' as vars;
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: vars.$border-radius;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button-primary {
+    background-color: vars.$primary-color;
+    color: white;
+  
+    &:hover {
+      background-color: color.adjust(vars.$primary-color, $lightness: -10%);
+    }
+  }
+  
+  .button-secondary {
+    background-color: vars.$secondary-color;
+    color: white;
+  
+    &:hover {
+      background-color: color.adjust(vars.$primary-color, $lightness: -10%);
+    }
+  }
+  
+  .button-error {
+    background-color: vars.$error-color;
+    color: white;
+  
+    &:hover {
+      background-color: color.adjust(vars.$primary-color, $lightness: -10%);
+    }
+  }

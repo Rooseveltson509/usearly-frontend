@@ -1,0 +1,88 @@
+.sidebar-right {
+  padding-inline-start: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .section {
+    padding: 0; /* Suppression des padding internes */
+    background-color: transparent; /* Suppression de la couleur de fond */
+    box-shadow: none; /* Suppression de l'ombre */
+    border-radius: 0; /* Suppression des bordures arrondies */
+
+    h3 {
+      font-size: 16px;
+      font-weight: bold;
+      margin-block-end: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #555;
+      margin-block-end: 15px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 10px 20px;
+      text-align: center;
+      border: 1px solid #000;
+      border-radius: 20px;
+      background-color: transparent;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #000;
+        color: #fff;
+      }
+    }
+  }
+
+  .brand-list {
+    .brand-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-block-end: 10px;
+
+      .brand-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        img {
+          inline-size: 30px;
+          block-size: 30px;
+          border-radius: 50%;
+        }
+
+        .brand-name {
+          font-size: 14px;
+          font-weight: bold;
+        }
+
+        .brand-handle {
+          font-size: 12px;
+          color: #777;
+        }
+      }
+
+      .follow-button {
+        padding: 5px 15px;
+        border: none;
+        border-radius: 20px;
+        background-color: #000;
+        color: #fff;
+        font-size: 12px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #333;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["node", "swiper"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "skipLibCheck": true, // Ignore les vérifications des types des bibliothèques
+    "esModuleInterop": true, // Assurez-vous que les modules ES sont correctement interprétés
+    "baseUrl": "./", // Définit la racine pour les alias
+    "paths": {
+      "@src/*": ["src/*"] // Mappe l'alias @src vers le dossier src
+    }
+  },
+  "include": ["src", "src/types/particles.d.ts", "src/swiper.d.ts", "src/styles.d.ts"]
+}
