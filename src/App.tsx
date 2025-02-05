@@ -10,16 +10,23 @@ import Dashboard from "./components/dashboard/Dashboard";
 import VerifyCode from "./pages/verifyCode/VerifyCode";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./contexts/AuthContext";
-import ReportsTest from "./components/ReportsTest";
 import MyAccount from "./components/profile/MyAccount";
 import ForgotPassword from "./components/forgotPassword/ForgotPassword";
 import PasswordChecker from "./components/passwordChecker/PasswordChecker";
 import LoadingScreen from "./components/LoadingScreen";
 import ResetPassword from "./components/resetpwd/ResetPassword";
+import DashboardBrand from "./components/dashboard-brands/DashbordBrand";
+import BrandLogin from "./pages/brand/BrandLogin";
 
 const App: React.FC = () => {
-  const { flashMessage, flashType, clearFlashMessage, isAuthenticated, userProfile, isLoadingProfile } = useAuth();
-
+  const {
+    flashMessage,
+    flashType,
+    clearFlashMessage,
+    isAuthenticated,
+    userProfile,
+    isLoadingProfile,
+  } = useAuth();
 
   if (isLoadingProfile) {
     return <LoadingScreen />; // Affiche un écran de chargement
@@ -59,7 +66,6 @@ const App: React.FC = () => {
                 <p>Chargement du profil...</p>
               )}
             </ProtectedRoute>
-
           }
         />
         <Route
@@ -88,11 +94,30 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
-        <Route path="/reset-password/:userId/:token" element={<ResetPassword />} />
+        <Route path="/brand-login" element={<BrandLogin />} />
+        {/*        <Route
+          path="/dashboard-brand"
+          element={
+            <ProtectedRoute allowedRoles={["brand"]} redirectTo="/brand-login">
+              <DashboardBrand />
+            </ProtectedRoute>
+          }
+        /> */}
+
+        <Route
+          path="/dashboard-brand"
+          element={
+              <DashboardBrand />
+          }
+        />
+        {/* <Route path="/dashboard-brand" element={<DashboardBrand />} /> */}
+
+        <Route
+          path="/reset-password/:userId/:token"
+          element={<ResetPassword />}
+        />
         {/* Routes diverses */}
         <Route path="/verify-code" element={<VerifyCode />} />
-        <Route path="/rep" element={<ReportsTest />} />
-
         {/* Page 404 */}
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>

@@ -1,8 +1,8 @@
 @use "sass:color";
-@use './_variables' as vars;
-@use './_buttons';
-@use './_flash';
-
+@use "./_variables" as vars;
+@use "./_buttons";
+@use "./_flash";
+//@import 'font-awesome/css/font-awesome.min.css';
 
 .navbar {
   justify-content: space-between;
@@ -104,20 +104,20 @@
   color: color.adjust(vars.$primary-color, $lightness: -10%);
 }
 
- @media (max-width: 768px) {
+@media (max-width: 768px) {
   .landing-page .landing-header .header-content h1 {
     font-size: 15px;
-    color: #2D1E2C;
+    color: #2d1e2c;
     text-align: justify;
-}
-.landing-page .landing-header .header-content p {
-  font-size: 12px;
-  text-align: justify;
-}
+  }
+  .landing-page .landing-header .header-content p {
+    font-size: 12px;
+    text-align: justify;
+  }
 
-.landing-page .landing-header .header-image img {
-  max-inline-size: 70%;
-}
+  .landing-page .landing-header .header-image img {
+    max-inline-size: 70%;
+  }
   .navbar {
     flex-direction: column;
     align-items: flex-start;
@@ -181,7 +181,6 @@
       display: flex;
     }
 
-    
     .navbar-link {
       margin: 10px 0; // Ajoute de l'espace entre chaque lien
       padding: 10px 20px;
@@ -192,7 +191,6 @@
       &:last-child {
         border-block-end: none;
       }
-      
     }
   }
 }

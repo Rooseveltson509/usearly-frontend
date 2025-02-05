@@ -1,98 +1,164 @@
 .sidebar-left {
   inline-size: 100%;
   max-inline-size: 300px;
+  font-family: 'Raleway';
+
+  h3 {
+    font-family: 'Urbanist';
+    font-size: 20px;
+    margin-block-start: -60px;
+  }
+
+  h4 {
+    font-family: 'Inter';
+    font-size: 12px;
+    font-weight: 300;
+    color: #808896;
+    line-height: 0;
+  }
+ 
+  p {
+    font-family: 'Inter';
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
   .user-card {
     text-align: center;
-    padding: 20px;
+    padding: 10px 10px 20px 10px;
     background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-block-end: 20px;
-  
+    border-radius: 2px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.079);
+    margin-block-end: 40px;
+    margin-block-start: 90px;
+
     .avatar {
-      margin: 0 auto;
-      inline-size: 80px;
-      block-size: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      inline-size: 86px;
+      block-size: 86px;
       border-radius: 50%;
       overflow: hidden;
-      margin-block-end: 10px;
-  
+      margin: 0 auto 10px;
+      background-color: #BAC0C9;
+      border: 2px solid rgb(205, 205, 205)0C9;
+      position: relative;
+      inset-block-start: -60px;
+
       img {
         inline-size: 100%;
         block-size: 100%;
         object-fit: cover;
       }
+
+      &::before {
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        font-size: 72px;
+        color:#7E8999;
+        position: absolute;
+        inset-block-start: 60%;
+        inset-inline-start: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
-  
-    h3 {
+
+    .username {
       font-size: 20px;
       font-weight: bold;
       margin: 10px 0;
     }
-  
     .user-info {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-block-start: 1px solid #eaeaea;
-      border-block-end: 1px solid #eaeaea;
-      padding: 15px 0;
-      margin-block-end: 10px;
-  
-      div {
-        flex: 1;
-        text-align: center;
-  
-        h4 {
-          font-size: 14px;
-          color: #777;
-          margin-block-end: 5px;
-        }
-  
-        p {
-          font-size: 16px;
-          font-weight: bold;
-          color: #000;
-        }
-      }
-  
-      div:not(:last-child) {
-        border-inline-end: 1px solid #eaeaea;
-      }
+      border-bottom: 1px solid #f1f1f1;
+      padding: 16px 0 0 0;
+      width: 100%; /* Assurer que la div occupe toute la largeur */
     }
+    
+    .stat-item {
+      flex: 1; /* Assurer que les autres items prennent une taille égale */
+      text-align: center;
+      position: relative;
+    }
+    
+    .large-item {
+      flex: 1.14; /* Ajuste la taille (test avec 1.8 pour plus d'effet) */
+      min-width: 100px; /* Forcer un minimum de largeur */
+    }
+
+    /* Ajout des séparateurs verticaux */
+    .stat-item:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      height: 50%;
+      width: 1px;
+      background-color: #f1f1f1; /* Gris pour un style plus propre */
+      display: block;
+    }
+    
   
+    
     .user-power {
-      margin: 20px 0;
-  
-      h4 {
-        font-size: 14px;
-        color: #777;
-        margin-block-end: 5px;
-      }
-  
-      p {
-        font-size: 18px;
-        font-weight: bold;
-        color: #000;
-  
-        .icon {
-          font-size: 16px;
-          font-weight: bold;
-          margin-inline-end: 5px;
-          color: #b300b3;
-        }
-      }
+      display: flex; /* Met les éléments sur la même ligne */
+      align-items: center; /* Aligne verticalement */
+      justify-content: space-between; /* Espacement équilibré */
+      gap: 10px; /* Ajoute un petit espace entre les éléments */
+      margin-block-start: 16px;
+      margin-block-end: 30px;
     }
-  
+    
+    .power-label {
+      font-size: 14px;
+      color: #808896;
+      font-weight: 400;
+      white-space: nowrap;
+      font-family: 'Inter';
+      margin: 0 10px 0 20px;
+    }
+    
+    .power-value {
+      font-size: 20px;
+      font-family: 'Inter';
+      font-weight: bold;
+      color: #000;
+      display: flex; /* Pour aligner l'icône et le nombre */
+      align-items: center;
+      margin-right: 30px;
+    }
+    
+    .icon {
+      font-size: 16px;
+      height:16px;
+      width:16px;
+      font-weight: bold;
+      margin-right: 8px;
+      color: #b300b3;
+      border: 2px solid #b300b3;
+      border-radius: 4px;
+      padding: 1px 2px 4px 4px;
+      text-align: center;
+      background-color: #ffffff;
+    }
+    
+
     .view-more {
-      padding: 10px 20px;
+      padding: 8px 20px;
       border: 1px solid #000;
       border-radius: 20px;
       background-color: transparent;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s ease;
+      margin-block-end: 10px;
+      margin-block-start: 10px;
   
       &:hover {
         background-color: #000;
@@ -100,5 +166,4 @@
       }
     }
   }
-  
 }

@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import './FlashMessage.scss';
+import React, { useState, useEffect } from "react";
+import "./FlashMessage.scss";
 
 interface FlashMessageProps {
   message: string;
-  type?: 'success' | 'error' | 'info';
+  type?: "success" | "error" | "info";
   duration?: number;
   onClose: () => void;
 }
 
 const FlashMessage: React.FC<FlashMessageProps> = ({
   message,
-  type = 'info',
+  type = "info",
   duration = 3000,
   onClose,
 }) => {
@@ -18,7 +18,7 @@ const FlashMessage: React.FC<FlashMessageProps> = ({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress((prev) => Math.max(prev - (100 / (duration / 100)), 0));
+      setProgress((prev) => Math.max(prev - 100 / (duration / 100), 0));
     }, 100);
 
     const timeout = setTimeout(() => {
@@ -35,7 +35,9 @@ const FlashMessage: React.FC<FlashMessageProps> = ({
     <div className={`flash-message ${type}`}>
       <div className="flash-message-content">
         <span>{message}</span>
-        <button className="close-button" onClick={onClose}>✕</button>
+        <button className="close-button" onClick={onClose}>
+          ✕
+        </button>
       </div>
       <div className="progress-bar">
         <div className="progress" style={{ inlineSize: `${progress}%` }} />

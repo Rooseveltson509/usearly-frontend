@@ -1,10 +1,16 @@
-import axios from 'axios';
-import { RegisterData } from '../types/RegisterData';
-import { ReportsResponse } from '../types/Reports';
-import { refreshToken } from './authService';
-import { getAccessToken, storeToken, storeTokenInCurrentStorage } from '@src/utils/tokenUtils';
+import axios, { AxiosError } from "axios";
+import { RegisterData } from "../types/RegisterData";
+import { ReportsResponse } from "../types/Reports";
+import { refreshToken } from "./authService";
+import {
+  getAccessToken,
+  storeToken,
+  storeTokenInCurrentStorage,
+} from "@src/utils/tokenUtils";
+import { UserProfile } from "@src/types/types";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
 const API_VERSION = import.meta.env.VITE_API_VERSION || "api/v1";
 
 // Crée une instance d'axios avec la configuration de base
@@ -28,33 +34,33 @@ const isTokenExpired = (token: string): boolean => {
   }
 };
 
-
 // Intercepteur de requêtes
-apiService.interceptors.request.use(async (config) => {
-  let token = getAccessToken();
+apiService.interceptors.request.use(
+  async (config) => {
+    let token = getAccessToken();
 
-  if (token && isTokenExpired(token)) {
-    try {
-      token = await refreshToken();
-      if (token) {
-        storeTokenInCurrentStorage(token); // Stocke dans l'emplacement actuel (localStorage ou sessionStorage)
+    if (token && isTokenExpired(token)) {
+      try {
+        token = await refreshToken();
+        if (token) {
+          storeTokenInCurrentStorage(token); // Stocke dans l'emplacement actuel (localStorage ou sessionStorage)
+        }
+      } catch (error) {
+        console.error("Erreur lors du rafraîchissement du token :", error);
+        localStorage.removeItem("accessToken");
+        sessionStorage.removeItem("accessToken");
+        throw error;
       }
-    } catch (error) {
-      console.error("Erreur lors du rafraîchissement du token :", error);
-      localStorage.removeItem("accessToken");
-      sessionStorage.removeItem("accessToken");
-      throw error;
     }
-  }
 
-  if (token) {
-    config.headers["Authorization"] = `Bearer ${token}`;
-  }
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
 
-  return config;
-}, (error) => Promise.reject(error));
-
-
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
 
 // Intercepteur de réponses
 apiService.interceptors.response.use(
@@ -77,7 +83,10 @@ apiService.interceptors.response.use(
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return apiService(originalRequest); // Réessayer la requête originale
       } catch (refreshError) {
-        console.error("Erreur lors du rafraîchissement du token :", refreshError);
+        console.error(
+          "Erreur lors du rafraîchissement du token :",
+          refreshError,
+        );
         localStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessToken");
         return Promise.reject(refreshError);
@@ -85,62 +94,106 @@ apiService.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
-export const registerUser = async (data: RegisterData): Promise<{ userId: string; email: string }> => {
+export const registerUser = async (
+  data: RegisterData,
+): Promise<{ userId: string; email: string }> => {
   try {
-    const response = await apiService.post('/user/register', data);
-    console.log('Utilisateur inscrit avec succès :', response.data);
-    const { userId, email } = response.data; // Assurez-vous que l'API renvoie userId et email
-    return { userId, email };
-  } catch (error: any) {
-    // Vérifiez si le backend renvoie un message d'erreur
-    if (error.response?.data?.error) {
-      throw new Error(error.response.data.error); // Transmettez l'erreur avec le bon message
+    const response = await apiService.post<{ userId: string; email: string }>(
+      "/user/register",
+      data,
+    );
+
+    console.log("Utilisateur inscrit avec succès :", response.data);
+    return response.data; // Assurez-vous que l'API renvoie userId et email correctement typés
+  } catch (error: unknown) {
+    let errorMessage = "Erreur inconnue lors de l’inscription.";
+
+    if (axios.isAxiosError(error)) {
+      errorMessage = error.response?.data?.error || errorMessage;
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
     }
-    throw new Error('Erreur inconnue lors de l’inscription.');
+
+    console.error("Erreur lors de l'inscription :", errorMessage);
+    throw new Error(errorMessage);
   }
 };
 
-export const confirmEmail = async (userId: string, token: string): Promise<any> => {
+export const confirmEmail = async (
+  userId: string,
+  token: string,
+): Promise<{ success: boolean; message: string; accessToken?: string }> => {
   try {
     const response = await apiService.post(`/user/mailValidation`, {
-      userId, // Ajoutez l'userId dans le corps de la requête
+      userId,
       token,
     });
-    return response.data;
-  } catch (error: any) {
-    throw error.response?.data?.message || "Erreur de validation du code.";
+
+    const responseData = response.data;
+
+    if (!responseData || !responseData.message) {
+      throw new Error("Réponse de l'API invalide.");
+    }
+
+    return {
+      success: true, // Supposons qu'une réponse valide signifie succès
+      message: responseData.message,
+      accessToken: responseData.accessToken, // Vérifier si l'API renvoie un token
+    };
+  } catch (error) {
+    const axiosError = error as AxiosError<{ message?: string }>;
+    throw new Error(
+      axiosError.response?.data?.message || "Erreur de validation du code.",
+    );
   }
 };
 
-export const fetchReports = async (page: number, limit: number): Promise<ReportsResponse> => {
+export const fetchReports = async (
+  page: number,
+  limit: number,
+): Promise<ReportsResponse> => {
   try {
     const token = getAccessToken();
     if (!token) {
-      throw new Error('Utilisateur non authentifié.');
+      throw new Error("Utilisateur non authentifié.");
     }
 
-    console.log('Token utilisé :', token);
-    console.log('Page et limite :', page, limit);
+    console.log("Token utilisé :", token);
+    console.log("Page et limite :", page, limit);
 
-    const response = await apiService.get(`/user/reports?page=${page}&limit=${limit}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await apiService.get<ReportsResponse>(
+      `/user/reports?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
-    console.log('Réponse API brute :', response.data);
+    console.log("Réponse API brute :", response.data);
 
-    // Assurez-vous que la réponse respecte le type ReportsResponse
-    return response.data as ReportsResponse;
-  } catch (error: any) {
-    console.error('Erreur lors de l’appel à fetchReports :', error.response?.data || error.message);
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Erreur lors de l’appel à fetchReports :",
+        error.response?.data || error.message,
+      );
 
-    // Lève une erreur avec un message plus explicite
-    throw new Error(error.response?.data?.error || 'Erreur lors du chargement des rapports.');
+      throw new Error(
+        error.response?.data?.error ||
+          "Erreur lors du chargement des rapports.",
+      );
+    } else if (error instanceof Error) {
+      console.error("Erreur inconnue :", error.message);
+      throw new Error(error.message);
+    } else {
+      throw new Error("Une erreur inconnue est survenue.");
+    }
   }
 };
 
@@ -149,14 +202,17 @@ export const fetchCoupsdeCoeur = async (page: number, limit: number) => {
   try {
     const token = getAccessToken();
     if (!token) {
-      throw new Error('Utilisateur non authentifié.');
+      throw new Error("Utilisateur non authentifié.");
     }
-    const response = await apiService.get(`/user/coupsdecoeur?page=${page}&limit=${limit}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await apiService.get(
+      `/user/coupsdecoeur?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     return {
       coupsdeCoeur: response.data.coupdeCoeur,
@@ -174,14 +230,17 @@ export const fetchSuggestions = async (page: number, limit: number) => {
   try {
     const token = getAccessToken();
     if (!token) {
-      throw new Error('Utilisateur non authentifié.');
+      throw new Error("Utilisateur non authentifié.");
     }
-    const response = await apiService.get(`/user/suggestion?page=${page}&limit=${limit}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await apiService.get(
+      `/user/suggestion?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     return {
       suggestions: response.data.suggestions,
@@ -195,30 +254,7 @@ export const fetchSuggestions = async (page: number, limit: number) => {
   }
 };
 
-
-
-export const updatePassword = async (passwordData: {
-  old_password: string;
-  password: string;
-  password_confirm: string;
-}) => {
-  const token = getAccessToken();
-  if (!token) {
-    throw new Error("Utilisateur non authentifié.");
-  }
-
-  const response = await apiService.put(`/user/pwd/me`, passwordData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-  });
-
-  return response.data;
-};
-
-
-export const fetchUserProfile = async (): Promise<any> => {
+export const fetchUserProfile = async (): Promise<UserProfile> => {
   try {
     // Récupérer le token depuis localStorage ou sessionStorage
     const token = getAccessToken();
@@ -227,7 +263,7 @@ export const fetchUserProfile = async (): Promise<any> => {
     }
 
     // Appel API avec le token
-    const response = await apiService.get("/user/me", {
+    const response = await apiService.get<UserProfile>("/user/me", {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -240,52 +276,85 @@ export const fetchUserProfile = async (): Promise<any> => {
       throw new Error(`Erreur HTTP : ${response.status}`);
     }
 
-    return response.data; // Retourne les données du profil
-  } catch (error: any) {
-    console.error("Erreur lors de l’appel à fetchUserProfile :", error.response?.data || error.message);
+    return response.data; // Retourne les données du profil utilisateur
+  } catch (error: unknown) {
+    console.error(
+      "Erreur lors de l’appel à fetchUserProfile :",
+      error instanceof Error ? error.message : "Erreur inconnue",
+    );
 
-    // Lève une erreur explicite
-    throw new Error(error.response?.data?.error || "Erreur lors du chargement du profil utilisateur.");
+    if (error instanceof (await import("axios")).AxiosError) {
+      throw new Error(
+        error.response?.data?.error ||
+          "Erreur lors du chargement du profil utilisateur.",
+      );
+    }
+
+    throw new Error(
+      "Erreur inattendue lors du chargement du profil utilisateur.",
+    );
   }
 };
 
 
-export const updateUserProfile = async (formData: FormData) => {
+export const fetchBrandProfile = async () => {
+  const token =
+    localStorage.getItem("brandAccessToken") ||
+    sessionStorage.getItem("brandAccessToken");
+
+  if (!token) {
+    throw new Error("Aucun token trouvé pour la marque.");
+  }
+
+  const { data } = await apiService.get(`/brand/profile`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return data;
+};
+
+export const updateUserProfile = async (
+  formData: FormData,
+): Promise<{ success: boolean; user?: UserProfile; message?: string }> => {
   try {
     const token = getAccessToken();
     if (!token) {
       throw new Error("Utilisateur non authentifié.");
     }
 
-    // Requête PUT avec axios
     const response = await apiService.put(`/user/me`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data", // Obligatoire pour FormData
+        "Content-Type": "multipart/form-data",
       },
     });
 
-    return response.data; // Retourne les données de la réponse
-  } catch (error: any) {
-    console.error("Erreur lors de la mise à jour du profil :", error.response || error.message);
-    throw new Error(error.response?.data?.error || "Erreur lors de la mise à jour du profil.");
-  }
-};
+    if (!response.data.success) {
+      throw new Error(
+        response.data.message || "Échec de la mise à jour du profil.",
+      );
+    }
 
-/**
- * Envoie un e-mail de réinitialisation de mot de passe
- * @param email - L'adresse e-mail de l'utilisateur
- * @returns Une promesse résolue en cas de succès ou rejetée en cas d'échec
- */
-export const forgetPassword = async (email: string): Promise<void> => {
-  try {
-    const response = await apiService.post(`/user/forgot-password`, {
-      email,
-    });
-    return response.data; // Renvoyer la réponse si nécessaire
-  } catch (error: any) {
-    console.error("Erreur lors de l'envoi de l'e-mail de réinitialisation :", error);
-    throw error.response?.data?.message || "Une erreur est survenue.";
+    return response.data; // Retourne les données de la réponse
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Erreur lors de la mise à jour du profil :",
+        error.response?.data || error.message,
+      );
+      throw new Error(
+        error.response?.data?.message ||
+          "Erreur lors de la mise à jour du profil.",
+      );
+    } else if (error instanceof Error) {
+      console.error(
+        "Erreur inconnue lors de la mise à jour du profil :",
+        error.message,
+      );
+      throw new Error(error.message);
+    } else {
+      throw new Error("Une erreur inconnue est survenue.");
+    }
   }
 };
 
@@ -299,5 +368,3 @@ export const deleteAccount = async () => {
     },
   });
 };
-
-

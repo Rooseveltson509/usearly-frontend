@@ -1,5 +1,5 @@
 import React from "react";
-import defaultAvatar from '../../assets/images/user.png';
+import defaultAvatar from "../../assets/images/user.png";
 import shakePhone from "../../assets/images/shakephone.png";
 import "./LeftSidebar.scss";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ const LeftSidebar: React.FC = () => {
   const navigate = useNavigate();
 
   const handleAvatarClick = () => {
-    navigate("/profile"); // Redirige vers la page de profil
+    navigate("/my-account"); // Redirige vers la page de profil
   };
 
   const userStats = {
@@ -39,24 +39,24 @@ const LeftSidebar: React.FC = () => {
         </div>
         <h3>{userProfile?.pseudo || "Utilisateur"}</h3>
         <div className="user-info">
-          <div>
+          <div className="stat-item">
             <h4>Signalement</h4>
             <p>{userStats.signalements}</p>
           </div>
-          <div>
+          <div className="stat-item large-item">
             <h4>Coup de cœur</h4>
             <p>{userStats.coupsDeCoeur}</p>
           </div>
-          <div>
+          <div className="stat-item">
             <h4>Suggestion</h4>
             <p>{userStats.suggestions}</p>
           </div>
         </div>
         <div className="user-power">
-          <h4>Mon Usear Power</h4>
-          <p>
-            <span className="icon">U.</span> {userStats.userPower}
-          </p>
+          <span className="power-label">Mon Usear Power</span>
+          <span className="power-value">
+            <span className="icon">U.</span> 1260
+          </span>
         </div>
         <button className="view-more">Voir plus</button>
       </div>

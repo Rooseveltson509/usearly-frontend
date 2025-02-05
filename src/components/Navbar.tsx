@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // Import useLocation
 import "./Navbar.scss";
 import { useAuth } from "../contexts/AuthContext";
 import logoUsearly from "../assets/images/logo-usearly.svg";
@@ -7,70 +7,78 @@ import logoUsearly from "../assets/images/logo-usearly.svg";
 const Navbar: React.FC = () => {
   const { isAuthenticated, logout, userProfile, isLoadingProfile } = useAuth();
   const [isSticky, setIsSticky] = useState(false);
-  const [navbarOpen, setNavbarOpen] = useState(false); // État pour la navbar
-  const [userMenuOpen, setUserMenuOpen] = useState(false); // État pour le menu utilisateur
+  const [navbarOpen, setNavbarOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation(); // Permet de récupérer le chemin actuel
 
-  const toggleNavbar = () => {
-    setNavbarOpen((prev) => !prev);
-  };
-
+  const toggleNavbar = () => setNavbarOpen((prev) => !prev);
   const toggleUserMenu = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Empêche le clic de se propager
+    e.stopPropagation();
     setUserMenuOpen((prev) => !prev);
   };
 
-  const closeUserMenu = (e: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-      setUserMenuOpen(false);
-    }
-  };
-
   useEffect(() => {
-    const handleScroll = () => {
-      // Ajoute la classe `sticky` si l'utilisateur fait défiler vers le bas
-      setIsSticky(window.scrollY > 50);
-    };
-
+    const handleScroll = () => setIsSticky(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
-    document.addEventListener("click", closeUserMenu);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      document.removeEventListener("click", closeUserMenu);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <nav className={`navbar ${isSticky ? "sticky" : ""}`}>
       <div className="container">
         <div className="navbar-logo">
-          <span className="logo-icon"> <img src={logoUsearly} alt={logoUsearly} /></span>
+          <img src={logoUsearly} alt="Usearly Logo" />
         </div>
         <button className="navbar-toggle" onClick={toggleNavbar}>
           ☰
         </button>
         <ul className={`navbar-links ${navbarOpen ? "open" : ""}`}>
           <li>
-            <Link to="/" className="navbar-link" onClick={() => setNavbarOpen(false)}>
+            <Link
+              to="/"
+              className={`navbar-link ${
+                location.pathname === "/" ? "active" : ""
+              }`}
+              onClick={() => setNavbarOpen(false)}
+            >
               Accueil
             </Link>
           </li>
           <li>
-            <Link to="/marques" className="navbar-link" onClick={() => setNavbarOpen(false)}>
+            <Link
+              to="/marques"
+              className={`navbar-link ${
+                location.pathname === "/marques" ? "active" : ""
+              }`}
+              onClick={() => setNavbarOpen(false)}
+            >
               Marques partenaires
             </Link>
           </li>
           <li>
-            <Link to="/collaboration" className="navbar-link" onClick={() => setNavbarOpen(false)}>
+            <Link
+              to="/collaboration"
+              className={`navbar-link ${
+                location.pathname === "/collaboration" ? "active" : ""
+              }`}
+              onClick={() => setNavbarOpen(false)}
+            >
               Qui sommes-nous ?
             </Link>
           </li>
           <li>
-            <Link to="/home" className="navbar-link" onClick={() => setNavbarOpen(false)}>
+            <Link
+              to="/home"
+              className={`navbar-link ${
+                location.pathname === "/home" ? "active" : ""
+              }`}
+              onClick={() => setNavbarOpen(false)}
+            >
               Impact
             </Link>
           </li>
+
           {isAuthenticated ? (
             isLoadingProfile ? (
               <li className="navbar-link">
@@ -79,19 +87,35 @@ const Navbar: React.FC = () => {
             ) : (
               <div className="user-dropdown">
                 <li>
-                  <div className={`user-dropdown ${userMenuOpen ? "open" : ""}`} onClick={toggleUserMenu}>
-                    <span className="user-icon"><i className="far  fa-light fa-user"></i></span> {/* Icône utilisateur */}
-                    <span className="user-name">Bonjour {userProfile?.pseudo || "Utilisateur"}</span>
-                    <span className="dropdown-icon">▼</span> {/* Chevron */}
+                  <div
+                    className={`user-dropdown ${userMenuOpen ? "open" : ""}`}
+                    onClick={toggleUserMenu}
+                  >
+                    <span className="user-icon">
+                      <i className="far fa-user"></i>
+                    </span>
+                    <span className="user-name">
+                      Bonjour {userProfile?.pseudo || "Utilisateur"}
+                    </span>
+                    <span className="dropdown-icon">
+                      <i className="fa fa-chevron-down"></i>
+                    </span>
                   </div>
-
                 </li>
                 {userMenuOpen && (
                   <div ref={dropdownRef} className="dropdown-menu">
-                    <Link to="/profile" className="menu-item" onClick={() => setUserMenuOpen(false)}>
+                    <Link
+                      to="/profile"
+                      className="menu-item"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
                       Mon profil
                     </Link>
-                    <Link to="/my-account" className="menu-item" onClick={() => setUserMenuOpen(false)}>
+                    <Link
+                      to="/my-account"
+                      className="menu-item"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
                       Mon compte
                     </Link>
                     <button className="menu-item" onClick={logout}>
@@ -103,16 +127,39 @@ const Navbar: React.FC = () => {
             )
           ) : (
             <>
-              <li>
-                <Link to="/login" className="navbar-link" onClick={() => setNavbarOpen(false)}>
-                  Connexion
-                </Link>
-              </li>
-              <li>
-                <Link to="/signup" className="navbar-link" onClick={() => setNavbarOpen(false)}>
-                  Inscription
-                </Link>
-              </li>
+              <div className="user-dropdown">
+                <li>
+                  <div
+                    className={`user-dropdown ${userMenuOpen ? "open" : ""}`}
+                    onClick={toggleUserMenu}
+                  >
+                    <span className="user-icon">
+                      <i className="far fa-user"></i> S'identifier
+                    </span>
+                    <span className="dropdown-icon">
+                      <i className="fa fa-chevron-down"></i>
+                    </span>
+                  </div>
+                </li>
+                {userMenuOpen && (
+                  <div ref={dropdownRef} className="dropdown-menu">
+                    <Link
+                      to="/login"
+                      className="menu-item"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      Se connecter
+                    </Link>
+                    <Link
+                      to="/signup"
+                      className="menu-item"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      S'inscrire
+                    </Link>
+                  </div>
+                )}
+              </div>
             </>
           )}
         </ul>
