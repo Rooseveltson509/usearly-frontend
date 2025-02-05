@@ -48,7 +48,7 @@ const Signup: React.FC = () => {
   ];
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -67,7 +67,14 @@ const Signup: React.FC = () => {
     setError(null);
     setIsLoading(true); // Activer le spinner
 
-    if (!formData.pseudo || !formData.born || !formData.email || !formData.password || !formData.password_confirm || !formData.gender) {
+    if (
+      !formData.pseudo ||
+      !formData.born ||
+      !formData.email ||
+      !formData.password ||
+      !formData.password_confirm ||
+      !formData.gender
+    ) {
       setError("Tous les champs doivent être remplis.");
       setIsLoading(false); // Désactiver le spinner
       return;
@@ -82,7 +89,7 @@ const Signup: React.FC = () => {
     if (!isTermsAccepted) {
       setFlashMessage(
         "Vous devez accepter les conditions d'utilisation.",
-        "error"
+        "error",
       );
       setError("Vous devez accepter les conditions d'utilisation.");
       setIsLoading(false); // Désactiver le spinner
@@ -93,14 +100,23 @@ const Signup: React.FC = () => {
       const { userId, email } = await registerUser(formData);
       setFlashMessage(
         "Inscription réussie! Veuillez vérifier votre email pour confirmer.",
-        "success"
+        "success",
       );
       navigate("/verify-code", { state: { userId, email } });
-    } catch (err: any) {
-      const errorMessage = err.message || "Une erreur est survenue.";
+    } catch (err: unknown) {
+      let errorMessage = "Une erreur est survenue.";
+
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === "string") {
+        errorMessage = err;
+      } else if (typeof err === "object" && err !== null && "message" in err) {
+        errorMessage = (err as { message: string }).message;
+      }
+
       setError(errorMessage);
       setFlashMessage(errorMessage, "error");
-    }finally {
+    } finally {
       setIsLoading(false); // Désactiver le spinner
     }
   };
@@ -194,8 +210,8 @@ const Signup: React.FC = () => {
           politique de confidentialité de Usearly.
         </label>
         <button type="submit" className="signup-button" disabled={isLoading}>
-            {isLoading ? 'chargement en cours...' : 'Créer un compte'}
-          </button>
+          {isLoading ? "chargement en cours..." : "Créer un compte"}
+        </button>
       </form>
       <div className="background-text">
         <img

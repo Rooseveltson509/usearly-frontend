@@ -1,5 +1,5 @@
-import React from 'react';
-import './LoadingScreen.scss';
+import React from "react";
+import "./LoadingScreen.scss";
 
 const LoadingScreen: React.FC = () => {
   return (

@@ -1,21 +1,35 @@
 .profile-container {
     max-inline-size: 800px;
-    margin: 0 auto;
-    padding: 20px;
+    margin: auto;
+    padding: 20px 80px;
     background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    margin-block-end: 60px;
 
+    a {
+        font-family:  "Raleway", sans-serif;
+        font-size:14px;
+        color: #000000;
+        display: inline-block; // Permet d'appliquer des marges plus facilement
+        margin-bottom: 40px; // Ajoute de l'espace sous le lien
+    }
 
-    h1,
-    h2 {
+    h1 {
         text-align: center;
         margin-block-end: 20px;
-        font-family: "Arial", sans-serif;
-        color: #333;
+        font-family:  "Raleway", sans-serif;
+        color: #000000;
+    }
+    h2.section-title  {
+        font-family: "Raleway", sans-serif;
+        color: #000000;
+        font-size: 20px;
+        text-align: center;
     }
 
     form {
+        font-family: "Inter", sans-serif;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -29,8 +43,9 @@
 
     label {
         font-size: 14px;
-        font-weight: bold;
+        font-weight: 400;
         color: #555;
+        font-weight: 300;
     }
 
     input[type="text"],
@@ -40,8 +55,8 @@
     button {
         padding: 10px;
         border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 16px;
+        border-radius: 4px;
+        font-size: 14px;
     }
 
     input:disabled {
@@ -50,23 +65,26 @@
     }
 
     img {
-        inline-size: 100px;
-        block-size: 100px;
+        inline-size: 120px;
+        block-size: 120px;
         border-radius: 50%;
         object-fit: cover;
         margin: 0 auto;
+        margin-block-end: 40px;
         display: block;
+        background-color: rgb(192, 192, 192);
     }
 
     button {
-        background-color: #007bff;
+        background-color: #000000;
         color: white;
         border: none;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        margin: 10px 0 40px 0;
 
         &:hover {
-            background-color: #0056b3;
+            background-color: #2d2d2d;
         }
 
         &:disabled {
@@ -76,18 +94,18 @@
     }
 
     .section {
-        margin-block-end: 30px;
-        padding: 20px;
-        border: 1px solid #eee;
-        border-radius: 8px;
-        background-color: #fff;
+        margin-block-end: 10px;
+        padding: 0;
     }
 
     .section-title {
         font-size: 18px;
-        margin-block-end: 10px;
+        font-weight: 600;
+        margin-block-end: 30px;
+        margin-block-start: 20px;
         border-block-end: 1px solid #ddd;
-        padding-block-end: 5px;
+        padding-block-end: 10px;
+        text-align: center;
     }
 
     .error-message {

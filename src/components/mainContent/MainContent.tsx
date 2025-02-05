@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./MainContent.scss";
-import { fetchReports, fetchCoupsdeCoeur, fetchSuggestions } from "../../services/apiService";
-import { Reports } from "../../types/Reports";
+import {
+    fetchReports,
+    fetchCoupsdeCoeur,
+    fetchSuggestions,
+} from "../../services/apiService";
+import { Reports, ReportsResponse } from "../../types/Reports";
 import { useAuth } from "../../contexts/AuthContext";
 import defaultAvatar from "../../assets/images/user.png";
+import signalIcon from "../../assets/images/signalIcon.svg";
+import baguette from "../../assets/images/baguette.svg";
+import cdc from "../../assets/images/cdc.svg";
 import { motion } from "framer-motion";
 
 const brands = ["Nike", "Adidas", "Puma", "Apple", "Samsung", "Tesla"];
@@ -27,9 +34,6 @@ const MainContent: React.FC = () => {
 
     // État du filtre sélectionné
     const [selectedAbonnement, setSelectedAbonnement] = useState("Signalements");
-    
-
-    
 
     useEffect(() => {
         const loadData = async () => {
@@ -37,18 +41,32 @@ const MainContent: React.FC = () => {
             setError(null);
             try {
                 let data;
+                let formattedData: ReportsResponse;
+
                 if (selectedAbonnement === "CoupdeCoeur") {
                     data = await fetchCoupsdeCoeur(currentPage, 5);
-                    setReports(data.coupsdeCoeur);
+                    formattedData = {
+                        totalReports: data.totalCoupsdeCoeur,
+                        currentPage: data.currentPage,
+                        totalPages: data.totalPages,
+                        reports: data.coupsdeCoeur,
+                    };
                 } else if (selectedAbonnement === "Suggestions") {
                     data = await fetchSuggestions(currentPage, 5);
-                    setReports(data.suggestions);
+                    formattedData = {
+                        totalReports: data.totalSuggestions,
+                        currentPage: data.currentPage,
+                        totalPages: data.totalPages,
+                        reports: data.suggestions,
+                    };
                 } else {
-                    data = await fetchReports(currentPage, 5);
-                    setReports(data.reports);
+                    formattedData = await fetchReports(currentPage, 5);
                 }
-                setTotalPages(data.totalPages);
-            } catch (error: any) {
+
+                setReports(formattedData.reports);
+                setTotalPages(formattedData.totalPages);
+            } catch (error) {
+                console.error("Erreur lors du chargement des données :", error);
                 setError("Erreur lors du chargement des données.");
             } finally {
                 setLoading(false);
@@ -57,6 +75,11 @@ const MainContent: React.FC = () => {
 
         loadData();
     }, [currentPage, selectedAbonnement]);
+
+    // Réinitialiser la page à 1 lorsque le filtre change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedAbonnement]);
 
     const handleNextPage = () => {
         if (currentPage < totalPages) {
@@ -78,35 +101,124 @@ const MainContent: React.FC = () => {
         setShowPopup(false);
     };
 
+// Fonction pour récupérer l'icône associée au type de report
+const getIconByFilter = (selectedAbonnement: string) => {
+    switch (selectedAbonnement) {
+        case "Signalements":
+            return signalIcon; // Icône pour Signalement
+        case "CoupdeCoeur":
+            return cdc; // Icône pour Suggestion
+        case "Suggestions":
+            return baguette; // Icône pour Coup de cœur
+        default:
+            return signalIcon; // Icône par défaut si aucun type trouvé
+    }
+};
+
+
+
     return (
         <div className="main-content">
             <div className="filter-bar">
-                <button className={`filter-button ${selectedFilter === "Actualité" ? "active" : ""}`} onClick={() => setSelectedFilter("Actualité")}>
+                <button
+                    className={`filter-button ${selectedFilter === "Actualité" ? "active" : ""}`}
+                    onClick={() => setSelectedFilter("Actualité")}
+                >
                     Actualité
                 </button>
                 <div className="dropdown">
-                    <button className="dropdown-button" onClick={(e) => { e.stopPropagation(); setAbonnementsMenuOpen((prev) => !prev); }} >
+                    <button
+                        className="dropdown-button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setAbonnementsMenuOpen((prev) => !prev);
+                        }}
+                    >
                         {selectedAbonnement}{" "}
-                        <span className={`chevron ${abonnementsMenuOpen ? "rotated" : ""}`}>▼</span>
+                        <span className={`chevron ${abonnementsMenuOpen ? "rotated" : ""}`}>
+                            ▼
+                        </span>
                     </button>
                     {abonnementsMenuOpen && (
                         <div className="dropdown-menu">
-                            <div className="dropdown-item" onClick={() => { setSelectedAbonnement("Signalements"); setAbonnementsMenuOpen(false); }} > Signalements </div>
-                            <div className="dropdown-item" onClick={() => { setSelectedAbonnement("CoupdeCoeur"); setAbonnementsMenuOpen(false); }} > Coup de Cœur </div>
-                            <div className="dropdown-item" onClick={() => { setSelectedAbonnement("Suggestions"); setAbonnementsMenuOpen(false); }} > Suggestions </div>
+                            <div
+                                className="dropdown-item"
+                                onClick={() => {
+                                    setSelectedAbonnement("Signalements");
+                                    setAbonnementsMenuOpen(false);
+                                }}
+                            >
+                                {" "}
+                                Signalements{" "}
+                            </div>
+                            <div
+                                className="dropdown-item"
+                                onClick={() => {
+                                    setSelectedAbonnement("CoupdeCoeur");
+                                    setAbonnementsMenuOpen(false);
+                                }}
+                            >
+                                {" "}
+                                Coup de Cœur{" "}
+                            </div>
+                            <div
+                                className="dropdown-item"
+                                onClick={() => {
+                                    setSelectedAbonnement("Suggestions");
+                                    setAbonnementsMenuOpen(false);
+                                }}
+                            >
+                                {" "}
+                                Suggestions{" "}
+                            </div>
                         </div>
                     )}
                 </div>
                 <div className="dropdown">
-                    <button className="dropdown-button" onClick={(e) => { e.stopPropagation(); setFilterMenuOpen((prev) => !prev); }} >
+                    <button
+                        className="dropdown-button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setFilterMenuOpen((prev) => !prev);
+                        }}
+                    >
                         {selectedFilter}{" "}
-                        <span className={`chevron ${filterMenuOpen ? "rotated" : ""}`}>▼</span>
+                        <span className={`chevron ${filterMenuOpen ? "rotated" : ""}`}>
+                            ▼
+                        </span>
                     </button>
                     {filterMenuOpen && (
                         <div className="dropdown-menu">
-                            <div className="dropdown-item" onClick={() => { setSelectedFilter("Filtre 1"); setFilterMenuOpen(false); }}> Filtre 1 </div>
-                            <div className="dropdown-item" onClick={() => { setSelectedFilter("Filtre 2"); setFilterMenuOpen(false); }}> Filtre 2 </div>
-                            <div className="dropdown-item" onClick={() => { setSelectedFilter("Filtre 3"); setFilterMenuOpen(false); }}> Filtre 3 </div>
+                            <div
+                                className="dropdown-item"
+                                onClick={() => {
+                                    setSelectedFilter("Filtre 1");
+                                    setFilterMenuOpen(false);
+                                }}
+                            >
+                                {" "}
+                                Filtre 1{" "}
+                            </div>
+                            <div
+                                className="dropdown-item"
+                                onClick={() => {
+                                    setSelectedFilter("Filtre 2");
+                                    setFilterMenuOpen(false);
+                                }}
+                            >
+                                {" "}
+                                Filtre 2{" "}
+                            </div>
+                            <div
+                                className="dropdown-item"
+                                onClick={() => {
+                                    setSelectedFilter("Filtre 3");
+                                    setFilterMenuOpen(false);
+                                }}
+                            >
+                                {" "}
+                                Filtre 3{" "}
+                            </div>
                         </div>
                     )}
                 </div>
@@ -117,31 +229,59 @@ const MainContent: React.FC = () => {
             </div>
 
             <div className="alert-box" onClick={handleInputClick}>
-                <img src={
-                    userProfile?.avatar
-                        ? `${import.meta.env.VITE_API_BASE_URL}/${userProfile.avatar}`
-                        : defaultAvatar
-                } alt="User Avatar" />
-                <input type="text" placeholder="C'est moi ou 'nom de la marque' bug ?" readOnly />
+                <img
+                    src={
+                        userProfile?.avatar
+                            ? `${import.meta.env.VITE_API_BASE_URL}/${userProfile.avatar}`
+                            : defaultAvatar
+                    }
+                    alt="User Avatar"
+                />
+                <input
+                    type="text"
+                    placeholder="C'est moi ou 'nom de la marque' bug ?"
+                    readOnly
+                />
             </div>
             {showPopup && (
                 <div className="overlay" onClick={handleClosePopup}>
-                    <motion.div className="popup" initial={{ opacity: 0, scale: 0.8 }}
+                    <motion.div
+                        className="popup"
+                        initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
-                        onClick={(e) => e.stopPropagation()} >
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <h2>Créer un post</h2>
-                        <input type="text" placeholder="Saisir un titre" value={title} onChange={(e) => setTitle(e.target.value)} />
-                        <textarea placeholder="Décrivez votre problème" value={description} onChange={(e) => setDescription(e.target.value)} />
-                        <select value={selectedBrand} onChange={(e) => setSelectedBrand(e.target.value)}>
+                        <input
+                            type="text"
+                            placeholder="Saisir un titre"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                        <textarea
+                            placeholder="Décrivez votre problème"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        />
+                        <select
+                            value={selectedBrand}
+                            onChange={(e) => setSelectedBrand(e.target.value)}
+                        >
                             <option value="">Sélectionnez une marque</option>
                             {brands.map((brand, index) => (
-                                <option key={index} value={brand}>{brand}</option>
+                                <option key={index} value={brand}>
+                                    {brand}
+                                </option>
                             ))}
                         </select>
                         <div className="button-group">
-                            <button onClick={handleClosePopup} className="cancel">Annuler</button>
-                            <button onClick={handleSubmit} className="submit">Publier</button>
+                            <button onClick={handleClosePopup} className="cancel">
+                                Annuler
+                            </button>
+                            <button onClick={handleSubmit} className="submit">
+                                Publier
+                            </button>
                         </div>
                     </motion.div>
                 </div>
@@ -152,26 +292,116 @@ const MainContent: React.FC = () => {
             {reports.length > 0 ? (
                 reports.map((report) => (
                     <div className="report-card" key={report.id}>
+                        {/* Header avec une alerte et l'info du temps */}
                         <div className="card-header">
-                            <span className="brand-name">{report.marque}</span>
+                            <div className="alert-info">
+                                <span className="alert-icon"><img src={signalIcon} alt="signal comment" /></span>
+                                <span>{report.marque} a besoin de vous pour résoudre ce problème !</span>
+                            </div>
                             <span className="time-info">
                                 {new Date(report.createdAt).toLocaleDateString()}
                             </span>
                         </div>
+
+                        {/* Contenu principal */}
                         <div className="card-content">
-                            <p className="report-title">{report.description}</p>
-                            <p className="report-details">{report.bugLocation || report.emplacement}</p>
-                            <span>{report.nbrLikes}</span>
+                            <p className="report-title">
+                                <span className="alert-icon"><img src={getIconByFilter(selectedAbonnement)} alt={selectedAbonnement}  /></span>
+                                {report.categories && report.categories.length > 3 ? (
+                                    <span className="category-tag">
+                                        {report.categories[3].name}📌 {/* Affiche la quatrième catégorie seulement si elle existe */}
+                                    </span>
+                                ) : report.categories && report.categories.length > 0 ? (
+                                    <span className="category-tag">
+                                        {report.categories[0].name}📌 {/* Affiche la première catégorie si la quatrième n'existe pas */}
+                                    </span>
+                                ) : (
+                                    <span className="category-tag">Autre</span>
+                                )}
+                                {/* <strong>{report.User.pseudo}</strong> 📌 */}
+                            </p>
+                            <p className="report-description">
+                                {report.description.length > 150
+                                    ? `${report.description.substring(0, 150)}... `
+                                    : report.description}
+                                {report.description.length > 150 && (
+                                    <span className="see-more">Voir plus</span>
+                                )}
+                            </p>
                         </div>
+
+                        {/* Footer avec réactions et bouton */}
                         <div className="card-footer">
-                            <span>{report.emojis}</span>
+                            <div className="reactions">
+                                <span className="emoji">{report.emojis}</span>
+                                <span className="signalement-count">{report.nbrLikes} signalements</span>
+                                <span className="comment-icon">💬 {/* report.nbrComments || */ 0}</span>
+                            </div>
                             <button className="check-button">Je check</button>
                         </div>
                     </div>
                 ))
-            ) : (
-                !loading && <p>Aucune donnée trouvée.</p>
+            ) : !loading && (
+                <p>Aucune donnée trouvée.</p>
             )}
+
+            {/* Pagination Style 2 */}
+
+            {/*  <div className="pagination">
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={`page-btn ${currentPage === 1 ? "disabled" : ""}`}
+        >
+          ◀ Précédent
+        </button>
+
+        {currentPage > 3 && (
+          <>
+            <button className="page-btn" onClick={() => setCurrentPage(1)}>
+              1
+            </button>
+            <span className="dots">...</span>
+          </>
+        )}
+
+        {Array.from({ length: totalPages }, (_, index) => index + 1)
+          .filter(
+            (page) =>
+              page === 1 ||
+              page === totalPages ||
+              (page >= currentPage - 2 && page <= currentPage + 2)
+          )
+          .map((page) => (
+            <button
+              key={page}
+              className={`page-btn ${currentPage === page ? "active" : ""}`}
+              onClick={() => setCurrentPage(page)}
+            >
+              {page}
+            </button>
+          ))}
+
+        {currentPage < totalPages - 2 && (
+          <>
+            <span className="dots">...</span>
+            <button
+              className="page-btn"
+              onClick={() => setCurrentPage(totalPages)}
+            >
+              {totalPages}
+            </button>
+          </>
+        )}
+
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`page-btn ${currentPage === totalPages ? "disabled" : ""}`}
+        >
+          Suivant ▶
+        </button>
+      </div> */}
 
             <div className="pagination">
                 <button onClick={handlePreviousPage} disabled={currentPage === 1}>
