@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import defaultAvatar from "../../assets/images/user.png";
 import shakePhone from "../../assets/images/shakephone.png";
 import "./LeftSidebar.scss";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext"; // Importer le contexte Auth
+import { fetchUserStats } from "@src/services/apiService";
 
 const LeftSidebar: React.FC = () => {
   const { userProfile } = useAuth(); // Récupérer les données utilisateur depuis le contexte
@@ -13,12 +14,25 @@ const LeftSidebar: React.FC = () => {
     navigate("/my-account"); // Redirige vers la page de profil
   };
 
-  const userStats = {
-    signalements: 24,
-    coupsDeCoeur: 8,
-    suggestions: 2,
-    userPower: 1260,
-  };
+    const [stats, setStats] = useState({
+      reports: 0,
+      coupsDeCoeur: 0,
+      suggestions: 0,
+      usearPower: 0,
+    });
+
+    useEffect(() => {
+      const loadStats = async () => {
+        const data = await fetchUserStats();
+        if (data) {
+          setStats(data);
+          console.log("stats: " + stats.reports);
+        }
+      };
+
+      loadStats();
+    }, []);
+
 
   return (
     <aside className="sidebar-left">
@@ -37,25 +51,26 @@ const LeftSidebar: React.FC = () => {
             alt="Avatar utilisateur"
           />
         </div>
+
         <h3>{userProfile?.pseudo || "Utilisateur"}</h3>
         <div className="user-info">
           <div className="stat-item">
             <h4>Signalement</h4>
-            <p>{userStats.signalements}</p>
+            <p>{stats.reports}</p>
           </div>
           <div className="stat-item large-item">
             <h4>Coup de cœur</h4>
-            <p>{userStats.coupsDeCoeur}</p>
+            <p>{stats.coupsDeCoeur}</p>
           </div>
           <div className="stat-item">
             <h4>Suggestion</h4>
-            <p>{userStats.suggestions}</p>
+            <p>{stats.suggestions}</p>
           </div>
         </div>
         <div className="user-power">
           <span className="power-label">Mon Usear Power</span>
           <span className="power-value">
-            <span className="icon">U.</span> 1260
+            <span className="icon">U.</span> {stats.usearPower}
           </span>
         </div>
         <button className="view-more">Voir plus</button>

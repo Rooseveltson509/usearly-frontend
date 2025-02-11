@@ -137,13 +137,18 @@
   }
 
   .story-container {
-    background-color: black; // Fond noir pour toute la section
+    //background-color: black; // Fond noir pour toute la section
+    background-image: url("../../assets//images//experience.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    //background-repeat: no-repeat;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 60px 0; // Espacement en haut et en bas
-    width: 100%;
+    inline-size: 100%;
   
     .video-wrapper {
       position: relative;

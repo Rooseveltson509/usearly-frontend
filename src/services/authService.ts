@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 import { ErrorResponse, ResetPasswordResponse } from "@src/types/types";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const API_VERSION = import.meta.env.VITE_API_VERSION || "api/v1";
 
 export const apiService = axios.create({

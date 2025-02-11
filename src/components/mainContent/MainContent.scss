@@ -62,7 +62,7 @@
       .report-description {
         font-size: 14px;
         color: #444;
-        margin-top: 5px;
+        margin-block-start: 5px;
         line-height: 1.4;
       }
     }
@@ -402,52 +402,6 @@
     cursor: not-allowed;
   }
 
-  // style 2 Pagination
-  /* .pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-block-start: 20px;
-  margin-block-end: 50px;
-  gap: 8px;
-  font-family: Arial, sans-serif;
-
-  .page-btn {
-    background-color: #7b2cbf;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    outline: none;
-
-    &:hover {
-      background-color: #5a189a;
-    }
-
-    &.active {
-      background-color: #3c096c;
-      font-weight: bold;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    }
-
-    &.disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-  }
-
-  .dots {
-    font-size: 18px;
-    color: #5a189a;
-    padding: 10px;
-  }
-} */
-}
-
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -543,6 +497,9 @@
     font-size: 12px;
     transition: transform 0.3s ease;
 
+    i {
+      margin-inline-start: 5px;
+    }
     &.rotated {
       transform: rotate(180deg);
     }
@@ -617,3 +574,52 @@
     }
   }
 }
+
+
+
+  // style 2 Pagination
+  /* .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-block-start: 20px;
+  margin-block-end: 50px;
+  gap: 8px;
+  font-family: Arial, sans-serif;
+
+  .page-btn {
+    background-color: #7b2cbf;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+
+    &:hover {
+      background-color: #5a189a;
+    }
+
+    &.active {
+      background-color: #3c096c;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    &.disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  .dots {
+    font-size: 18px;
+    color: #5a189a;
+    padding: 10px;
+  }
+} */
+}
+

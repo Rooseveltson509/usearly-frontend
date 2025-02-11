@@ -74,9 +74,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #f1f1f1;
+      border-block-end: 1px solid #f1f1f1;
       padding: 16px 0 0 0;
-      width: 100%; /* Assurer que la div occupe toute la largeur */
+      inline-size: 100%; /* Assurer que la div occupe toute la largeur */
     }
     
     .stat-item {
@@ -87,18 +87,18 @@
     
     .large-item {
       flex: 1.14; /* Ajuste la taille (test avec 1.8 pour plus d'effet) */
-      min-width: 100px; /* Forcer un minimum de largeur */
+      min-inline-size: 100px; /* Forcer un minimum de largeur */
     }
 
     /* Ajout des séparateurs verticaux */
     .stat-item:not(:last-child)::after {
       content: "";
       position: absolute;
-      top: 50%;
-      right: 0;
+      inset-block-start: 50%;
+      inset-inline-end: 0;
       transform: translateY(-50%);
-      height: 50%;
-      width: 1px;
+      block-size: 50%;
+      inline-size: 1px;
       background-color: #f1f1f1; /* Gris pour un style plus propre */
       display: block;
     }
@@ -130,15 +130,15 @@
       color: #000;
       display: flex; /* Pour aligner l'icône et le nombre */
       align-items: center;
-      margin-right: 30px;
+      margin-inline-end: 30px;
     }
     
     .icon {
       font-size: 16px;
-      height:16px;
-      width:16px;
+      block-size:16px;
+      inline-size:16px;
       font-weight: bold;
-      margin-right: 8px;
+      margin-inline-end: 8px;
       color: #b300b3;
       border: 2px solid #b300b3;
       border-radius: 4px;

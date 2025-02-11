@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom"; // Import useLocation
+import { NavLink } from "react-router-dom"; // On utilise NavLink pour active class
 import "./Navbar.scss";
 import { useAuth } from "../contexts/AuthContext";
 import logoUsearly from "../assets/images/logo-usearly.svg";
@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const location = useLocation(); // Permet de récupérer le chemin actuel
+  //const location = useLocation(); // Permet de récupérer le chemin actuel
 
   const toggleNavbar = () => setNavbarOpen((prev) => !prev);
   const toggleUserMenu = (e: React.MouseEvent) => {
@@ -19,6 +19,7 @@ const Navbar: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log("userProfile: " + userProfile?.role);
     const handleScroll = () => setIsSticky(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -35,48 +36,50 @@ const Navbar: React.FC = () => {
         </button>
         <ul className={`navbar-links ${navbarOpen ? "open" : ""}`}>
           <li>
-            <Link
+            <NavLink
               to="/"
-              className={`navbar-link ${
-                location.pathname === "/" ? "active" : ""
-              }`}
+              className={({ isActive }) =>
+                `navbar-link ${isActive ? "active" : ""}`
+              }
               onClick={() => setNavbarOpen(false)}
             >
               Accueil
-            </Link>
+            </NavLink>
           </li>
+          {userProfile?.role === "admin" && (
+            <li>
+              <NavLink
+                to="/admin/brands"
+                className={({ isActive }) =>
+                  `navbar-link ${isActive ? "active" : ""}`
+                }
+                onClick={() => setNavbarOpen(false)}
+              >
+                Marques partenaires
+              </NavLink>
+            </li>
+          )}
           <li>
-            <Link
-              to="/marques"
-              className={`navbar-link ${
-                location.pathname === "/marques" ? "active" : ""
-              }`}
-              onClick={() => setNavbarOpen(false)}
-            >
-              Marques partenaires
-            </Link>
-          </li>
-          <li>
-            <Link
+            <NavLink
               to="/collaboration"
-              className={`navbar-link ${
-                location.pathname === "/collaboration" ? "active" : ""
-              }`}
+              className={({ isActive }) =>
+                `navbar-link ${isActive ? "active" : ""}`
+              }
               onClick={() => setNavbarOpen(false)}
             >
               Qui sommes-nous ?
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link
+            <NavLink
               to="/home"
-              className={`navbar-link ${
-                location.pathname === "/home" ? "active" : ""
-              }`}
+              className={({ isActive }) =>
+                `navbar-link ${isActive ? "active" : ""}`
+              }
               onClick={() => setNavbarOpen(false)}
             >
               Impact
-            </Link>
+            </NavLink>
           </li>
 
           {isAuthenticated ? (
@@ -104,20 +107,20 @@ const Navbar: React.FC = () => {
                 </li>
                 {userMenuOpen && (
                   <div ref={dropdownRef} className="dropdown-menu">
-                    <Link
+                    <NavLink
                       to="/profile"
                       className="menu-item"
                       onClick={() => setUserMenuOpen(false)}
                     >
                       Mon profil
-                    </Link>
-                    <Link
+                    </NavLink>
+                    <NavLink
                       to="/my-account"
                       className="menu-item"
                       onClick={() => setUserMenuOpen(false)}
                     >
                       Mon compte
-                    </Link>
+                    </NavLink>
                     <button className="menu-item" onClick={logout}>
                       Se déconnecter
                     </button>
@@ -143,20 +146,20 @@ const Navbar: React.FC = () => {
                 </li>
                 {userMenuOpen && (
                   <div ref={dropdownRef} className="dropdown-menu">
-                    <Link
+                    <NavLink
                       to="/login"
                       className="menu-item"
                       onClick={() => setUserMenuOpen(false)}
                     >
                       Se connecter
-                    </Link>
-                    <Link
+                    </NavLink>
+                    <NavLink
                       to="/signup"
                       className="menu-item"
                       onClick={() => setUserMenuOpen(false)}
                     >
                       S'inscrire
-                    </Link>
+                    </NavLink>
                   </div>
                 )}
               </div>
