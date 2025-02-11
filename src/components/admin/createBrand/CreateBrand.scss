@@ -1,0 +1,38 @@
+.create-brand-container {
+  max-inline-size: 400px;
+  margin: auto;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.create-brand-form input,
+.create-brand-form button {
+  inline-size: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.create-brand-form button {
+  background: #6a0dad;
+  color: white;
+  cursor: pointer;
+}
+
+.create-brand-form button:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+.success-message {
+  color: green;
+  font-weight: bold;
+}

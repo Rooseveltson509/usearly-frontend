@@ -17,6 +17,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import ResetPassword from "./components/resetpwd/ResetPassword";
 import DashboardBrand from "./components/dashboard-brands/DashbordBrand";
 import BrandLogin from "./pages/brand/BrandLogin";
+import BrandList from "./components/admin/brandList/BrandList";
 
 const App: React.FC = () => {
   const {
@@ -104,13 +105,19 @@ const App: React.FC = () => {
           }
         /> */}
 
+        <Route path="/dashboard-brand" element={<DashboardBrand />} />
+        {/* <Route path="/dashboard-brand" element={<DashboardBrand />} /> */}
         <Route
-          path="/dashboard-brand"
+          path="/admin/brands"
           element={
-              <DashboardBrand />
+            <ProtectedRoute
+              condition={userProfile?.role === "admin"}
+              redirectTo="/home"
+            >
+              <BrandList />
+            </ProtectedRoute>
           }
         />
-        {/* <Route path="/dashboard-brand" element={<DashboardBrand />} /> */}
 
         <Route
           path="/reset-password/:userId/:token"

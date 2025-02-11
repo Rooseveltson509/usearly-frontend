@@ -11,53 +11,49 @@
   transition: all 0.3s ease-in-out;
   border-block-end: 1px solid #ddd; /* Garde la bordure pour la navbar principale */
   background-color: #fff;
-  box-shadow: 0px -1px 0px 0px #F1F1F1 inset;
-  
- 
-  
-/*   display: flex;
+  box-shadow: 0px -1px 0px 0px #f1f1f1 inset;
+
+  /*   display: flex;
   justify-content: space-between;
   align-items: center; */
-  a, button {
+  a,
+  button {
     all: unset; /* Réinitialise tous les styles par défaut */
     cursor: pointer;
-  
-
   }
-  
+
   .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-
   .user-icon {
     font-size: 18px; /* Taille de l'icône */
     color: #333; /* Couleur de l'icône */
   }
-  
+
   .user-name {
     font-size: 16px;
     font-weight: 500;
     color: #333; /* Couleur du texte */
   }
-  
+
   .user-dropdown:focus,
-.user-dropdown:active {
-  outline: none; /* Supprime les bordures des interactions clavier/souris */
-}
+  .user-dropdown:active {
+    outline: none; /* Supprime les bordures des interactions clavier/souris */
+  }
   .dropdown-icon {
     font-size: 12px; /* Taille du chevron */
     color: #333; /* Couleur du chevron */
     transform: rotate(0deg);
     transition: transform 0.3s ease;
   }
-  
+
   .user-dropdown.open .dropdown-icon {
     transform: rotate(180deg); /* Rotation du chevron si le menu est ouvert */
   }
-  
+
   .user-dropdown {
     margin-inline-start: 20px; /* Espace entre les liens et la dropdown */
     border: none; /* Supprime toute bordure additionnelle */
@@ -84,7 +80,7 @@
 
   .container {
     max-inline-size: 1200px;
-    margin: 0 auto; 
+    margin: 0 auto;
     display: flex;
     justify-content: space-between; /* Place le logo à gauche et les liens à droite */
     align-items: center;
@@ -95,13 +91,13 @@
     align-items: center;
     font-size: 24px;
     font-weight: bold;
-    color: #880E4F;
+    color: #880e4f;
 
     .logo-icon {
       margin-inline-end: 8px;
       font-size: 24px;
       font-weight: bold;
-      color: #880E4F;
+      color: #880e4f;
     }
 
     .logo-text {
@@ -133,13 +129,19 @@
         margin-inline-start: 20px;
         text-decoration: none;
         font-weight: 500;
-        color: #6F6F6F;
+        color: #6f6f6f;
         transition: color 0.3s ease;
         font-size: 16px;
 
         &:hover {
           color: #000000;
-          padding-bottom: 17px;
+          padding-block-end: 17px;
+        }
+
+        &.active {
+          color: #000000; /* Couleur pour le lien actif */
+          border-block-end: 2px solid #6a0dad; /* Optionnel : soulignement */
+          padding-block-end: 17px;
         }
       }
     }
@@ -153,7 +155,6 @@
       background-color: #fff;
       padding: 20px;
       border-block-start: 1px solid #ddd;
-
     }
   }
 
@@ -181,7 +182,7 @@
     inset-inline-start: 0;
     background-color: #fff;
     inline-size: 100%;
-   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     border-block-start: 1px solid #ddd;
 
@@ -206,10 +207,6 @@
   }
 }
 
-
-
-
-
 .user-dropdown-wrapper {
   border: none; /* Aucune bordure pour le conteneur */
   background: none; /* Supprime tout fond inutile */
@@ -229,7 +226,6 @@
   border-radius: 25px; /* Bordure arrondie */
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-
 
   &:focus,
   &:active {
@@ -259,14 +255,12 @@
   }
 }
 
-
-
 .user-dropdown {
-li {
-  border: 1px solid #eaeaea;
-  border-radius: 25px;
-  margin-left: 80px;
-}
+  li {
+    border: 1px solid #eaeaea;
+    border-radius: 25px;
+    margin-inline-start: 80px;
+  }
   .user-button {
     background: none;
     border: none;
@@ -282,14 +276,14 @@ li {
     inset-block-start: 100%;
     inset-inline-end: 0;
     background-color: #fff;
-     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
     inline-size: 200px;
     z-index: 1000;
     padding: 8px 0; /* Ajoute un espacement vertical pour les items */
   }
-  
+
   .menu-item {
     display: block;
     padding: 12px 16px;
@@ -302,11 +296,11 @@ li {
     text-align: start;
     inline-size: 100%; /* Prend toute la largeur */
   }
-  
+
   .menu-item:hover {
     background-color: #f9f9f9; /* Ajoute un fond clair au survol */
   }
-  
+
   button.menu-item {
     background: none; /* Supprime les couleurs par défaut des boutons */
     border: none; /* Supprime les bordures */
@@ -316,9 +310,8 @@ li {
     cursor: pointer;
     font-size: 14px;
   }
-  
+
   .menu-item:last-child {
     border-block-end: none; /* Supprime la bordure du dernier élément */
   }
-
 }

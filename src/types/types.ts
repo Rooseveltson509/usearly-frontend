@@ -13,6 +13,47 @@ export interface UserProfile {
   offres?: string; // Pour les marques
 
 }
+
+export interface Brand {
+  id: string;
+  userId: string; // ✅ Ajout du champ userId
+  name: string;
+  email: string;
+  mdp?: string; // Facultatif pour éviter de forcer un mot de passe dans la mise à jour
+  offres: string;
+  avatar?: string | null;
+  createdAt: string;
+  updatedAt?: string; // ✅ Ajout du champ updatedAt
+}
+
+
+export interface Post {
+  id: string;
+  title: string;
+  content: string;
+  brand: Brand;
+  author: {
+    id: string;
+    pseudo: string;
+    avatar?: string;
+  };
+  createdAt: string;
+}
+
+export interface PostData {
+  title: string;
+  content: string;
+  marqueId: string;
+}
+
+export interface PostsResponse {
+  totalPosts: number;
+  totalPages: number;
+  currentPage: number;
+  posts: Post[];
+}
+
+
 export interface ResetPasswordResponse {
   success: boolean;
   message: string;

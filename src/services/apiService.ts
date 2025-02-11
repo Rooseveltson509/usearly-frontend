@@ -7,10 +7,17 @@ import {
   storeToken,
   storeTokenInCurrentStorage,
 } from "@src/utils/tokenUtils";
-import { UserProfile } from "@src/types/types";
+import {
+  Brand,
+  Post,
+  PostData,
+  PostsResponse,
+  UserProfile,
+} from "@src/types/types";
+import { CreateBrandData } from "@src/types/brand";
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const API_VERSION = import.meta.env.VITE_API_VERSION || "api/v1";
 
 // Crée une instance d'axios avec la configuration de base
@@ -59,7 +66,7 @@ apiService.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 // Intercepteur de réponses
@@ -85,7 +92,7 @@ apiService.interceptors.response.use(
       } catch (refreshError) {
         console.error(
           "Erreur lors du rafraîchissement du token :",
-          refreshError,
+          refreshError
         );
         localStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessToken");
@@ -94,16 +101,16 @@ apiService.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export const registerUser = async (
-  data: RegisterData,
+  data: RegisterData
 ): Promise<{ userId: string; email: string }> => {
   try {
     const response = await apiService.post<{ userId: string; email: string }>(
       "/user/register",
-      data,
+      data
     );
 
     console.log("Utilisateur inscrit avec succès :", response.data);
@@ -124,7 +131,7 @@ export const registerUser = async (
 
 export const confirmEmail = async (
   userId: string,
-  token: string,
+  token: string
 ): Promise<{ success: boolean; message: string; accessToken?: string }> => {
   try {
     const response = await apiService.post(`/user/mailValidation`, {
@@ -146,14 +153,203 @@ export const confirmEmail = async (
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
     throw new Error(
-      axiosError.response?.data?.message || "Erreur de validation du code.",
+      axiosError.response?.data?.message || "Erreur de validation du code."
     );
+  }
+};
+
+// ✅ Récupérer tous les posts
+export const fetchPosts = async (
+  page = 1,
+  limit = 5
+): Promise<PostsResponse> => {
+  try {
+    const token = getAccessToken();
+    if (!token) throw new Error("Utilisateur non authentifié.");
+
+    const response = await apiService.get(
+      `/user/posts?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data; // ✅ Retourne bien l'objet PostsResponse
+  } catch (error) {
+    console.error("Erreur lors de la récupération des posts :", error);
+
+    // ✅ Retourne un objet vide respectant PostsResponse
+    return { posts: [], totalPosts: 0, totalPages: 0, currentPage: page };
+  }
+};
+
+// ✅ Créer un post
+export const createPost = async (postData: PostData): Promise<Post> => {
+  try {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error("Utilisateur non authentifié.");
+    }
+    const response = await axios.post<Post>(
+      `${API_BASE_URL}/${API_VERSION}/user/post`,
+      postData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la création du post :", error);
+    throw error;
+  }
+};
+
+export const createBrand = async (
+  data: CreateBrandData
+): Promise<{ success: boolean; brand?: Brand; error?: string }> => {
+  const formData = new FormData();
+  formData.append("name", data.name);
+  formData.append("email", data.email);
+  formData.append("mdp", data.mdp);
+  formData.append("mdp_confirm", data.mdp_confirm);
+  if (data.avatar) formData.append("avatar", data.avatar);
+
+  console.log("📤 Données envoyées au backend :", [...formData.entries()]);
+
+  try {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error("Utilisateur non authentifié.");
+    }
+
+    const response = await axios.post(
+      `${API_BASE_URL}/${API_VERSION}/admin/brand/new`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    // 🔥 Assure-toi que ton backend retourne bien la marque créée
+    return { success: true, brand: response.data.brand };
+  } catch (error: unknown) {
+    console.error("Erreur API:", error);
+
+    if (axios.isAxiosError(error)) {
+      return {
+        success: false,
+        error: error.response?.data?.error || "Erreur inconnue",
+      };
+    }
+
+    return { success: false, error: "Erreur réseau ou serveur" };
+  }
+};
+
+// Récupérer toutes les marques
+export const fetchBrands = async (): Promise<Brand[]> => {
+  try {
+    const token = getAccessToken();
+    if (!token) throw new Error("Utilisateur non authentifié.");
+
+    const response = await apiService.get(`/admin/brand/all`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log("📥 Marques reçues de l'API :", response.data); // ✅ Vérifie ici
+
+    return response.data.brands;
+  } catch (error: unknown) {
+    console.error("Erreur lors de la récupération des marques :", error);
+    return [];
+  }
+};
+
+export const updateBrand = async (
+  brandId: string,
+  data: FormData
+): Promise<{ success: boolean; updatedBrand?: Brand; error?: string }> => {
+  try {
+    console.log("🛠️ ID de la marque envoyé :", brandId);
+
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error("Utilisateur non authentifié.");
+    }
+
+    const response = await axios.put(
+      `${API_BASE_URL}/${API_VERSION}/admin/brand/update/${brandId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log("🛠️ Réponse API :", response);
+    return { success: true, updatedBrand: response.data.brand };
+  } catch (error: unknown) {
+    console.error("Erreur API:", error);
+
+    if (axios.isAxiosError(error)) {
+      return {
+        success: false,
+        error: error.response?.data?.error || "Erreur inconnue",
+      };
+    }
+
+    return { success: false, error: "Erreur réseau ou serveur" };
+  }
+};
+
+export const deleteBrand = async (
+  brandId: string
+): Promise<{ success: boolean; error?: string }> => {
+  try {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error("Utilisateur non authentifié.");
+    }
+
+    await axios.delete(
+      `${API_BASE_URL}/${API_VERSION}/admin/brand/${brandId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Erreur API:", error);
+
+    if (axios.isAxiosError(error)) {
+      return {
+        success: false,
+        error: error.response?.data?.error || "Erreur inconnue",
+      };
+    }
+
+    return { success: false, error: "Erreur réseau ou serveur" };
   }
 };
 
 export const fetchReports = async (
   page: number,
-  limit: number,
+  limit: number
 ): Promise<ReportsResponse> => {
   try {
     const token = getAccessToken();
@@ -171,7 +367,7 @@ export const fetchReports = async (
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     console.log("Réponse API brute :", response.data);
@@ -181,12 +377,11 @@ export const fetchReports = async (
     if (axios.isAxiosError(error)) {
       console.error(
         "Erreur lors de l’appel à fetchReports :",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
 
       throw new Error(
-        error.response?.data?.error ||
-          "Erreur lors du chargement des rapports.",
+        error.response?.data?.error || "Erreur lors du chargement des rapports."
       );
     } else if (error instanceof Error) {
       console.error("Erreur inconnue :", error.message);
@@ -194,6 +389,26 @@ export const fetchReports = async (
     } else {
       throw new Error("Une erreur inconnue est survenue.");
     }
+  }
+};
+
+export const fetchUserStats = async () => {
+  try {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error("Utilisateur non authentifié.");
+    }
+    const response = await apiService.get(`user/stats`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des statistiques :", error);
+    return null;
   }
 };
 
@@ -211,7 +426,7 @@ export const fetchCoupsdeCoeur = async (page: number, limit: number) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     return {
@@ -239,7 +454,7 @@ export const fetchSuggestions = async (page: number, limit: number) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     return {
@@ -280,22 +495,21 @@ export const fetchUserProfile = async (): Promise<UserProfile> => {
   } catch (error: unknown) {
     console.error(
       "Erreur lors de l’appel à fetchUserProfile :",
-      error instanceof Error ? error.message : "Erreur inconnue",
+      error instanceof Error ? error.message : "Erreur inconnue"
     );
 
     if (error instanceof (await import("axios")).AxiosError) {
       throw new Error(
         error.response?.data?.error ||
-          "Erreur lors du chargement du profil utilisateur.",
+          "Erreur lors du chargement du profil utilisateur."
       );
     }
 
     throw new Error(
-      "Erreur inattendue lors du chargement du profil utilisateur.",
+      "Erreur inattendue lors du chargement du profil utilisateur."
     );
   }
 };
-
 
 export const fetchBrandProfile = async () => {
   const token =
@@ -314,7 +528,7 @@ export const fetchBrandProfile = async () => {
 };
 
 export const updateUserProfile = async (
-  formData: FormData,
+  formData: FormData
 ): Promise<{ success: boolean; user?: UserProfile; message?: string }> => {
   try {
     const token = getAccessToken();
@@ -331,7 +545,7 @@ export const updateUserProfile = async (
 
     if (!response.data.success) {
       throw new Error(
-        response.data.message || "Échec de la mise à jour du profil.",
+        response.data.message || "Échec de la mise à jour du profil."
       );
     }
 
@@ -340,16 +554,16 @@ export const updateUserProfile = async (
     if (axios.isAxiosError(error)) {
       console.error(
         "Erreur lors de la mise à jour du profil :",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
       throw new Error(
         error.response?.data?.message ||
-          "Erreur lors de la mise à jour du profil.",
+          "Erreur lors de la mise à jour du profil."
       );
     } else if (error instanceof Error) {
       console.error(
         "Erreur inconnue lors de la mise à jour du profil :",
-        error.message,
+        error.message
       );
       throw new Error(error.message);
     } else {

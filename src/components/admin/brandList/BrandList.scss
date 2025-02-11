@@ -1,0 +1,269 @@
+.brand-list-container {
+  position: relative;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-block-end: 20px;
+  }
+
+  /* ✅ Conteneur pour aligner le bouton et la barre de recherche */
+  .actions-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-end: 20px;
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      inline-size: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      background: #f3f3f3;
+      max-inline-size: 350px; /* ✅ Réduction de la largeur */
+
+      .search-icon {
+        font-size: 16px;
+        margin-inline-end: 10px;
+        color: #777;
+      }
+
+      input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        font-size: 14px;
+        outline: none;
+      }
+    }
+
+    .add-brand-button {
+      background-color: #007bff;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+      }
+
+      .plus-icon {
+        font-size: 16px;
+      }
+    }
+  }
+
+  /* 📑 Table améliorée */
+.brand-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto; /* ✅ Permet aux colonnes de s'ajuster dynamiquement */
+
+  th, td {
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+    border-block-end: 1px solid #ddd; /* ✅ Uniformisation des bordures */
+  }
+
+  th {
+    background: #6200ea;
+    color: white;
+    font-weight: bold;
+  }
+
+  .brand-logo {
+    inline-size: 40px;
+    /* block-size: 40px;
+    border-radius: 50%; */
+    object-fit: cover;
+    display: block;
+    margin: auto;
+  }
+
+  .actions {
+    text-align: center;
+    white-space: nowrap; /* ✅ Évite que les boutons se superposent */
+  }
+
+  .edit-btn, .delete-btn {
+    display: inline-block; /* ✅ Plus de flexbox qui casse l'alignement */
+    margin: 0 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .edit-btn {
+    background: #007bff;
+    color: white;
+  }
+
+  .delete-btn {
+    background: #dc3545;
+    color: white;
+  }
+}
+
+
+
+}
+
+
+/* Overlay du modal */
+.delete-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5); /* Fonce l'arrière-plan */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Assure que le modal est toujours au-dessus */
+}
+
+/* Contenu du modal */
+.delete-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+  position: relative; /* Évite les problèmes de position */
+}
+
+/* Icône d'avertissement */
+.warning-icon {
+  font-size: 40px;
+  color: #f1c40f;
+  margin-bottom: 10px;
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Boutons */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  background: #cccccc;
+  color: black;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #aaaaaa;
+  }
+}
+
+.confirm-btn {
+  background: #e74c3c;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #c0392b;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+
+  button {
+    background-color: #6c63ff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin: 0 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+.brand-table {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-in-out;
+}

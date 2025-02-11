@@ -14,7 +14,7 @@ const MyAccount: React.FC = () => {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
     userProfile?.avatar
       ? `${import.meta.env.VITE_API_BASE_URL}/${userProfile.avatar}`
-      : null,
+      : null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -37,8 +37,10 @@ const MyAccount: React.FC = () => {
           setEmail(profile.email || "");
           setAvatarPreview(
             profile.avatar
-              ? `${import.meta.env.VITE_API_BASE_URL}/${profile.avatar}`
-              : null,
+              ? `${import.meta.env.VITE_API_BASE_URL}/uploads/${
+                  profile.avatar
+                }`
+              : null
           );
         } catch (error) {
           console.error("Erreur lors du chargement du profil :", error);
@@ -74,7 +76,9 @@ const MyAccount: React.FC = () => {
         setFlashMessage("Profil mis à jour avec succès !", "success");
         setUserProfile(updatedProfile.user); // Mise à jour du profil utilisateur
         setAvatarPreview(
-          `${import.meta.env.VITE_API_BASE_URL}/${updatedProfile.user.avatar}`,
+          `${import.meta.env.VITE_API_BASE_URL}/${
+            updatedProfile.user.avatar
+          }`
         );
       } else {
         setFlashMessage(
