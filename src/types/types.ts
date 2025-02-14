@@ -27,17 +27,30 @@ export interface Brand {
 }
 
 
+export type Reaction = {
+  userId: string;
+  emoji: string;
+  count?: number; // ✅ Ajoute cette propriété
+};
+
 export interface Post {
   id: string;
   title: string;
   content: string;
-  brand: Brand;
-  author: {
+  createdAt: string;
+  updatedAt: string;
+  author?: {
     id: string;
     pseudo: string;
     avatar?: string;
   };
-  createdAt: string;
+  brand?: {
+    id: string;
+    name: string;
+    avatar?: string;
+  };
+  likeCount?: number; // ✅ Nombre total de likes
+  reactions: Reaction[]; // ✅ Maintenant, les réactions incluent `userId`
 }
 
 export interface PostData {
