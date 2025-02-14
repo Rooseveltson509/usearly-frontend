@@ -32,9 +32,9 @@ const PostList: React.FC<PostProps> = ({ post }) => {
   const [reactions, setReactions] = useState<Reaction[]>(post.reactions ?? []);
   //const [showModal, setShowModal] = useState(false);
   //const [selectedReaction, setSelectedReaction] = useState<string | null>(null);
-  const [reactionUsers, setReactionUsers] = useState<User[]>([]);
+  const [, setReactionUsers] = useState<User[]>([]);
 
-  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
+  const [, setSelectedEmoji] = useState<string | null>(null);
   //const [showReactionPopup, setShowReactionPopup] = useState(false);
 
   //const [showReactionModal, setShowReactionModal] = useState(false);
