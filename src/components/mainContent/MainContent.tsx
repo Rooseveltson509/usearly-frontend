@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./MainContent.scss";
 import {
-    fetchReports,
-    fetchCoupsdeCoeur,
-    fetchSuggestions,
-    fetchPosts,
-    fetchBrands,
+  fetchReports,
+  fetchCoupsdeCoeur,
+  fetchSuggestions,
+  fetchPosts,
+  fetchBrands,
+  fetchBrandByName,
 } from "../../services/apiService";
 import { Reports, ReportsResponse } from "../../types/Reports";
 import { useAuth } from "../../contexts/AuthContext";
@@ -16,6 +17,9 @@ import cdc from "../../assets/images/cdc.svg";
 import { Brand, Post } from "@src/types/types";
 import CreatePostPopup from "../posts/createPostPopup/CreatePostPopup";
 import PostList from "../posts/postList/PostList";
+import { formatRelativeTime } from "@src/utils/formatRelativeTime";
+import defaultBrandAvatar from "@src/assets/images/user.png"; // ✅ Image par défaut pour les marques
+import axios from "axios";
 
 //const brands = ["Nike", "Adidas", "Puma", "Apple", "Samsung", "Tesla"];
 
@@ -31,7 +35,13 @@ const MainContent: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [postsPage, setPostsPage] = useState(1);
   const [postsTotalPages, setPostsTotalPages] = useState(0);
-
+  const [brandData, setBrandData] = useState<{
+    [key: string]: { name: string; avatar: string };
+  }>({});
+  // ✅ Définition du type pour éviter l'erreur TypeScript
+  const [expandedPosts, setExpandedPosts] = useState<{
+    [key: string]: boolean;
+  }>({});
   // États pour les menus déroulants
   const [abonnementsMenuOpen, setAbonnementsMenuOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("Filtrer");
@@ -134,15 +144,60 @@ const MainContent: React.FC = () => {
     setSelectedFilter("Actualité"); // Active automatiquement l'affichage des posts
   };
 
+  useEffect(() => {
+    const fetchBrandInfo = async () => {
+      const brandsInfo: { [key: string]: { name: string; avatar: string } } =
+        {};
+      const uniqueBrandNames = new Set(
+        reports
+          .map((report) => extractBrandName(report.marque))
+          .filter((brandName) => brandName && brandName !== "localhost") // ✅ Ignore les noms invalides
+      );
+
+      const fetchBrandPromises = Array.from(uniqueBrandNames)
+        .filter((brandName) => !brandData[brandName]) // ✅ Ne charge pas les marques déjà connues
+        .map(async (brandName) => {
+          try {
+            const brandInfo = await fetchBrandByName(brandName);
+            if (brandInfo) {
+              brandsInfo[brandName] = {
+                name: brandName,
+                avatar: brandInfo.avatar
+                  ? brandInfo.avatar
+                  : defaultBrandAvatar,
+              };
+            }
+          } catch (error) {
+            // ✅ Correction : Typage strict pour l'erreur Axios
+            if (axios.isAxiosError(error) && error.response?.status === 404) {
+              brandsInfo[brandName] = {
+                name: brandName,
+                avatar: defaultBrandAvatar,
+              };
+            } else {
+              console.error(`🚨 Erreur API pour ${brandName}:`, error);
+            }
+          }
+        });
+
+      await Promise.all(fetchBrandPromises);
+      setBrandData((prev) => ({ ...prev, ...brandsInfo }));
+    };
+
+    if (reports.length > 0) {
+      fetchBrandInfo();
+    }
+  }, [reports]);
+
+  const extractBrandName = (url: string) => url.split(".")[0];
+
   // Réinitialiser la page à 1 lorsque le filtre change
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedAbonnement]);
 
-
   const handleInputClick = () => setShowPopup(true);
   const handleClosePopup = () => setShowPopup(false);
-
 
   // Fonction pour récupérer l'icône associée au type de report
   const getIconByFilter = (selectedAbonnement: string) => {
@@ -156,6 +211,13 @@ const MainContent: React.FC = () => {
       default:
         return signalIcon; // Icône par défaut si aucun type trouvé
     }
+  };
+
+  const toggleExpand = (postId: string) => {
+    setExpandedPosts((prev) => ({
+      ...prev,
+      [postId]: !prev[postId], // ✅ Clé en `string`
+    }));
   };
 
   return (
@@ -248,9 +310,7 @@ const MainContent: React.FC = () => {
         <img
           src={
             userProfile?.avatar
-              ? `${import.meta.env.VITE_API_BASE_URL}/${
-                  userProfile.avatar
-                }`
+              ? `${import.meta.env.VITE_API_BASE_URL}/${userProfile.avatar}`
               : defaultAvatar
           }
           alt="User Avatar"
@@ -283,46 +343,126 @@ const MainContent: React.FC = () => {
           {loading && <p className="loading-message">Chargement en cours...</p>}
           {error && <p className="error-message">{error}</p>}
           {reports.length > 0 ? (
-            reports.map((report) => (
-              <div className="report-card" key={report.id}>
-                <div className="card-header">
-                  <div className="alert-info">
-                    <span>
-                      <strong>{report.marque}</strong> a besoin de vous !
-                    </span>
-                  </div>
-                  <span className="time-info">
-                    {new Date(report.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-
-                <div className="card-content">
-                  <p className="report-title">
-                    <span className="alert-icon">
+            reports.map((report) => {
+              const brandName = extractBrandName(report.marque);
+              const brandInfo = brandData[brandName] || {
+                name: brandName,
+                avatar: defaultBrandAvatar,
+              };
+              return (
+                <div className="post-card" key={report.id}>
+                  {/* HEADER */}
+                  <div className="post-header">
+                    <div className="user-info">
                       <img
-                        src={getIconByFilter(selectedAbonnement)}
-                        alt={selectedAbonnement}
+                        src={
+                          report.User?.avatar
+                            ? `${import.meta.env.VITE_API_BASE_URL}/${
+                                report.User.avatar
+                              }`
+                            : defaultAvatar
+                        }
+                        alt="Avatar"
+                        className="user-avatar"
                       />
-                    </span>
-                    {report.categories && report.categories.length > 0 ? (
-                      <span className="category-tag">
-                        {report.categories[0].name} 📌
+                      {/* c'est ici qu'on récupère la marque avec l'extension (report.marque) */}
+                      <span className="post-author">
+                        C’est moi ou <strong>{brandInfo.name}</strong> ?
                       </span>
-                    ) : (
-                      <span className="category-tag">Autre</span>
+                      <span className="post-time">
+                        • {formatRelativeTime(report.createdAt)}
+                      </span>
+                    </div>
+                    <div className="post-options">⋮</div>
+                  </div>
+
+                  {/* CONTENU DU POST */}
+                  <div className="post-content">
+                    <div className="post-icon">
+                      {" "}
+                      <span className="alert-icon">
+                        <img
+                          src={getIconByFilter(selectedAbonnement)}
+                          alt={selectedAbonnement}
+                        />
+                      </span>
+                    </div>
+                    <div className="post-details">
+                      {report.categories && report.categories.length > 0 ? (
+                        <h3 className="post-title">
+                          {report.categories[0].name} 📌 🔥
+                        </h3>
+                      ) : (
+                        <h3 className="post-title">Autre 🔥</h3>
+                      )}
+                      <p className="post-description">
+                        {expandedPosts[report.id] ? (
+                          <>
+                            {report.description}{" "}
+                            <span
+                              className="see-more"
+                              onClick={() => toggleExpand(report.id)} // ✅ Masquer le texte quand cliqué
+                              style={{ cursor: "pointer", color: "blue" }}
+                            >
+                              Voir moins
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            {report.description.length > 150
+                              ? `${report.description.substring(0, 150)}... `
+                              : report.description}
+                            {report.description.length > 150 && (
+                              <span
+                                className="see-more"
+                                onClick={() => toggleExpand(report.id)} // ✅ Afficher plus quand cliqué
+                                style={{ cursor: "pointer", color: "blue" }}
+                              >
+                                Voir plus
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </p>
+                    </div>
+                    {brandInfo.avatar && (
+                      <img
+                        src={brandInfo.avatar}
+                        alt={brandInfo.name}
+                        className="brand-logo"
+                      />
                     )}
-                  </p>
-                  <p className="report-description">
-                    {report.description.length > 150
-                      ? `${report.description.substring(0, 150)}... `
-                      : report.description}
-                    {report.description.length > 150 && (
-                      <span className="see-more">Voir plus</span>
-                    )}
-                  </p>
+                    {/*  
+              {post.brand?.avatar && ( // ✅ Vérification que brand existe bien avant d'afficher l'avatar
+                    <img
+                      src={`${import.meta.env.VITE_API_BASE_URL}/${
+                        post.brand.avatar
+                      }`}
+                      alt="Brand Logo"
+                      className="brand-logo"
+                    />
+                  )} 
+                   */}
+                  </div>
+
+                  {/* FOOTER */}
+                  <div className="post-footer">
+                    <div className="reaction">
+                      <span className="emoji">{report.emojis}</span>{" "}
+                      <span>Early signalement</span>
+                    </div>
+                    <div className="icons">
+                      <span className="icon">💡 {report.nbrLikes}</span>
+                      <span className="icon">💬 {0}</span>
+                      {/* <span className="icon">💬 {post.comments?.length || 0}</span> */}
+                    </div>
+                    <div className="card-footer">
+                      <button className="check-button">Je check</button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <p>Aucune donnée trouvée.</p>
           )}

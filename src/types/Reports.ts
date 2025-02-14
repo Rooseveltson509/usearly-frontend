@@ -1,8 +1,13 @@
 export interface User {
+  id: string;
   pseudo: string;
   email: string;
+  avatar?: string;
 }
-
+export interface Reaction {
+  emoji: string;
+  count: number;
+}
 export interface Reports {
   id: string;
   siteUrl: string;
@@ -19,7 +24,9 @@ export interface Reports {
   User: {
     pseudo: string;
     email: string;
+    avatar?: string;
   };
+  reactions: Reaction[]; // ✅ Ajoute le champ reactions
   siteType: string | null;
   categories: { name: string }[]; // ✅ Ajout des catégories
   type?: string; // <-- Ajout du type

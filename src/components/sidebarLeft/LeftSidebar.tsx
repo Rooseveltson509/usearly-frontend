@@ -31,7 +31,7 @@ const LeftSidebar: React.FC = () => {
       };
 
       loadStats();
-    }, []);
+    }, [stats.reports]);
 
 
   return (

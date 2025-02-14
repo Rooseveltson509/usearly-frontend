@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { RegisterData } from "../types/RegisterData";
-import { ReportsResponse } from "../types/Reports";
+import { ReportsResponse, User } from "../types/Reports";
 import { refreshToken } from "./authService";
 import {
   getAccessToken,
@@ -277,6 +277,95 @@ export const fetchBrands = async (): Promise<Brand[]> => {
     return [];
   }
 };
+
+export const fetchBrandByName = async (brandName: string) => {
+  try {
+    const response = await apiService.get(`/brand/${brandName.toLowerCase()}`);
+    return response.data; // ✅ Retourne { avatar, updatedAt }
+  } catch (error: unknown) {
+    const axiosError = error as AxiosError; // 🚀 Cast explicite en AxiosError
+
+    if (axiosError.response?.status === 404) {
+      console.warn(`🔍 Marque non trouvée: ${brandName}`);
+    } else {
+      console.error(
+        `🚨 Erreur API pour ${brandName} (Code: ${axiosError.response?.status}):`,
+        axiosError
+      );
+    }
+    return null; // ✅ Retourne null proprement
+  }
+};
+
+export const fetchPostLikes = async (postId: string) => {
+  try {
+    const response = await apiService.get(`/posts/${postId}/likes`);
+    return response.data.likes; // Retourne le nombre total de likes
+  } catch (error) {
+    console.error(
+      `❌ Erreur lors de la récupération des likes du post ${postId} :`,
+      error
+    );
+    return 0; // Retourne 0 en cas d'erreur
+  }
+};
+
+export const toggleLikePost = async (postId: string) => {
+  try {
+    const response = await apiService.put(`/posts/${postId}/like`);
+    return response.data; // Retourne la réponse du backend (succès ou erreur)
+  } catch (error) {
+    console.error(`❌ Erreur lors du like/unlike du post ${postId} :`, error);
+    return null;
+  }
+};
+
+// ✅ Ajouter une réaction à un post
+export const addReactionToPost = async (postId: string, emoji: string) => {
+  try {
+    const response = await apiService.put(`/posts/${postId}/reaction`, {
+      emoji,
+    });
+    return response.data; // ✅ Retourne les réactions mises à jour
+  } catch (error) {
+    console.error("❌ Erreur lors de l'ajout de la réaction :", error);
+    return null;
+  }
+};
+
+
+export const fetchReactionUsers = async (
+  postId: string,
+  emoji: string
+): Promise<{ users: User[] }> => {
+  try {
+    const response = await apiService.get(
+      `/posts/${postId}/reactions/${emoji}`
+    );
+
+    // ✅ Type explicite : on force le type `User`
+    const formattedUsers: User[] = response.data.users.map(
+      (user: {
+        id: string;
+        pseudo: string;
+        avatar: string;
+        email?: string;
+      }) => ({
+        id: user.id,
+        pseudo: user.pseudo,
+        avatar: user.avatar,
+        email: user.email || "", // ✅ Ajoute un email vide par défaut si non fourni
+      })
+    );
+
+    return { users: formattedUsers }; // ✅ Retourne bien un `User[]`
+  } catch (error) {
+    console.error("Erreur lors de la récupération des utilisateurs :", error);
+    return { users: [] }; // ✅ Retourne un tableau vide en cas d'erreur
+  }
+};
+
+
 
 export const updateBrand = async (
   brandId: string,

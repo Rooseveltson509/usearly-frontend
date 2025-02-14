@@ -71,7 +71,7 @@
 
   /* 📑 Table améliorée */
 .brand-table {
-  width: 100%;
+  inline-size: 100%;
   border-collapse: collapse;
   table-layout: auto; /* ✅ Permet aux colonnes de s'ajuster dynamiquement */
 
@@ -145,8 +145,8 @@
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
-  max-width: 420px;
-  width: 100%;
+  max-inline-size: 420px;
+  inline-size: 100%;
   text-align: center;
   animation: fadeIn 0.3s ease-in-out;
   position: relative; /* Évite les problèmes de position */
@@ -156,7 +156,7 @@
 .warning-icon {
   font-size: 40px;
   color: #f1c40f;
-  margin-bottom: 10px;
+  margin-block-end: 10px;
 }
 
 /* Animation d'apparition */
@@ -175,7 +175,7 @@
 .modal-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-block-start: 20px;
 }
 
 .cancel-btn {
@@ -210,7 +210,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-block-start: 20px;
 
   button {
     background-color: #6c63ff;

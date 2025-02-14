@@ -1,4 +1,3 @@
-
 .main-content {
   //padding: 20px;
   background-color: #f5f5f5; /* Couleur de fond */
@@ -23,8 +22,8 @@
     border: 0px solid #ddd;
     border-radius: 4px;
 
-    h3{
-       margin: 0 0 10px;
+    h3 {
+      margin: 0 0 10px;
     }
     .card-header {
       display: flex;
@@ -234,33 +233,33 @@
   }
 
   .alert-box {
-      margin-block-start: 8px;
-      margin-block-end: 20px;
-      padding: 20px 15px 30px 15px;
-      background: #fff;
-      cursor: pointer;
-      border-radius: 4px;
-      box-shadow: 0 1px 2px rgba(69, 69, 69, 0.1);
-      display: flex;
-      align-items: center;
-      transition: box-shadow 0.3s ease;
+    margin-block-start: 8px;
+    margin-block-end: 20px;
+    padding: 20px 15px 30px 15px;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(69, 69, 69, 0.1);
+    display: flex;
+    align-items: center;
+    transition: box-shadow 0.3s ease;
 
     img {
-        inline-size: 40px;
-        block-size: 40px;
-        border-radius: 50%;
-        margin-inline-end: 10px;
+      inline-size: 40px;
+      block-size: 40px;
+      border-radius: 50%;
+      margin-inline-end: 10px;
     }
 
     input {
-        flex: 1;
-        padding: 10px 15px;
-        border: 1px solid #E7E7E7;
-        border-radius: 25px;
-        font-size: 14px;
-        background-color: #f9f9f9;
-        font-family: "Inter";
-        font-weight: 300;
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid #e7e7e7;
+      border-radius: 25px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      font-family: "Inter";
+      font-weight: 300;
     }
   }
 
@@ -402,153 +401,110 @@
     cursor: not-allowed;
   }
 
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-block-end: 10px;
-
-  .brand-info {
+  .card-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    margin-block-end: 10px;
 
-    .brand-logo {
-      inline-size: 40px;
-      block-size: 40px;
-      border-radius: 50%;
-      margin-inline-end: 10px;
+    .brand-info {
+      display: flex;
+      align-items: center;
+
+      .brand-logo {
+        inline-size: 40px;
+        block-size: 40px;
+        max-inline-size: 50px; // Ajuste la largeur max pour qu’elle ne soit pas trop grande
+        max-block-size: 50px; // Ajuste la hauteur max pour garder la proportion
+        object-fit: contain; // Assure que l’image garde son aspect ratio sans être coupée
+        display: block; // Évite les marges indésirables
+        margin-inline-start: auto; // Aligne à droite si nécessaire
+      }
+
+      .brand-name {
+        font-weight: bold;
+        font-size: 14px;
+      }
     }
 
-    .brand-name {
+    .time-info {
+      font-size: 12px;
+      color: #777;
+    }
+  }
+
+  .card-content {
+    .report-title {
       font-weight: bold;
+      font-size: 16px;
+      margin-block-end: 5px;
+    }
+
+    .report-details {
       font-size: 14px;
+      color: #555;
     }
   }
 
-  .time-info {
-    font-size: 12px;
-    color: #777;
-  }
-}
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-block-start: 15px;
 
-.card-content {
-  .report-title {
-    font-weight: bold;
-    font-size: 16px;
-    margin-block-end: 5px;
-  }
+    .check-button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 80px;
+      background-color: #000;
+      color: #fff;
+      cursor: pointer;
 
-  .report-details {
-    font-size: 14px;
-    color: #555;
-  }
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-block-start: 15px;
-
-  .check-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 80px;
-    background-color: #000;
-    color: #fff;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #333;
+      &:hover {
+        background-color: #333;
+      }
     }
   }
-}
 
-.filter-bar {
-  display: flex;
-  gap: 10px;
-}
-
-.filters {
-  display: flex;
-  gap: 20px;
-}
-
-.dropdown {
-  position: relative;
-}
-
-.dropdown-button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #f9f9f9;
+  .filter-bar {
+    display: flex;
+    gap: 10px;
   }
 
-  .chevron {
-    font-size: 12px;
-    transition: transform 0.3s ease;
-
-    i {
-      margin-inline-start: 5px;
-    }
-    &.rotated {
-      transform: rotate(180deg);
-    }
+  .filters {
+    display: flex;
+    gap: 20px;
   }
-}
 
-.dropdown-menu {
-  position: absolute;
-  inset-block-start: 100%;
-  inset-inline-start: 0;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-
-  .dropdown-item {
-    padding: 10px 16px;
-    cursor: pointer;
-    inline-size: max-content;
-    transition: background-color 0.3s ease;
-    &:hover {
-      background-color: #f9f9f9;
-    }
+  .dropdown {
+    position: relative;
   }
-}
-
-.dropdown {
-  position: relative;
 
   .dropdown-button {
-    padding: 12px 20px;
-    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease;
 
     &:hover {
       background-color: #f9f9f9;
     }
 
     .chevron {
+      font-size: 12px;
       transition: transform 0.3s ease;
-    }
 
-    .rotated {
-      transform: rotate(180deg);
+      i {
+        margin-inline-start: 5px;
+      }
+      &.rotated {
+        transform: rotate(180deg);
+      }
     }
   }
 
@@ -556,26 +512,96 @@
     position: absolute;
     inset-block-start: 100%;
     inset-inline-start: 0;
-    background: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    overflow: hidden;
-    z-index: 10;
-  }
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 
-  .dropdown-item {
-    padding: 12px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s ease;
-
-    &:hover {
-      background: #f1f1f1;
+    .dropdown-item {
+      padding: 10px 16px;
+      cursor: pointer;
+      inline-size: max-content;
+      transition: background-color 0.3s ease;
+      &:hover {
+        background-color: #f9f9f9;
+      }
     }
   }
+
+  .dropdown {
+    position: relative;
+
+    .dropdown-button {
+      padding: 12px 20px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #f9f9f9;
+      }
+
+      .chevron {
+        transition: transform 0.3s ease;
+      }
+
+      .rotated {
+        transform: rotate(180deg);
+      }
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      inset-block-start: 100%;
+      inset-inline-start: 0;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    .dropdown-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #f1f1f1;
+      }
+    }
+  }
+.reaction-list {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
 }
 
+.reaction-icon {
+  background-color: #f4f4f4;
+  border-radius: 12px;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: bold;
+}
 
+.reaction-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  margin-left: 8px;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
 
   // style 2 Pagination
   /* .pagination {
@@ -622,4 +648,3 @@
   }
 } */
 }
-
