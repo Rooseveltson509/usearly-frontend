@@ -19,6 +19,7 @@ import { User } from "@src/types/Reports";
 import ReactionsModal from "@src/components/reactions/ReactionsModal";
 import "react-confirm-alert/src/react-confirm-alert.css"; // 📌 Style par défaut
 
+
 interface PostProps {
   post: Post;
 }
