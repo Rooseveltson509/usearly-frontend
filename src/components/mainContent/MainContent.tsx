@@ -140,6 +140,7 @@ const MainContent: React.FC = () => {
 
   // ✅ **Ajoute un post au mur après création**
   const handleNewPost = (newPost: Post) => {
+     console.log("🚀 Nouveau post ajouté :", newPost);
     setPosts((prevPosts) => [newPost, ...prevPosts]);
     setSelectedFilter("Actualité"); // Active automatiquement l'affichage des posts
   };
