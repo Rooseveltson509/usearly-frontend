@@ -83,3 +83,14 @@ export interface ConfirmEmailResponse {
   accessToken?: string; // Le token d'accès si l'utilisateur est automatiquement connecté
   user?: UserProfile; // Le profil utilisateur renvoyé après validation
 }
+
+export interface CommentType {
+  id: string;
+  content: string;
+  createdAt: string;
+  author: {
+    id: string;
+    pseudo: string;
+    avatar: string;
+  };
+}

@@ -1,17 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useRef, useState } from "react";
 import "./PostList.scss";
 import defaultAvatar from "../../../assets/images/user.png";
-import { Post, Reaction } from "@src/types/types";
+import { CommentType, Post, Reaction } from "@src/types/types";
 import { formatRelativeTime } from "@src/utils/formatRelativeTime";
 import signalIcon from "../../../assets/images/signalIcon.svg";
+import { motion } from "framer-motion";
 import {
+  addCommentToPost,
   addReactionToPost,
+  deleteComment,
+  fetchPostComments,
   fetchReactionUsers,
 } from "@src/services/apiService";
+import { Trash2 } from "lucide-react"; // 📌 Utilise Lucide (ou FontAwesome si tu préfères)
+import Swal from "sweetalert2";
 import { useAuth } from "@src/contexts/AuthContext";
 import { User } from "@src/types/Reports";
 import ReactionsModal from "@src/components/reactions/ReactionsModal";
+import "react-confirm-alert/src/react-confirm-alert.css"; // 📌 Style par défaut
+
 
 interface PostProps {
   post: Post;
@@ -22,29 +29,23 @@ const reactionOptions = [
   { emoji: "😂", label: "Haha" },
   { emoji: "😮", label: "Wouah" },
   { emoji: "😡", label: "Grrr" },
+  { emoji: "🤬", label: "Bouche bée" },
+  { emoji: "🥵", label: "Visage rouge" },
 ];
 
 const PostList: React.FC<PostProps> = ({ post }) => {
   const { userProfile } = useAuth();
-/*   const [likeCount, setLikeCount] = useState(post.likeCount || 0);
-  const [userLiked, setUserLiked] = useState(false); */
-  //const [reactions, setReactions] = useState(post.reactions || []);
   const [reactions, setReactions] = useState<Reaction[]>(post.reactions ?? []);
-  //const [showModal, setShowModal] = useState(false);
-  //const [selectedReaction, setSelectedReaction] = useState<string | null>(null);
   const [, setReactionUsers] = useState<User[]>([]);
-
   const [, setSelectedEmoji] = useState<string | null>(null);
-  //const [showReactionPopup, setShowReactionPopup] = useState(false);
-
-  //const [showReactionModal, setShowReactionModal] = useState(false);
-
-  //const [showReactionsMenu, setShowReactionsMenu] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
   const reactionsArray: Reaction[] = Array.isArray(reactions) ? reactions : [];
   const userId = userProfile?.id; // ✅ Vérifie s'il existe
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const [comments, setComments] = useState<CommentType[]>([]);
+  const [newComment, setNewComment] = useState(""); // Gère l'input de commentaire
 
   // ✅ Afficher le menu au survol
   const handleMouseEnter = () => {
@@ -59,19 +60,6 @@ const PostList: React.FC<PostProps> = ({ post }) => {
     }, 300); // Petit délai pour éviter que ça disparaisse trop vite
   };
 
-  // ✅ Gérer le like
-/*   const handleLike = async () => {
-    try {
-      const response = await toggleLikePost(post.id);
-
-      if (response.success) {
-        setLikeCount(response.likeCount); // 🔥 On met à jour avec la valeur exacte depuis l’API
-        setUserLiked(response.userLiked); // 🔥 On suit l’état retourné par l’API
-      }
-    } catch (error) {
-      console.error("Erreur lors du like :", error);
-    }
-  }; */
 
   const normalizeEmoji = (emoji: string) => {
     return emoji.normalize("NFC"); // Normalise les émojis pour éviter les variations invisibles
@@ -130,19 +118,6 @@ const PostList: React.FC<PostProps> = ({ post }) => {
     }
   };
 
-  // ✅ Fonction pour ouvrir la popup avec les utilisateurs ayant réagi
-  /*   const handleReactionClick = async (emoji: string) => {
-    setSelectedEmoji(emoji);
-    setShowReactionModal(true); // Ouvre le modal
-
-    try {
-      const users = await fetchReactionUsers(post.id, emoji); // 🔥 Récupère les utilisateurs
-      setReactionUsers(users);
-    } catch (error) {
-      console.error("Erreur lors du chargement des réactions :", error);
-    }
-  }; */
-
   // Fonction pour ouvrir le modal et charger les utilisateurs ayant réagi avec un emoji donné
   const handleOpenModal = async (emoji: string) => {
     setSelectedEmoji(emoji);
@@ -158,6 +133,72 @@ const PostList: React.FC<PostProps> = ({ post }) => {
         "❌ Erreur lors de la récupération des utilisateurs :",
         error
       );
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return; // Vérifie si le commentaire n'est pas vide
+
+    console.log("Post ID utilisé :", post.id); // ✅ Vérifie que `post.id` est bien défini
+
+    try {
+      const addedComment = await addCommentToPost(post.id, newComment);
+      setComments((prev) => [addedComment, ...prev]);
+      setNewComment("");
+    } catch (error) {
+      console.error("Erreur lors de l'ajout du commentaire :", error);
+    }
+  };
+
+  const toggleComments = async () => {
+    setIsCommentsOpen((prev) => !prev);
+
+    if (!isCommentsOpen && comments.length === 0) {
+      // ✅ Charge les commentaires SEULEMENT s'ils ne sont pas déjà chargés
+      try {
+        const response = await fetchPostComments(post.id);
+        setComments(response.comments);
+        console.log("user role : ", userProfile?.role);
+      } catch (error) {
+        console.error("Erreur lors du chargement des commentaires :", error);
+      }
+    } else if (isCommentsOpen) {
+      // ✅ Efface les commentaires quand on referme (optionnel)
+      setComments([]);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    const result = await Swal.fire({
+      title: "Supprimer le commentaire ?",
+      text: "Cette action est irréversible !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d9534f",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Annuler",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      const response = await deleteComment(commentId);
+      if (response.success) {
+        setComments((prevComments) =>
+          prevComments.filter((c) => c.id !== commentId)
+        );
+        Swal.fire("Supprimé !", "Le commentaire a été supprimé.", "success");
+      } else {
+        Swal.fire(
+          "Erreur",
+          response.error || "Une erreur s'est produite.",
+          "error"
+        );
+      }
+    } catch (error) {
+      console.error("Erreur lors de la suppression :", error);
+      Swal.fire("Erreur", "Une erreur inattendue s'est produite.", "error");
     }
   };
 
@@ -209,56 +250,6 @@ const PostList: React.FC<PostProps> = ({ post }) => {
         <div className="reactions-container">
           {/* Résumé des réactions */}
 
-          {reactionsArray.length > 0 && (
-            <div
-              className="reactions-summary fade-in slide-up"
-              onClick={() => setIsModalOpen(true)}
-            >
-              {/* ✅ Regroupe les réactions identiques et affiche les 3 plus populaires */}
-              <div className="reaction-icons">
-                {reactionsArray
-                  .reduce<Reaction[]>((acc, reaction) => {
-                    if (!reaction || !reaction.emoji) return acc;
-
-                    const existing = acc.find(
-                      (r) =>
-                        normalizeEmoji(r.emoji) ===
-                        normalizeEmoji(reaction.emoji)
-                    );
-
-                    if (existing) {
-                      existing.count = (existing.count ?? 0) + 1;
-                    } else {
-                      acc.push({ ...reaction, count: 1 });
-                    }
-                    return acc;
-                  }, [])
-                  .sort((a, b) => (b.count ?? 0) - (a.count ?? 0)) // ✅ Correction ici !
-                  .slice(0, 3) // ✅ Garde seulement les 3 plus populaires
-                  .map((reaction, index) => (
-                    <span
-                      key={index}
-                      className="reaction-icon animated-reaction bounce-in"
-                      onClick={() => handleOpenModal(reaction.emoji)} // ✅ Ajoute l'événement click
-                      //onClick={() => handleReactionClick(reaction.emoji)}
-                    >
-                      {reaction.emoji}
-                    </span>
-                  ))}
-                {post.reactions.length > 3 && (
-                  <span onClick={() => handleOpenModal("all")}>
-                    +{post.reactions.length - 3}
-                  </span>
-                )}
-              </div>
-
-              {/* ✅ Affiche le total des réactions */}
-              <span className="reaction-count bounce-in">
-                {reactionsArray.length}
-              </span>
-            </div>
-          )}
-
           {/* Bouton J’aime et menu */}
           <div
             className="like-container"
@@ -266,33 +257,152 @@ const PostList: React.FC<PostProps> = ({ post }) => {
             onMouseLeave={handleMouseLeave} */
           >
             {/*  <button className="like-button">👍 J’aime</button> */}
+            <div className="post-actions-container">
+              {/* ✅ Zone des actions (J'aime, Commenter, Republier) qui reste toujours en haut */}
+              <div className="post-actions">
+                {reactionsArray.length > 0 && (
+                  <div
+                    className="reactions-summary fade-in slide-up"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    {/* ✅ Regroupe les réactions identiques et affiche les 3 plus populaires */}
+                    <div className="reaction-icons">
+                      {reactionsArray
+                        .reduce<Reaction[]>((acc, reaction) => {
+                          if (!reaction || !reaction.emoji) return acc;
 
-            <div className="post-actions">
-              <button
-                className="action-btn"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <span
-                  className={`like-button icon liked pulse`}
+                          const existing = acc.find(
+                            (r) =>
+                              normalizeEmoji(r.emoji) ===
+                              normalizeEmoji(reaction.emoji)
+                          );
+
+                          if (existing) {
+                            existing.count = (existing.count ?? 0) + 1;
+                          } else {
+                            acc.push({ ...reaction, count: 1 });
+                          }
+                          return acc;
+                        }, [])
+                        .sort((a, b) => (b.count ?? 0) - (a.count ?? 0)) // ✅ Correction ici !
+                        .slice(0, 3) // ✅ Garde seulement les 3 plus populaires
+                        .map((reaction, index) => (
+                          <span
+                            key={index}
+                            className="reaction-icon animated-reaction bounce-in"
+                            onClick={() => handleOpenModal(reaction.emoji)} // ✅ Ajoute l'événement click
+                          >
+                            {reaction.emoji}
+                          </span>
+                        ))}
+                      {post.reactions.length > 3 && (
+                        <span onClick={() => handleOpenModal("all")}>
+                          +{post.reactions.length - 3}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* ✅ Affiche le total des réactions */}
+                    <span className="reaction-count bounce-in">
+                      {reactionsArray.length}
+                    </span>
+                  </div>
+                )}
+                <button
+                  className="action-btn"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
                 >
-                  👍
-                </span>{" "}
-                J’aime
-              </button>
-              <button className="action-btn">
-                <span className="icon">💬</span> Commenter
-              </button>
-              <button className="action-btn">
-                <span className="icon">🔁</span> Republier
-              </button>
-              {/*        <button className="action-btn">
-                <span className="icon">✈️</span> Envoyer
-              </button> */}
-              {/*               <div className="card-footer">
-                <button className="check-button">Je check</button>
-              </div> */}
+                  <span className={`like-button icon liked pulse`}>👍</span>{" "}
+                  J’aime
+                </button>
+                <button className="action-btn" onClick={toggleComments}>
+                  <span className="icon">💬</span>{" "}
+                  {isCommentsOpen ? "Masquer" : "Commenter"}
+                </button>
+                <button className="action-btn">
+                  <span className="icon">🔁</span> Republier
+                </button>
+              </div>
+
+              {/* ✅ Section des commentaires affichée sous les actions */}
+              {isCommentsOpen && (
+                <motion.div
+                  className="comment-section"
+                  initial={{ opacity: 0, blockSize: 0 }}
+                  animate={{ opacity: 1, blockSize: "auto" }}
+                  exit={{ opacity: 0, blockSize: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {/* ✅ Zone d'ajout de commentaire */}
+                  <div className="comment-input-container">
+                    <input
+                      type="text"
+                      placeholder="Écrire un commentaire..."
+                      className="comment-input"
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                    />
+                    <button
+                      className="comment-button"
+                      onClick={handleAddComment}
+                    >
+                      Envoyer
+                    </button>
+                  </div>
+
+                  {/* ✅ Liste des commentaires en affichage fluide */}
+                  <motion.div
+                    className="comment-list"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {comments.map((comment) => (
+                      <motion.div
+                        key={comment.id}
+                        className="comment-item"
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <img
+                          src={
+                            comment.author.avatar
+                              ? `${import.meta.env.VITE_API_BASE_URL}/${
+                                  comment.author.avatar
+                                }`
+                              : defaultAvatar
+                          }
+                          alt={comment.author.pseudo}
+                          className="comment-avatar"
+                        />
+                        <div className="comment-content">
+                          <div className="comment-header">
+                            <span className="comment-author">
+                              {comment.author.pseudo}
+                            </span>
+                            {/* ✅ Bouton de suppression visible uniquement pour l'auteur ou l'admin */}
+                            {(comment.author.id === userId ||
+                              userProfile?.role === "admin") && (
+                              <button
+                                onClick={() => handleDeleteComment(comment.id)}
+                                className="delete-comment"
+                              >
+                                <Trash2 size={20} color="#d9534f" />
+                              </button>
+                            )}
+                          </div>
+                          <p className="comment-text">{comment.content}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </motion.div>
+              )}
             </div>
+
             {showReactions && (
               <div
                 className="reaction-menu fade-in slide-up"
@@ -313,18 +423,6 @@ const PostList: React.FC<PostProps> = ({ post }) => {
             )}
           </div>
         </div>
-
-        {/* ✅ Bouton d'action */}
-        {/*      <div className="card-footer">
-          <button className="check-button">Je check</button>
-        </div> */}
-        {/* ✅ Icônes d'interaction */}
-        {/*         <div className="icons">
-          <span className="icon" onClick={handleLike}>
-            {userLiked ? "👍" : "👍"} {likeCount}
-          </span>
-        </div> */}
-
         {/* ✅ Popup des utilisateurs ayant réagi */}
         {isModalOpen && (
           <ReactionsModal

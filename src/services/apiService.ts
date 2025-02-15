@@ -9,6 +9,7 @@ import {
 } from "@src/utils/tokenUtils";
 import {
   Brand,
+  CommentType,
   Post,
   PostData,
   PostsResponse,
@@ -27,6 +28,17 @@ export const apiService = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// ✅ Fonction pour récupérer les headers d'authentification
+export const authHeaders = () => {
+  const token = getAccessToken();
+  if (!token) throw new Error("Utilisateur non authentifié.");
+  return {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+};
+
 
 // Fonction pour vérifier si un token est expiré
 const isTokenExpired = (token: string): boolean => {
@@ -333,7 +345,6 @@ export const addReactionToPost = async (postId: string, emoji: string) => {
   }
 };
 
-
 export const fetchReactionUsers = async (
   postId: string,
   emoji: string
@@ -362,6 +373,66 @@ export const fetchReactionUsers = async (
   } catch (error) {
     console.error("Erreur lors de la récupération des utilisateurs :", error);
     return { users: [] }; // ✅ Retourne un tableau vide en cas d'erreur
+  }
+};
+
+// 📌 Ajouter un commentaire à un post
+export const addCommentToPost = async (postId: string, content: string) => {
+  try {
+    const response = await apiService.post(
+      `/posts/${postId}/comments`,
+      { content },
+      { headers: authHeaders() }
+    );
+    return response.data.comment;
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du commentaire :", error);
+    return null; // 🔥 Évite un crash en cas d'erreur
+  }
+};
+
+// 📌 Récupérer les commentaires d'un post avec pagination
+export const fetchPostComments = async (
+  postId: string,
+  page = 1,
+  limit = 5
+): Promise<{ comments: CommentType[] }> => {
+  try {
+    const token = getAccessToken();
+    if (!token) throw new Error("Utilisateur non authentifié.");
+    const response = await apiService.get(`/posts/${postId}/comments`, {
+      params: { page, limit },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data; // ✅ Retourne { comments: [...] }
+  } catch (error) {
+    console.error("Erreur lors de la récupération des commentaires :", error);
+    return { comments: [] }; // ✅ Retourne un tableau vide en cas d’erreur
+  }
+};
+
+
+
+// 📌 Supprimer un commentaire
+export const deleteComment = async (commentId: string) => {
+  try {
+    await apiService.delete(`/comments/${commentId}`, {
+      headers: authHeaders(),
+    });
+    return { success: true, message: "Commentaire supprimé avec succès" };
+  } catch (error) {
+    console.error("Erreur lors de la suppression du commentaire :", error);
+
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Une erreur inconnue s'est produite",
+    };
   }
 };
 
