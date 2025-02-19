@@ -32,8 +32,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   const userId = userProfile?.id; // ✅ Vérifie s'il existe
   const [comments, setComments] = useState<CommentType[]>([]);
   const [newComment, setNewComment] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [loading, setLoading] = useState(true);
+   
+  const [, setLoading] = useState(true);
 
   // Définition des méthodes API dynamiquement en fonction du `type`
   const fetchComments =

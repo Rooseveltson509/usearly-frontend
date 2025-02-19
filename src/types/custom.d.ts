@@ -1,4 +1,5 @@
-declare module "@src/js" {
+/* declare module "@src/js" {
   const content: any;
   export default content;
 }
+ */

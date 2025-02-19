@@ -17,7 +17,6 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
     report.reactions ?? []
   );
   const { userProfile } = useAuth();
-  const userId = userProfile?.id; // ✅ Vérifie s'il existe
   const [showReactions, setShowReactions] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const emojiPickerRef = useRef<HTMLDivElement | null>(null);
