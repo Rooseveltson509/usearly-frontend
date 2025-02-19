@@ -21,7 +21,7 @@ import "./Home.scss";
 
 const Home: React.FC = () => {
   const baseText = "Exprimez-vous au moment même où ";
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   const typingTexts = [
     "Vous rencontrez un bug !",
     "une idée d'amélioration vous traverse l'esprit !",
