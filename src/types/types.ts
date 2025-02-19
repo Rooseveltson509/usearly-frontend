@@ -30,7 +30,7 @@ export interface Brand {
 export type Reaction = {
   userId: string;
   emoji: string;
-  count?: number; // ✅ Ajoute cette propriété
+  count: number; // ✅ Ajoute cette propriété
 };
 
 export interface Post {

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { RegisterData } from "../types/RegisterData";
-import { ReportsResponse, User } from "../types/Reports";
+import { CdcsResponse, ReportsResponse, User } from "../types/Reports";
 import { refreshToken } from "./authService";
 import {
   getAccessToken,
@@ -38,7 +38,6 @@ export const authHeaders = () => {
     "Content-Type": "application/json",
   };
 };
-
 
 // Fonction pour vérifier si un token est expiré
 const isTokenExpired = (token: string): boolean => {
@@ -169,6 +168,11 @@ export const confirmEmail = async (
     );
   }
 };
+
+
+
+
+
 
 // ✅ Récupérer tous les posts
 export const fetchPosts = async (
@@ -345,6 +349,13 @@ export const addReactionToPost = async (postId: string, emoji: string) => {
   }
 };
 
+
+
+
+
+
+
+
 export const fetchReactionUsers = async (
   postId: string,
   emoji: string
@@ -414,8 +425,6 @@ export const fetchPostComments = async (
   }
 };
 
-
-
 // 📌 Supprimer un commentaire
 export const deleteComment = async (commentId: string) => {
   try {
@@ -433,6 +442,177 @@ export const deleteComment = async (commentId: string) => {
           ? error.message
           : "Une erreur inconnue s'est produite",
     };
+  }
+};
+
+
+// 📌 Ajouter un commentaire à un Report
+export const addCommentToReport = async (reportId: string, content: string) => {
+  try {
+    const response = await apiService.post(
+      `/reports/${reportId}/comments`,
+      { content },
+      { headers: authHeaders() }
+    );
+    return response.data.comment;
+  } catch (error) {
+    console.error("Erreur lors de l'ajout du commentaire au Report :", error);
+    return null; // 🔥 Évite un crash en cas d'erreur
+  }
+};
+
+// 📌 Récupérer les commentaires d'un Report avec pagination
+export const fetchReportComments = async (
+  reportId: string,
+  page = 1,
+  limit = 5
+) => {
+  try {
+    const response = await apiService.get(`/reports/${reportId}/comments`, {
+      params: { page, limit },
+      headers: authHeaders(),
+    });
+    console.log("Commentaires récupérés :", response.data);
+    return response.data; // ✅ Assure-toi que le backend retourne un tableau `comments`
+  } catch (error) {
+    console.error("Erreur lors de la récupération des commentaires :", error);
+    return { comments: [] }; // 🔥 Évite un crash si l'API échoue
+  }
+};
+
+
+// 📌 Supprimer un commentaire d'un Report (utilise la même route que pour les Posts)
+export const deleteReportComment = async (commentId: string) => {
+  try {
+    await apiService.delete(`/comments/${commentId}`, {
+      headers: authHeaders(),
+    });
+    return { success: true, message: "Commentaire supprimé avec succès" };
+  } catch (error) {
+    console.error("Erreur lors de la suppression du commentaire du Report :", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Une erreur inconnue s'est produite",
+    };
+  }
+};
+
+// ✅ Ajouter un commentaire à une Suggestion
+export const addCommentToSuggestion = async (
+  suggestionId: string,
+  content: string
+) => {
+  try {
+    const response = await apiService.post(
+      `/suggestions/${suggestionId}/comments`,
+      { content },
+      { headers: authHeaders() }
+    );
+    return response.data.comment;
+  } catch (error) {
+    console.error(
+      "❌ Erreur lors de l'ajout du commentaire à la Suggestion :",
+      error
+    );
+    return null;
+  }
+};
+
+// ✅ Récupérer les commentaires d'une Suggestion
+export const fetchSuggestionComments = async (
+  suggestionId: string,
+  page = 1,
+  limit = 5
+) => {
+  try {
+    const response = await apiService.get(
+      `/suggestions/${suggestionId}/comments`,
+      {
+        params: { page, limit },
+        headers: authHeaders(),
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "❌ Erreur lors de la récupération des commentaires :",
+      error
+    );
+    return { comments: [] };
+  }
+};
+
+// ✅ Supprimer un commentaire d'une Suggestion
+export const deleteSuggestionComment = async (commentId: string) => {
+  try {
+    await apiService.delete(`/comments/${commentId}`, {
+      headers: authHeaders(),
+    });
+    return { success: true, message: "Commentaire supprimé avec succès" };
+  } catch (error) {
+    console.error("❌ Erreur lors de la suppression du commentaire :", error);
+    return { success: false, error: "Une erreur s'est produite" };
+  }
+};
+
+// ✅ Ajouter un commentaire à un CoupDeCoeur
+export const addCommentToCdc = async (
+  coupDeCoeurId: string,
+  content: string
+) => {
+  try {
+    const response = await apiService.post(
+      `/coupdecoeur/${coupDeCoeurId}/comments`,
+      { content },
+      { headers: authHeaders() }
+    );
+    return response.data.comment;
+  } catch (error) {
+    console.error(
+      "❌ Erreur lors de l'ajout du commentaire au CoupDeCoeur :",
+      error
+    );
+    return null;
+  }
+};
+
+// ✅ Récupérer les commentaires d'un CoupDeCoeur
+export const fetchCdcComments = async (
+  coupDeCoeurId: string,
+  page = 1,
+  limit = 5
+) => {
+  try {
+    const response = await apiService.get(
+      `/coupdecoeur/${coupDeCoeurId}/comments`,
+      {
+        params: { page, limit },
+        headers: authHeaders(),
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "❌ Erreur lors de la récupération des commentaires :",
+      error
+    );
+    return { comments: [] };
+  }
+};
+
+// ✅ Supprimer un commentaire d'un CoupDeCoeur
+export const deleteCdcComment = async (commentId: string) => {
+  try {
+    await apiService.delete(`/comments/${commentId}`, {
+      headers: authHeaders(),
+    });
+    return { success: true, message: "Commentaire supprimé avec succès" };
+  } catch (error) {
+    console.error("❌ Erreur lors de la suppression du commentaire :", error);
+    return { success: false, error: "Une erreur s'est produite" };
   }
 };
 
@@ -507,18 +687,21 @@ export const deleteBrand = async (
   }
 };
 
-export const fetchReports = async (
+/* export const fetchReports = async (
   page: number,
   limit: number
 ): Promise<ReportsResponse> => {
   try {
+    console.log("🚀 API fetchReports() appelée !");
+
     const token = getAccessToken();
     if (!token) {
+      console.error("❌ Aucun token trouvé !");
       throw new Error("Utilisateur non authentifié.");
     }
 
-    console.log("Token utilisé :", token);
-    console.log("Page et limite :", page, limit);
+    console.log("🔑 Token utilisé :", token);
+    console.log("📄 Page et limite :", page, limit);
 
     const response = await apiService.get<ReportsResponse>(
       `/user/reports?page=${page}&limit=${limit}`,
@@ -530,25 +713,54 @@ export const fetchReports = async (
       }
     );
 
-    console.log("Réponse API brute :", response.data);
+    console.log("✅ Réponse API brute reports :", response.data);
 
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      console.error(
-        "Erreur lors de l’appel à fetchReports :",
-        error.response?.data || error.message
-      );
+    console.error("❌ Erreur lors de `fetchReports()` :", error);
+    throw new Error("Erreur lors du chargement des rapports.");
+  }
+}; */
 
-      throw new Error(
-        error.response?.data?.error || "Erreur lors du chargement des rapports."
-      );
-    } else if (error instanceof Error) {
-      console.error("Erreur inconnue :", error.message);
-      throw new Error(error.message);
-    } else {
-      throw new Error("Une erreur inconnue est survenue.");
+export const fetchReports = async (
+  page: number,
+  limit: number
+): Promise<ReportsResponse> => {
+  try {
+    console.log("🚀 API fetchReports() appelée !");
+
+    const token = getAccessToken();
+    if (!token) {
+      console.error("❌ Aucun token trouvé !");
+      throw new Error("Utilisateur non authentifié.");
     }
+
+    console.log("🔑 Token utilisé :", token);
+    console.log("📄 Page et limite :", page, limit);
+
+    const response = await apiService.get<ReportsResponse>(
+      `/user/reports?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("✅ Réponse API brute reports :", response.data);
+
+    // 🔥 S'assure que `reactions` est toujours un tableau
+    const formattedReports = response.data.reports.map((report) => ({
+      ...report,
+      reactions: report.reactions ? report.reactions : [],
+    }));
+    console.log("📤 Réponse envoyée avec filtre :", formattedReports);
+
+    return { ...response.data, reports: formattedReports };
+  } catch (error: unknown) {
+    console.error("❌ Erreur lors de `fetchReports()` :", error);
+    throw new Error("Erreur lors du chargement des rapports.");
   }
 };
 
@@ -573,7 +785,7 @@ export const fetchUserStats = async () => {
 };
 
 // Fonction pour récupérer les coups de cœur
-export const fetchCoupsdeCoeur = async (page: number, limit: number) => {
+/* export const fetchCoupsdeCoeursss = async (page: number, limit: number) => {
   try {
     const token = getAccessToken();
     if (!token) {
@@ -598,6 +810,48 @@ export const fetchCoupsdeCoeur = async (page: number, limit: number) => {
   } catch (error) {
     console.error("Erreur lors de la récupération des coups de cœur :", error);
     throw error;
+  }
+}; */
+
+export const fetchCoupsdeCoeur = async (
+  page: number,
+  limit: number
+): Promise<CdcsResponse> => {
+  try {
+    console.log("🚀 API fetchReports() appelée !");
+
+    const token = getAccessToken();
+    if (!token) {
+      console.error("❌ Aucun token trouvé !");
+      throw new Error("Utilisateur non authentifié.");
+    }
+
+    console.log("🔑 Token utilisé :", token);
+    console.log("📄 Page et limite :", page, limit);
+
+    const response = await apiService.get<CdcsResponse>(
+      `/user/coupsdecoeur?page=${page}&limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("✅ Réponse API brute reports :", response.data);
+
+    // 🔥 S'assure que `reactions` est toujours un tableau
+    const formattedCdc = response.data.coupdeCoeurs.map((cdc) => ({
+      ...cdc,
+      reactions: cdc.reactions ? cdc.reactions : [],
+    }));
+    console.log("📤 Réponse envoyée avec filtre :", formattedCdc);
+
+    return { ...response.data, coupdeCoeurs: formattedCdc };
+  } catch (error: unknown) {
+    console.error("❌ Erreur lors de `fetchReports()` :", error);
+    throw new Error("Erreur lors du chargement des rapports.");
   }
 };
 

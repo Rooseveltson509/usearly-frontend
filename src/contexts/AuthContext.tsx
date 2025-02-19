@@ -164,6 +164,7 @@ useEffect(() => {
   window.addEventListener("storage", handleStorageChange);
 
   return () => window.removeEventListener("storage", handleStorageChange);
+// eslint-disable-next-line react-hooks/exhaustive-deps
 }, []);
 
 
@@ -256,6 +257,7 @@ const login = (username: string, type: "user" | "brand" = "user") => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
