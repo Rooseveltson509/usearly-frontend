@@ -11,6 +11,9 @@ import {
   deleteReportComment,
   deleteCdcComment,
   deleteSuggestionComment,
+  fetchPostComments,
+  addCommentToPost,
+  deleteComment,
 } from "@src/services/apiService";
 import Swal from "sweetalert2";
 import { Trash2 } from "lucide-react";
@@ -19,26 +22,32 @@ import "./CommentSection.scss";
 
 interface CommentSectionProps {
   parentId: string;
-  type: "report" | "coupdecoeur" | "suggestion";
+  type: "post" | "report" | "coupdecoeur" | "suggestion";
   showCommentInput: boolean; // ✅ Ajout de la prop pour gérer l'affichage
+  commentCount: number;
+  setCommentCount: (count: number) => void; // ✅ Ajout de cette prop
 }
 
 const CommentSection: React.FC<CommentSectionProps> = ({
   parentId,
   type,
   showCommentInput,
+  commentCount,
+  setCommentCount,
 }) => {
   const { userProfile } = useAuth();
   const userId = userProfile?.id; // ✅ Vérifie s'il existe
   const [comments, setComments] = useState<CommentType[]>([]);
   const [newComment, setNewComment] = useState("");
-   
-  const [, setLoading] = useState(true);
-
+  const [loading, setLoading] = useState(true); // ✅ Ajout du state de chargement
+  
+  
   // Définition des méthodes API dynamiquement en fonction du `type`
   const fetchComments =
     type === "report"
       ? fetchReportComments
+      : type === "post"
+      ? fetchPostComments
       : type === "coupdecoeur"
       ? fetchCdcComments
       : fetchSuggestionComments;
@@ -46,13 +55,17 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   const addComment =
     type === "report"
       ? addCommentToReport
+      : type === "post"
+      ? addCommentToPost
       : type === "coupdecoeur"
       ? addCommentToCdc
       : addCommentToSuggestion;
 
-  const deleteComment =
+  const deleteCommunComment =
     type === "report"
       ? deleteReportComment
+      : type === "post"
+      ? deleteComment
       : type === "coupdecoeur"
       ? deleteCdcComment
       : deleteSuggestionComment;
@@ -60,6 +73,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   useEffect(() => {
     if (showCommentInput) {
       const loadComments = async () => {
+        setLoading(true); // ✅ Active le chargement
         try {
           const response = await fetchComments(parentId);
           setComments(response.comments || []);
@@ -71,7 +85,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       };
       loadComments();
     }
-  }, [parentId]);
+  }, [fetchComments, parentId, showCommentInput]);
 
   useEffect(() => {
     console.log("🔄 Mise à jour de comments :", comments);
@@ -100,9 +114,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
       };
 
       setComments((prev) => [updatedComment, ...prev]);
-
-      console.log("📌 Liste des commentaires après ajout :", comments);
-
+      setCommentCount(commentCount + 1); // ✅ Mise à jour en temps réel // ✅ Met à jour en temps réel
       setNewComment(""); // Reset input
     } catch (error) {
       console.error("❌ Erreur lors de l'ajout du commentaire :", error);
@@ -124,11 +136,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     if (!result.isConfirmed) return;
 
     try {
-      const response = await deleteComment(commentId);
+      const response = await deleteCommunComment(commentId);
       if (response.success) {
         setComments((prev) =>
           prev.filter((comment) => comment.id !== commentId)
         );
+        setCommentCount(Math.max(0, commentCount - 1)); // ✅ Mise à jour en temps réel
         Swal.fire("Supprimé !", "Le commentaire a été supprimé.", "success");
       } else {
         Swal.fire(
@@ -160,40 +173,50 @@ const CommentSection: React.FC<CommentSectionProps> = ({
             </button>
           </div>
           <ul className="comment-list">
-            {comments.map((comment) => (
-              <li key={comment.id} className="comment-item">
-                <img
-                  src={
-                    comment.author?.avatar
-                      ? `${import.meta.env.VITE_API_BASE_URL}/${
-                          comment.author.avatar
-                        }`
-                      : defaultAvatar
-                  }
-                  alt="avatar"
-                  className="comment-avatar"
-                />
-                <div className="comment-content">
-                  <div className="comment-header">
-                    <span>
-                      {comment.author?.pseudo || "Utilisateur inconnu"}
-                    </span>
+            {loading ? (
+              <div className="loading-container">
+                <span className="spinner"></span> {/* ✅ Ajout du spinner */}
+                {/* <p>Chargement en cours...</p> */}{" "}
+                {/* ✅ Message de chargement */}
+              </div>
+            ) : comments.length > 0 ? (
+              comments.map((comment) => (
+                <li key={comment.id} className="comment-item">
+                  <img
+                    src={
+                      comment.author?.avatar
+                        ? `${import.meta.env.VITE_API_BASE_URL}/${
+                            comment.author.avatar
+                          }`
+                        : defaultAvatar
+                    }
+                    alt="avatar"
+                    className="comment-avatar"
+                  />
+                  <div className="comment-content">
+                    <div className="comment-header">
+                      <span>
+                        {comment.author?.pseudo || "Utilisateur inconnu"}
+                      </span>
+                    </div>
+                    <div className="comment-text">
+                      <p>{comment.content}</p>
+                    </div>
                   </div>
-                  <div className="comment-text">
-                    <p>{comment.content}</p>
-                  </div>
-                </div>
-                {(comment.author.id === userId ||
-                  userProfile?.role === "admin") && (
-                  <button
-                    onClick={() => handleDeleteComment(comment.id)}
-                    className="delete-comment"
-                  >
-                    <Trash2 size={20} color="#d9534f" />
-                  </button>
-                )}
-              </li>
-            ))}
+                  {(comment.author.id === userId ||
+                    userProfile?.role === "admin") && (
+                    <button
+                      onClick={() => handleDeleteComment(comment.id)}
+                      className="delete-comment"
+                    >
+                      <Trash2 size={20} color="#d9534f" />
+                    </button>
+                  )}
+                </li>
+              ))
+            ) : (
+              <p className="no-comments">Aucun commentaire pour l'instant.</p>
+            )}
           </ul>
         </>
       )}

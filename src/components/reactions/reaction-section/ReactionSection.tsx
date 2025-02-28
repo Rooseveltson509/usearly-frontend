@@ -9,36 +9,50 @@ import {
   fetchSuggestionReactions,
 } from "@src/services/apiReactions";
 import { Reaction } from "@src/types/types";
+import CommonReactionsModal from "@src/components/commons/CommonReactionsModal";
+import { getEmojisForType } from "@src/components/config/emojisConfig";
+import "./ReactionSection.scss";
+import { addReactionToPost, fetchPostReactions } from "@src/services/apiService";
 
 interface ReactionSectionProps {
   parentId: string;
-  type: "report" | "coupdecoeur" | "suggestion";
+  type: "post" | "report" | "coupdecoeur" | "suggestion";
   showCommentInput: boolean;
   setShowCommentInput: (value: boolean) => void;
+  commentCount: number; // ✅ Ajout du nombre de commentaires
+  onReactionUpdate?: (parentId: string, updatedReactions: Reaction[]) => void;
 }
-
-const reactionOptions = ["👍", "❤️", "😂", "😡"];
 
 const ReactionSection: React.FC<ReactionSectionProps> = ({
   parentId,
   type,
   showCommentInput,
   setShowCommentInput,
+  onReactionUpdate,
+  commentCount,
 }) => {
   const { userProfile } = useAuth();
   const userId = userProfile?.id;
   const [reactions, setReactions] = useState<Reaction[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const normalizeEmoji = (emoji: string) => emoji.normalize("NFC");
-  //const [showCommentInput, setShowCommentInput] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState<
+    "post" | "report" | "suggestion" | "coupdecoeur"
+  >("report");
+  const [selectedParentId, setSelectedParentId] = useState<string | null>(null);
+  const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
+  
+
 
   // Sélectionne les méthodes dynamiquement
   const fetchReactions =
     type === "report"
       ? fetchReportReactions
+      : type === "post"
+      ? fetchPostReactions
       : type === "coupdecoeur"
       ? fetchCdcReactions
       : fetchSuggestionReactions;
@@ -46,23 +60,30 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
   const addReaction =
     type === "report"
       ? addReactionToReport
+      : type === "post"
+      ? addReactionToPost
       : type === "coupdecoeur"
       ? addReactionToCdc
       : addReactionToSuggestion;
+  
+    useEffect(() => {
+      const loadReactions = async () => {
+        try {
+          const response = await fetchReactions(parentId);
+          setReactions(response.reactions || []);
+          console.log("Reactions chargées :", response.reactions);
+        } catch (error) {
+          console.error("Erreur lors du chargement des réactions :", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadReactions();
+    }, [fetchReactions, parentId]);
 
-  useEffect(() => {
-    const loadReactions = async () => {
-      try {
-        const response = await fetchReactions(parentId);
-        setReactions(response.reactions || []);
-      } catch (error) {
-        console.error("Erreur lors du chargement des réactions :", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadReactions();
-  }, [parentId]);
+  // ✅ Vérifie si l'utilisateur a déjà réagi
+  const userReaction = reactions.find((reaction) => reaction.userId === userId);
+  const userHasReacted = !!userReaction;
 
   // ✅ Gère l'affichage du menu au survol
   const handleMouseEnter = () => {
@@ -76,128 +97,165 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
     }, 300); // Petit délai pour éviter une disparition trop rapide
   };
 
-  /*   const handleReaction = async (emoji: string) => {
-    if (!userId) return;
+const handleReaction = async (parentId: string, emoji: string) => {
+  if (!userId) {
+    console.error("Utilisateur non authentifié !");
+    return;
+  }
 
-      try {
-        const response = await addReaction(parentId, emoji); // API `PUT`
-        setReactions(response.reactions || []); // ✅ Met à jour directement avec la réponse
-      } catch (error) {
-        console.error("❌ Erreur lors de l'ajout de la réaction :", error);
-      }
+  const normalizedEmoji = normalizeEmoji(emoji);
 
-  }; */
+  let newReactions = [...reactions];
 
-  const handleReaction = async (parentId: string, emoji: string) => {
-    if (!userId) {
-      console.error("Utilisateur non authentifié !");
-      return;
+  console.log("🔍 Emoji reçu :", emoji); // ✅ Vérification
+  console.log("🔍 Emoji normalizedEmoji :", normalizedEmoji); // ✅ Vérification
+  console.log("🔍 ParentId reçu :", parentId); // ✅ Vérification
+
+  if (!emoji) {
+    console.error("❌ Emoji non défini !");
+    return;
+  }
+  const userReactionIndex = newReactions.findIndex((r) => r.userId === userId);
+
+  if (userReactionIndex !== -1) {
+    if (newReactions[userReactionIndex].emoji === normalizedEmoji) {
+      // ✅ Supprime la réaction immédiatement
+      newReactions = newReactions.filter((r) => r.userId !== userId);
+    } else {
+      // ✅ Change la réaction immédiatement
+      newReactions[userReactionIndex].emoji = normalizedEmoji;
+    }
+  } else {
+    // ✅ Ajoute la réaction immédiatement
+    newReactions.push({ userId, emoji: normalizedEmoji, count: 1 });
+  }
+
+  // ✅ Mise à jour optimiste
+  setReactions(newReactions);
+
+  // ✅ Notifie `PostList` si `onReactionUpdate` est fourni
+  if (onReactionUpdate) {
+    onReactionUpdate(parentId, newReactions);
+  }
+
+  try {
+    const response = await addReaction(parentId, normalizedEmoji);
+
+    if (!response.success) {
+      throw new Error("Échec de la mise à jour des réactions !");
     }
 
-    const normalizedEmoji = normalizeEmoji(emoji);
+    // 🔄 Synchronise avec l'API
+    setReactions(response.reactions);
 
-    // ✅ Mise à jour optimiste immédiate (affichage instantané)
-    const newReactions = (() => {
-      let updatedReactions = [...reactions];
-
-      const userReactionIndex = updatedReactions.findIndex(
-        (r) => r.userId === userId
-      );
-
-      if (userReactionIndex !== -1) {
-        if (updatedReactions[userReactionIndex].emoji === normalizedEmoji) {
-          // ✅ Supprime la réaction immédiatement
-          updatedReactions = updatedReactions.filter(
-            (r) => r.userId !== userId
-          );
-        } else {
-          // ✅ Change la réaction immédiatement
-          updatedReactions[userReactionIndex].emoji = normalizedEmoji;
-        }
-      } else {
-        // ✅ Ajoute la réaction immédiatement sans attendre la réponse API
-        updatedReactions.push({ userId, emoji: normalizedEmoji, count: 1 });
-      }
-
-      return updatedReactions;
-    })();
-
-    // ✅ Force l'affichage immédiat (sans latence)
-    setReactions(newReactions);
-
-    try {
-      // ✅ Envoie au backend en arrière-plan
-      const response = await addReaction(parentId, normalizedEmoji);
-
-      if (!response.success) {
-        throw new Error("Échec de la mise à jour des réactions !");
-      }
-
-      // 🔄 Synchronise avec les données réelles du backend
-      setReactions(response.reactions);
-    } catch (error) {
-      console.error("❌ Erreur lors de l'ajout de la réaction :", error);
-
-      // 🔄 Annule la mise à jour en cas d'échec
-      setReactions((prevReactions) =>
-        prevReactions.filter((r) => r.userId !== userId)
-      );
+    // 🔄 Notifie `PostList` pour assurer la cohérence des données
+    if (onReactionUpdate) {
+      onReactionUpdate(parentId, response.reactions);
     }
+  } catch (error) {
+    console.error("❌ Erreur lors de l'ajout de la réaction :", error);
+
+    // 🔄 Annule la mise à jour en cas d'échec
+    setReactions((prevReactions) =>
+      prevReactions.filter((r) => r.userId !== userId)
+    );
+  }
+};
+
+
+  // ✅ Fonction pour ouvrir le modal
+  const handleOpenReactionModal = async (
+    parentId: string,
+    type: "post" | "report" | "suggestion" | "coupdecoeur"
+  ) => {
+    setIsModalOpen(true);
+    setSelectedParentId(parentId);
+    setSelectedType(type); // ✅ Garde en mémoire le type pour bien charger les données
   };
+  console.log(`🎭 Emojis chargés pour ${type}:`, getEmojisForType(type));
 
   return (
     <>
       <div className="flex-element">
-        {/* ✅ Section des réactions (affichage optimisé) */}
         <div className="report-reactions">
-          {reactions.length > 0 ? (
+          {reactions.length > 0 && (
             <>
-              <div className="reaction-icons">
-                {Object.entries(
-                  reactions.reduce<{ [emoji: string]: number }>(
-                    (acc, reaction) => {
-                      if (!reaction || !reaction.emoji) return acc;
-
-                      const normalizedEmoji = normalizeEmoji(reaction.emoji);
-
-                      // ✅ Compte chaque emoji
-                      acc[normalizedEmoji] =
-                        (acc[normalizedEmoji] || 0) + reaction.count;
-                      return acc;
-                    },
-                    {}
+              <div className="reaction-summary">
+                {/* ✅ Regroupement des réactions affichées */}
+                <div className="reaction-icons">
+                  {Object.entries(
+                    reactions.reduce<{ [emoji: string]: number }>(
+                      (acc, reaction) => {
+                        if (!reaction || !reaction.emoji) return acc;
+                        const normalizedEmoji = normalizeEmoji(reaction.emoji);
+                        acc[normalizedEmoji] =
+                          (acc[normalizedEmoji] || 0) + reaction.count;
+                        return acc;
+                      },
+                      {}
+                    )
                   )
-                )
-                  .sort((a, b) => b[1] - a[1]) // ✅ Trie les plus populaires en premier
-                  .slice(0, 3) // ✅ Affiche seulement 3 emojis maximum
-                  .map(([emoji], index) => (
-                    <span key={index} className="reaction-icon">
-                      {emoji}
-                    </span>
-                  ))}
-              </div>
+                    .sort((a, b) => b[1] - a[1]) // Trie les plus populaires en premier
+                    .slice(0, 3) // Affiche seulement 3 emojis maximum
+                    .map(([emoji], index) => (
+                      <span
+                        key={index}
+                        className={`reaction-icon ${
+                          userReaction?.emoji === emoji
+                            ? "selected-reaction"
+                            : ""
+                        }`}
+                        onClick={() => handleOpenReactionModal(parentId, type)}
+                      >
+                        {emoji}
+                      </span>
+                    ))}
+                </div>
 
-              {/* ✅ Affiche le total des réactions */}
-              <span className="reaction-total">
-                {reactions.reduce((sum, r) => sum + r.count, 0)}
-              </span>
+                {/* 🔥 Compteur total de réactions (bien aligné) */}
+                <span className="reaction-total">{reactions.length}</span>
+              </div>
             </>
-          ) : (
-            <span className="no-reactions">Ajoutez une réaction</span>
           )}
         </div>
 
         {/* Section des réactions, commentaires et transmission */}
         <div className="report-meta">
-          <span className="meta-info">
-            💬 {/* {report.commentCount} */} commentaires
+          <span
+            className="meta-info"
+            onClick={() => setShowCommentInput(!showCommentInput)}
+          >
+            💬 {commentCount} commentaires
           </span>
-          <span className="meta-info">
-            💡 {/* {report.solutionCount} */} solution
+          <span className="meta-info">💡 solution</span>
+          <span className="meta-info transmitted">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <path
+                d="M8 12l3 3 5-5"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Transmis à la marque
           </span>
-          <span className="meta-info">✔️ Transmis à la marque</span>
         </div>
       </div>
+
       <div className="report-actions">
         {/* ✅ Sélecteur d'émojis au survol */}
         <div
@@ -205,18 +263,30 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <span className="action-button">✋ J’ai aussi ce problème</span>
+          <span
+            className={`action-button ${userHasReacted ? "active-button" : ""}`}
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+          >
+            {userReaction?.emoji || "✋"} J’ai aussi ce problème
+          </span>
 
           {/* ✅ Affichage conditionnel des emojis */}
           {showEmojiPicker && (
             <div className="emoji-picker">
-              {reactionOptions.map((emoji) => (
+              {getEmojisForType(type).map(({ emoji, label }) => (
                 <button
                   key={emoji}
-                  className="emoji-btn"
+                  className={`emoji-btn ${
+                    userReaction?.emoji === emoji ? "selected-emoji" : ""
+                  }`}
                   onClick={() => handleReaction(parentId, emoji)}
+                  onMouseEnter={() => setHoveredLabel(label)}
+                  onMouseLeave={() => setHoveredLabel(null)}
                 >
                   {emoji}
+                  {hoveredLabel === label && (
+                    <span className="emoji-tooltip">{label}</span>
+                  )}
                 </button>
               ))}
             </div>
@@ -234,6 +304,15 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
         <span className="action-button">💡 Solutionner</span>
         <span className="check-button">Je check</span>
       </div>
+
+      {isModalOpen && (
+        <CommonReactionsModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          parentId={selectedParentId || ""}
+          type={selectedType}
+        />
+      )}
     </>
   );
 };

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./CreatePostPopup.scss";
 import { Brand, Post } from "@src/types/types";
 import { createPost } from "@src/services/apiService";
+import { useAuth } from "@src/contexts/AuthContext";
 
 interface CreatePostPopupProps {
   brands: Brand[]; // ✅ Liste des marques provenant de `MainContent`
@@ -21,6 +22,8 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
   const [isValidBrand, setIsValidBrand] = useState(false);
   const [loading, setLoading] = useState(false); // 🔥 Loader pour la soumission
+  const { userProfile } = useAuth();
+  const userId = userProfile?.id;
 
   // 🔍 **Filtrage des marques**
   useEffect(() => {
@@ -44,45 +47,57 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
   }, [brandQuery, brands]);
 
   // ✅ **Sélection d'une marque existante**
-const handleBrandSelect = (brand: Brand) => {
-  setBrandQuery(brand.name);
-  setSelectedBrand(brand);
-  setIsValidBrand(true);
+  const handleBrandSelect = (brand: Brand) => {
+    setBrandQuery(brand.name);
+    setSelectedBrand(brand);
+    setIsValidBrand(true);
 
-  // ✅ Assure que le menu se ferme immédiatement après la sélection
-  setTimeout(() => {
-    setFilteredBrands([]);
-  }, 0);
-};
-
+    // ✅ Assure que le menu se ferme immédiatement après la sélection
+    setTimeout(() => {
+      setFilteredBrands([]);
+    }, 0);
+  };
 
   // 🚀 **Soumission du post**
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault(); // ✅ Empêche le rechargement de la page
-      if (!selectedBrand) return;
-      setLoading(true);
-      try {
-        console.log("🛠 Marque sélectionnée :", selectedBrand?.name);
-        console.log("🛠 ID envoyé au backend :", selectedBrand?.id);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedBrand) return;
+    setLoading(true);
 
-        const newPost = await createPost({
-          title,
-          content,
-          marqueId: selectedBrand.id, // ✅ Envoi de `marqueId` au lieu de `brand`
+    try {
+      console.log("🛠 Marque sélectionnée :", selectedBrand?.name);
+      console.log("🛠 ID envoyé au backend :", selectedBrand?.id);
+
+      const newPost = await createPost({
+        title,
+        content,
+        marqueId: selectedBrand.id,
+      });
+
+      setLoading(false);
+      if (newPost) {
+        onPostCreated({
+          ...newPost,
+          author: {
+            id: newPost.author?.id ?? userId ?? "unknown_id",
+            pseudo: newPost.author?.pseudo ?? "Utilisateur inconnu",
+            avatar: newPost.author?.avatar ?? "default-avatar.png",
+          },
+          brand: {
+            id: newPost.brand?.id ?? selectedBrand.id,
+            name: newPost.brand?.name ?? selectedBrand.name,
+            avatar: newPost.brand?.avatar ?? "default-brand-avatar.png",
+          },
         });
 
-        setLoading(false);
-        if (newPost) {
-          onPostCreated(newPost);
-          onClose();
-        }
-      } catch (error) {
-        console.error("Erreur lors de la création du post :", error);
-      } finally {
-        setLoading(false);
+        onClose();
       }
-    };
-
+    } catch (error) {
+      console.error("Erreur lors de la création du post :", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="overlay" onClick={onClose}>

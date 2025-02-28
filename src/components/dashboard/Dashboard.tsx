@@ -17,9 +17,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
       <div className="sidebar-left">
         <LeftSidebar />
       </div>
-      <div className="main-content">
         <MainContent />
-      </div>
       <div className="sidebar-right">
         <RightSidebar />
       </div>

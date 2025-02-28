@@ -1,3 +1,4 @@
+import { User } from "@src/types/Reports";
 import { getAccessToken } from "@src/utils/tokenUtils";
 import axios from "axios";
 
@@ -39,7 +40,6 @@ export const addReactionToReport = async (reportId: string, emoji: string) => {
     throw error;
   }
 };
-
 export const fetchReportReactions = async (
   reportId: string,
   emoji?: string
@@ -56,6 +56,41 @@ export const fetchReportReactions = async (
     return { reactions: [] };
   }
 };
+
+export const fetchReportReactionUsers = async (
+  reportId: string,
+  emoji?: string
+): Promise<{ users: User[] }> => {
+  try {
+    const response = await apiService.get(
+      `/reports/${reportId}/reactions/${emoji}`
+    );
+
+    // ✅ Transforme la réponse en `User[]`
+    const formattedUsers: User[] = response.data.users.map(
+      (user: {
+        id: string;
+        pseudo: string;
+        avatar: string;
+        email?: string;
+      }) => ({
+        id: user.id,
+        pseudo: user.pseudo,
+        avatar: user.avatar,
+        email: user.email || "", // ✅ Ajoute un email vide par défaut si non fourni
+      })
+    );
+
+    return { users: formattedUsers }; // ✅ Retourne un `User[]`
+  } catch (error) {
+    console.error(
+      "❌ Erreur lors de la récupération des utilisateurs :",
+      error
+    );
+    return { users: [] }; // ✅ Retourne un tableau vide en cas d'erreur
+  }
+};
+
 
 export const addReactionToCdc = async (
   coupdecoeurId: string,
@@ -106,6 +141,56 @@ export const fetchCdcReactions = async (
   }
 };
 
+export const fetchCdcReactionUsers = async (
+  cdcId: string,
+  emoji?: string
+): Promise<{ users: User[] }> => {
+  try {
+    const response = await apiService.get(`/cdc/${cdcId}/reactions/${emoji}`);
+
+    const formattedUsers: User[] = response.data.users.map(
+      (user: {
+        id: string;
+        pseudo: string;
+        avatar: string;
+        email?: string;
+      }) => ({
+        id: user.id,
+        pseudo: user.pseudo,
+        avatar: user.avatar,
+        email: user.email || "",
+      })
+    );
+
+    return { users: formattedUsers };
+  } catch (error) {
+    console.error(
+      "❌ Erreur lors de la récupération des utilisateurs :",
+      error
+    );
+    return { users: [] };
+  }
+};
+
+export const fetchSuggestionReactions = async (
+  suggestionId: string,
+  emoji?: string
+) => {
+  try {
+    const url = emoji
+      ? `/suggestion/${suggestionId}/reactions/${emoji}`
+      : `/suggestion/${suggestionId}/reactions`;
+
+    console.log("🌍 Requête envoyée à :", url);
+
+    const response = await apiService.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération des réactions :", error);
+    return { reactions: [] };
+  }
+};
+
 
 export const addReactionToSuggestion = async (
   suggestionId: string,
@@ -141,22 +226,35 @@ export const addReactionToSuggestion = async (
 };
 
 
-export const fetchSuggestionReactions = async (
+export const fetchSuggestionReactionUsers = async (
   suggestionId: string,
   emoji?: string
-) => {
+): Promise<{ users: User[] }> => {
   try {
-    const url = emoji
-      ? `/suggestion/${suggestionId}/reactions/${emoji}`
-      : `/suggestion/${suggestionId}/reactions`;
+    const response = await apiService.get(
+      `/suggestion/${suggestionId}/reactions/${emoji}`
+    );
 
-    console.log("🌍 Requête envoyée à :", url);
+    const formattedUsers: User[] = response.data.users.map(
+      (user: {
+        id: string;
+        pseudo: string;
+        avatar: string;
+        email?: string;
+      }) => ({
+        id: user.id,
+        pseudo: user.pseudo,
+        avatar: user.avatar,
+        email: user.email || "",
+      })
+    );
 
-    const response = await apiService.get(url);
-    return response.data;
+    return { users: formattedUsers };
   } catch (error) {
-    console.error("❌ Erreur lors de la récupération des réactions :", error);
-    return { reactions: [] };
+    console.error(
+      "❌ Erreur lors de la récupération des utilisateurs :",
+      error
+    );
+    return { users: [] };
   }
 };
-
