@@ -19,7 +19,6 @@ const Navbar: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("userProfile: " + userProfile?.role);
     const handleScroll = () => setIsSticky(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);

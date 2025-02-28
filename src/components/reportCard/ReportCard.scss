@@ -5,6 +5,43 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   margin-block-end: 16px;
 
+  .img-round {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 50px; // Largeur fixe
+    block-size: 50px; // Hauteur fixe pour garder le cercle
+    border-radius: 50%;
+    overflow: hidden; // Coupe tout ce qui dépasse du cercle
+    background-color: #fff; // Fond blanc pour uniformiser
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    .brand-logo {
+      position: absolute;
+      inline-size: 80%; // ✅ Ajuste la taille du logo pour qu'il soit bien contenu
+      block-size: 80%;
+      object-fit: contain; // ✅ Empêche le logo d'être coupé
+      padding: 5px; // ✅ Ajoute un petit espace autour du logo pour éviter qu'il touche les bords
+    }
+  }
+
+  .report-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px; // Espace entre le texte et l'image
+  }
+
+  .post-details {
+    flex: 1; // Prend l'espace disponible sans affecter l’image
+    min-width: 0;
+  }
+
+  .img-round {
+    flex-shrink: 0; // Empêche l'image de rétrécir ou de se déplacer
+  }
+
   .flex-element {
     display: flex;
     align-items: baseline;
@@ -19,20 +56,27 @@
     color: #333;
 
     img {
-      width: 40px;
-      height: 40px;
+      inline-size: 40px;
+      block-size: 40px;
       border-radius: 50%;
     }
   }
-
+  .post-icon {
+    font-size: 24px;
+    margin-inline-start: 15px;
+  }
   .report-content {
-    padding: 12px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #f8f9fa;
 
     .report-title {
-      font-size: 18px;
+      flex: 1;
+      font-size: 16px;
       font-weight: bold;
-      color: #000;
-      margin-bottom: 5px;
     }
 
     .report-description {
@@ -54,8 +98,8 @@
   .report-actions {
     display: flex;
     justify-content: space-between;
-    padding-top: 12px;
-    border-top: 1px solid #eee;
+    padding-block-start: 12px;
+    border-block-start: 1px solid #eee;
 
     .action-button {
       background: #f5f5f5;
@@ -89,495 +133,567 @@
     }
   }
 
-  
-
-
-
-.comment-section {
-  margin-top: 10px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  padding: 10px;
-  border-top: 1px solid #ddd;
-
-  .comment-input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    font-size: 14px;
-    outline: none;
-    transition: 0.2s ease-in-out;
-
-    &:focus {
-      border-color: #007bff;
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-    }
-  }
-
-  .comment-submit {
-    padding: 8px 15px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
-
-    &:hover {
-      background-color: #0056b3;
-    }
-  }
-}
-
-
-
-
-
-
-/* .comments-section {
-  max-height: 300px; // 🔥 Ajuste selon ton design
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 10px;
-}
-
-.comment-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.comment-item {
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-}
-
-.comment-header {
-  display: flex;
-  align-items: center;
-}
-
-.comment-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-} */
-
-/* .comment-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-  padding: 8px;
-  background: #f5f5f5;
-  border-radius: 8px;
-
-  .comment-input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-  }
-
-  .comment-submit {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-
-    &:hover {
-      background: #0056b3;
-    }
-  }
-}
-
-.comment-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
-  max-height: 300px; // ✅ Scroll si plus de 3 commentaires
-  overflow-y: auto;
-
-  .comment-item {
+  .comment-section {
+    margin-block-start: 10px;
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
+    gap: 10px;
+    align-items: center;
     padding: 10px;
-    background: #fff;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-block-start: 1px solid #ddd;
 
-    .comment-header {
+    .comment-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-size: 14px;
+      outline: none;
+      transition: 0.2s ease-in-out;
+
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+      }
+    }
+
+    .comment-submit {
+      padding: 8px 15px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+
+  .report.desc {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .comment-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-block-start: 10px;
+    padding: 8px;
+    background: #f5f5f5;
+    border-radius: 8px;
+
+    .comment-input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      background: white;
+      transition: all 0.2s;
+
+      &:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+      }
+    }
+
+    .comment-submit {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+
+      &:hover {
+        background: #0056b3;
+      }
+    }
+  }
+
+  .comment-list {
+    list-style: none;
+    padding: 0;
+    margin-block-start: 10px;
+    max-block-size: 300px; // ✅ Ajout d’un scroll après 3 commentaires
+    overflow-y: auto;
+  }
+
+  /* modal reactions */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    inline-size: 450px; /* Largeur fixe */
+    block-size: 500px; /* Hauteur fixe */
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    overflow: hidden; /* Empêche le contenu de dépasser */
+  }
+
+  /* ✅ Section des filtres (émoticônes) */
+  .reaction-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px;
+    background: #f7f7f7;
+    border-radius: 8px;
+    margin-block-end: 15px;
+  }
+
+  /* ✅ Style des boutons de filtre */
+  .reaction-tabs button {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  /* ✅ Effet de zoom au survol */
+  .reaction-tabs button:hover {
+    transform: scale(1.2); /* Zoom léger */
+  }
+
+  /* ✅ Emoji plus gros */
+  .reaction-tabs button span {
+    font-size: 24px; /* Augmentation de la taille */
+    margin-inline-end: 6px;
+  }
+
+  /* ✅ Active state */
+  .reaction-tabs button.active {
+    background: blue;
+    color: white;
+    padding: 10px 14px;
+  }
+
+  /* ✅ Liste des utilisateurs */
+  .user-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* ✅ Élément utilisateur */
+  .user-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-block-end: 1px solid #eee;
+    transition: background 0.3s;
+  }
+
+  .user-item:hover {
+    background: #f9f9f9;
+  }
+
+  /* ✅ Avatar */
+  .user-item img {
+    inline-size: 48px;
+    block-size: 48px;
+    border-radius: 50%;
+    margin-inline-end: 12px;
+    object-fit: cover;
+  }
+
+  /* ✅ Fermer */
+  .close-button {
+    background: red;
+    color: white;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    inline-size: 100%;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+  }
+
+  .close-button:hover {
+    background: darkred;
+  }
+  // ✅ Animation pour l’émoji sélectionné
+  @keyframes bounceEmoji {
+    0% {
+      transform: scale(1.05) translateY(0px);
+    }
+    100% {
+      transform: scale(1.15) translateY(-3px); // ✅ Petit rebond
+    }
+  }
+
+  .report-reactions {
+    .reaction {
+      align-items: center;
+      justify-content: center;
+      font-size: 18px; // Taille des emojis
+      font-weight: bold;
+      background: none; // Enlève le fond gris s'il y en a un
+      border-radius: 50%;
+      inline-size: 26px;
+      block-size: 26px;
+      position: relative;
+    }
+
+    .reaction:not(:first-child) {
+      margin-inline-start: -8px; // Superposition pour coller les emojis
+    }
+  }
+
+  .reaction-picker {
+    display: flex;
+    gap: 6px;
+    margin-block-start: 6px;
+
+    .emoji-btn {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
+  .action-button-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .emoji-picker {
+    position: absolute;
+    inset-block-end: 10%; /* ✅ Place le menu au-dessus du bouton */
+    inset-inline-start: 80%; /* ✅ Centre horizontalement */
+    transform: translateX(-50%); /* ✅ Ajuste pour un bon centrage */
+    display: flex;
+    gap: 8px;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.2s ease-in-out;
+    z-index: 10;
+  }
+
+  .emoji-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out;
+  }
+
+  .emoji-btn:hover {
+    transform: scale(1.2);
+  }
+
+  .report-reactions {
+    display: flex;
+    align-items: center;
+    gap: 4px; // 🔹 Espacement minimal entre les emojis
+    margin-block-end: 8px;
+
+    .reaction-icons {
+      display: flex;
+      gap: -3px; // 🔹 Les emojis se chevauchent légèrement
+    }
+
+    .reaction-icon {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      font-size: 16px;
+      background: white;
+      border-radius: 50%;
+      padding: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.1s ease-in-out;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    .reaction-total {
+      font-size: 14px;
       font-weight: bold;
+      margin-inline-start: 5px;
+    }
+  }
+
+  .report-reactions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .reaction-icons {
+      display: flex;
+      align-items: center;
+
+      .reaction-icon {
+        font-size: 18px;
+        margin-inline-end: -5px; // ✅ Effet de superposition comme LinkedIn
+      }
+    }
+
+    .reaction-total {
+      font-weight: bold;
+      font-size: 14px;
+      margin-inline-start: 6px;
+    }
+  }
+
+  .comment-list {
+    max-inline-size: 100%;
+    padding: 0;
+    list-style: none;
+
+    .comment-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px;
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      margin-block-end: 8px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
+      }
 
       .comment-avatar {
-        width: 35px;
-        height: 35px;
+        inline-size: 36px;
+        block-size: 36px;
         border-radius: 50%;
         object-fit: cover;
         border: 2px solid #ddd;
       }
 
-      span {
-        font-size: 14px;
-        color: #333;
-      }
-    }
-
-    p {
-      flex: 1;
-      margin: 0;
-      font-size: 14px;
-      color: #444;
-    }
-
-    .delete-comment {
-      background: none;
-      border: none;
-      color: red;
-      cursor: pointer;
-      font-size: 16px;
-      transition: transform 0.2s ease-in-out;
-
-      &:hover {
-        transform: scale(1.2);
-      }
-    }
-  }
-} */
-
-
-.comment-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-  padding: 8px;
-  background: #f5f5f5;
-  border-radius: 8px;
-
-  .comment-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    background: white;
-    transition: all 0.2s;
-
-    &:focus {
-      border-color: #007bff;
-      outline: none;
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-    }
-  }
-
-  .comment-submit {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.3s;
-
-    &:hover {
-      background: #0056b3;
-    }
-  }
-}
-
-.comment-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
-  max-height: 300px; // ✅ Ajout d’un scroll après 3 commentaires
-  overflow-y: auto;
-
-/*   .comment-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    margin-bottom: 6px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease-in-out;
-
-    &:hover {
-      transform: scale(1.02);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .comment-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: bold;
-
-      .comment-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 1px solid #ddd;
-      }
-
-      span {
-        font-size: 14px;
-        color: #333;
-      }
-    }
-
-    p {
-      flex: 1;
-      margin: 0;
-      font-size: 14px;
-      color: #444;
-    }
-
-    .delete-comment {
-      background: none;
-      border: none;
-      color: red;
-      cursor: pointer;
-      font-size: 18px;
-      transition: transform 0.2s ease-in-out;
-
-      &:hover {
-        transform: scale(1.2);
-      }
-    }
-  } */
-
-  
-}
-
-
-
-}
-
-
-.report-reactions {
-
-  .reaction {
-    align-items: center;
-    justify-content: center;
-    font-size: 18px; // Taille des emojis
-    font-weight: bold;
-    background: none; // Enlève le fond gris s'il y en a un
-    border-radius: 50%;
-    inline-size: 26px; 
-    block-size: 26px;
-    position: relative;
-  }
-
-  .reaction:not(:first-child) {
-    margin-inline-start: -8px; // Superposition pour coller les emojis
-  }
-}
-
-
-
-.reaction-picker {
-  display: flex;
-  gap: 6px;
-  margin-top: 6px;
-
-  .emoji-btn {
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-
-    &:hover {
-      transform: scale(1.2);
-    }
-  }
-}
-.action-button-container {
-  position: relative;
-  display: inline-block;
-}
-
-.emoji-picker {
-  position: absolute;
-  bottom: 100%; /* ✅ Place le menu au-dessus du bouton */
-  left: 50%; /* ✅ Centre horizontalement */
-  transform: translateX(-50%); /* ✅ Ajuste pour un bon centrage */
-  display: flex;
-  gap: 8px;
-  background: white;
-  border: 1px solid #ddd;
-  padding: 8px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  transition: opacity 0.2s ease-in-out;
-  z-index: 10;
-}
-
-.emoji-btn {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  transition: transform 0.1s ease-in-out;
-}
-
-.emoji-btn:hover {
-  transform: scale(1.2);
-}
-
-
-
-.report-reactions {
-  display: flex;
-  align-items: center;
-  gap: 4px; // 🔹 Espacement minimal entre les emojis
-  margin-bottom: 8px;
-
-  .reaction-icons {
-    display: flex;
-    gap: -3px; // 🔹 Les emojis se chevauchent légèrement
-  }
-
-  .reaction-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    background: white;
-    border-radius: 50%;
-    padding: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.1s ease-in-out;
-
-    &:hover {
-      transform: scale(1.1);
-    }
-  }
-
-  .reaction-total {
-    font-size: 14px;
-    font-weight: bold;
-    margin-inline-start: 5px;
-  }
-}
-
-
-.report-reactions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-
-  .reaction-icons {
-    display: flex;
-    align-items: center;
-
-    .reaction-icon {
-      font-size: 18px;
-      margin-right: -5px; // ✅ Effet de superposition comme LinkedIn
-    }
-  }
-
-  .reaction-total {
-    font-weight: bold;
-    font-size: 14px;
-    margin-left: 6px;
-  }
-}
-
-
-.comment-list {
-  max-width: 100%;
-  padding: 0;
-  list-style: none;
-
-  .comment-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 12px;
-    background: #fff;
-    border-radius: 10px;
-    border: 1px solid #e0e0e0;
-    margin-bottom: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.06);
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
-    }
-
-    .comment-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ddd;
-    }
-
-    .comment-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 5px;
-
-      .comment-header {
-        font-weight: bold;
-        font-size: 14px;
-        color: #333;
+      .comment-content {
+        flex: 1;
         display: flex;
-        align-items: center;
-        gap: 8px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+
+        .comment-header {
+          font-weight: bold;
+          font-size: 14px;
+          color: #333;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .comment-text {
+          font-size: 14px;
+          color: #444;
+          background: #f5f5f5;
+          padding: 12px;
+          border-radius: 8px;
+          margin-block-start: 5px;
+        }
       }
 
-      .comment-text {
-        font-size: 14px;
-        color: #444;
-        background: #f5f5f5;
-        padding: 12px;
-        border-radius: 8px;
-        margin-top: 5px;
-      }
-    }
+      .delete-comment {
+        background: none;
+        border: none;
+        font-size: 18px;
+        color: #e74c3c;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
 
-    .delete-comment {
-      background: none;
-      border: none;
-      font-size: 18px;
-      color: #e74c3c;
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-
-      &:hover {
-        color: #c0392b;
-        transform: scale(1.1);
+        &:hover {
+          color: #c0392b;
+          transform: scale(1.1);
+        }
       }
     }
   }
+
+  /* spinner */
+  .loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+  }
+
+  .spinner {
+    inline-size: 16px;
+    block-size: 16px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-inline-end-color: #007bff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .no-comments {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+    margin-block-start: 10px;
+  }
+
+  .report-image {
+    display: block;
+    max-inline-size: 100%;
+    max-block-size: 200px; // ✅ Limite la hauteur pour éviter les cards trop grandes
+    object-fit: cover; // ✅ Coupe l’image au lieu de la déformer
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
+
+  .see-more {
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #007bff;
+    transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    display: inline-block;
+
+    &:hover {
+      color: #0056b3;
+      text-decoration: underline;
+      transform: scale(1.05);
+    }
+  }
+
+  .image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-block-start: 10px;
+
+    .report-image {
+      inline-size: 100%; // ✅ Ajuste à la largeur de la card
+      max-block-size: 250px; // ✅ Empêche l'agrandissement excessif
+      object-fit: cover;
+      border-radius: 10px;
+      transition: transform 0.3s ease-in-out;
+
+      &:hover {
+        transform: scale(1.02);
+        cursor: pointer;
+      }
+    }
+
+    .see-more {
+      color: blue;
+      cursor: pointer;
+      text-decoration: underline;
+      margin-block-start: 5px;
+    }
+  }
+
+  /* ✅ Lightbox */
+  .lightbox-overlay {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .lightbox-image {
+    max-inline-size: 90%;
+    max-block-size: 90%;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.2);
+  }
+
+  .lightbox {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 100vw;
+    block-size: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    cursor: pointer;
+    animation: fadeIn 0.3s ease-in-out;
+
+    img {
+      max-inline-size: 90%;
+      max-block-size: 90%;
+      border-radius: 10px;
+      box-shadow: 0px 10px 30px rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease-in-out;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }
-
-
-

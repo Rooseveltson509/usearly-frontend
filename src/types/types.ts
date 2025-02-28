@@ -51,6 +51,7 @@ export interface Post {
   };
   likeCount?: number; // ✅ Nombre total de likes
   reactions: Reaction[]; // ✅ Maintenant, les réactions incluent `userId`
+  isLoading?: boolean;
 }
 
 export interface PostData {

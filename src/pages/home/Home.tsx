@@ -22,6 +22,7 @@ import "./Home.scss";
 const Home: React.FC = () => {
   const baseText = "Exprimez-vous au moment même où ";
    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const typingTexts = [
     "Vous rencontrez un bug !",
     "une idée d'amélioration vous traverse l'esprit !",
@@ -61,30 +62,33 @@ const Home: React.FC = () => {
     }
 
     return () => clearTimeout(timeout);
-  }, [charIndex, isDeleting, textIndex]);
+  }, [charIndex, isDeleting, textIndex, typingTexts]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true); // Texte visible dans le viewport
-        } else {
-          setIsVisible(false); // Texte en dehors du viewport
-        }
-      },
-      { threshold: 0.5 } // Déclenche à 50% visible
-    );
+ useEffect(() => {
+   const observer = new IntersectionObserver(
+     (entries) => {
+       if (entries[0].isIntersecting) {
+         setIsVisible(true); // Texte visible dans le viewport
+       } else {
+         setIsVisible(false); // Texte en dehors du viewport
+       }
+     },
+     { threshold: 0.5 } // Déclenche à 50% visible
+   );
 
-    if (textRef.current) {
-      observer.observe(textRef.current);
-    }
+   const currentElement = textRef.current; // ✅ Stocker la référence actuelle
 
-    return () => {
-      if (textRef.current) {
-        observer.unobserve(textRef.current);
-      }
-    };
-  }, []);
+   if (currentElement) {
+     observer.observe(currentElement);
+   }
+
+   return () => {
+     if (currentElement) {
+       observer.unobserve(currentElement); // ✅ Utiliser la version stockée
+     }
+   };
+ }, []);
+
 
   return (
     <div className="container">

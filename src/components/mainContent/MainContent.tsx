@@ -1,41 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./MainContent.scss";
 import {
   fetchReports,
   fetchCoupsdeCoeur,
   fetchSuggestions,
   fetchPosts,
+  fetchBrands,
 } from "../../services/apiService";
 import { Cdc, Reports, Suggestion } from "../../types/Reports";
-//import { useAuth } from "../../contexts/AuthContext";
 import signalIcon from "../../assets/images/signalIcon.svg";
 import baguette from "../../assets/images/baguette.svg";
 import cdc from "../../assets/images/cdc.svg";
-import { Post } from "@src/types/types";
-//import CreatePostPopup from "../posts/createPostPopup/CreatePostPopup";
-import PostList from "../posts/postList/PostList";
-import ReportCard from "../reportCard/ReportCard";
-import CoupDeCoeurCard from "../cdc/CoupDeCoeurCard";
-import SuggestionCard from "../suggestion/SuggestionCard";
+import { Brand, Post, Reaction } from "@src/types/types";
+import { useAuth } from "@src/contexts/AuthContext";
+import defaultAvatar from "../../assets/images/user.png";
+import CreatePostPopup from "../posts/createPostPopup/CreatePostPopup";
+import FilterBar from "../filter-bar/FilterBar";
+import PostFeed from "../post-feed/PostFeed";
+import ReportFeed from "../report-feed/reportFeed";
+import Pagination from "../commons/pagination/Pagination";
 
 const MainContent: React.FC = () => {
-  //const { userProfile } = useAuth();
+  const { userProfile } = useAuth();
   const [reports, setReports] = useState<Reports[]>([]);
   const [coupDeCoeurs, setCoupDeCoeurs] = useState<Cdc[]>([]);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedType, setSelectedType] = useState("report"); // Par défaut, affiche les reports
+  const [, setSelectedType] = useState("report"); // Par défaut, affiche les reports
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  //const [showPopup, setShowPopup] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [postsPage, setPostsPage] = useState(1);
   const [postsTotalPages, setPostsTotalPages] = useState(0);
   const [selectedFilter, setSelectedFilter] = useState("Actualité");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedAbonnement, setSelectedAbonnement] = useState("Signalements");
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [, setSearchTerm] = useState("");
+  const [, setSelectedSort] = useState("Date");
 
   // 📌 Fonction pour récupérer l'icône du filtre sélectionné
   const getIconByFilter = (filter: string) => {
@@ -51,6 +55,63 @@ const MainContent: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo({ top: 0, behavior: "smooth" }); // 🔥 Scroll fluide vers le haut
+    }
+  }, [currentPage, postsPage]); // 🔥 Déclenché à chaque changement de page
+
+
+
+
+  useEffect(() => {
+    if (selectedFilter !== "Actualité") {
+      setLoading(true);
+      setError(null);
+
+      const loadData = async () => {
+        try {
+          if (selectedFilter === "Coup de Cœur") {
+            const data = await fetchCoupsdeCoeur(currentPage, 5);
+            setCoupDeCoeurs(data.coupdeCoeurs);
+            setSelectedType("coupdecoeur"); // ✅ Définir le type pour le rendu
+            setTotalPages(data.totalPages);
+          } else if (selectedFilter === "Suggestions") {
+            const data = await fetchSuggestions(currentPage, 5);
+            setSuggestions(data.suggestions);
+            setSelectedType("suggestion"); // ✅ Définir le type pour le rendu
+            setTotalPages(data.totalPages);
+          } else {
+            const data = await fetchReports(currentPage, 5);
+            setReports(data.reports);
+            setTotalPages(data.totalPages);
+            setSelectedType("report"); // ✅ Définir le type pour le rendu
+          }
+        } catch (error) {
+          console.error("❌ Erreur lors du chargement des données :", error);
+          setError("Erreur lors du chargement des données.");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      loadData();
+    }
+  }, [selectedFilter, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1); // 🔄 Réinitialise la pagination à la première page quand on change de filtre
+  }, [selectedFilter]);
+
+  // 🚀 **Récupérer les marques pour l'input de sélection**
+  useEffect(() => {
+    const loadBrands = async () => {
+      const fetchedBrands = await fetchBrands();
+      setBrands(fetchedBrands);
+    };
+    loadBrands();
+  }, []);
+
   // 📌 Charger les posts quand "Actualité" est sélectionné
   useEffect(() => {
     if (selectedFilter === "Actualité") {
@@ -59,8 +120,11 @@ const MainContent: React.FC = () => {
           setLoading(true);
           console.log("📥 Chargement des posts...");
           const fetchedPosts = await fetchPosts(postsPage, 5);
-          console.log("✅ Posts récupérés :", fetchedPosts);
-          setPosts(fetchedPosts.posts);
+          console.log(
+            "✅ Posts récupérés après changement de filtre :",
+            fetchedPosts.posts
+          );
+          setPosts(fetchedPosts.posts); // ✅ Recharge les posts avec leurs réactions
           setPostsTotalPages(fetchedPosts.totalPages);
         } catch (error) {
           console.error("❌ Erreur lors de la récupération des posts :", error);
@@ -72,252 +136,130 @@ const MainContent: React.FC = () => {
     }
   }, [selectedFilter, postsPage]);
 
-  // 📌 Charger les signalements, coups de cœur et suggestions
-/*   useEffect(() => {
-    if (selectedFilter !== "Actualité") {
-      setLoading(true);
-      setError(null);
-
-      const loadData = async () => {
-        try {
-          let formattedData: ReportsResponse;
-
-          if (selectedFilter === "Coup de Cœur") {
-            const data = await fetchCoupsdeCoeur(currentPage, 5);
-            formattedData = {
-              totalReports: data.totalCoupsdeCoeur,
-              currentPage: data.currentPage,
-              totalPages: data.totalPages,
-              reports: [...data.coupsdeCoeur],
-            };
-          } else if (selectedFilter === "Suggestions") {
-            const data = await fetchSuggestions(currentPage, 5);
-            formattedData = {
-              totalReports: data.totalSuggestions,
-              currentPage: data.currentPage,
-              totalPages: data.totalPages,
-              reports: [...data.suggestions],
-            };
-          } else {
-            const data = await fetchReports(currentPage, 5);
-            formattedData = {
-              totalReports: data.totalReports,
-              currentPage: data.currentPage,
-              totalPages: data.totalPages,
-              reports: [...data.reports],
-            };
-          }
-
-          console.log("✅ Données chargées pour :", selectedFilter);
-          console.log("📊 Nombre de reports :", formattedData.reports.length);
-          console.log("📜 Contenu des reports :", formattedData.reports);
-
-          setReports([...formattedData.reports]);
-          setTotalPages(formattedData.totalPages);
-        } catch (error) {
-          console.error("❌ Erreur lors du chargement des reports :", error);
-          setError("Erreur lors du chargement des données.");
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      loadData();
-    }
-  }, [selectedFilter, currentPage]); */
-
-    useEffect(() => {
-      if (selectedFilter !== "Actualité") {
-        setLoading(true);
-        setError(null);
-
-        const loadData = async () => {
-          try {
-            if (selectedFilter === "Coup de Cœur") {
-              const data = await fetchCoupsdeCoeur(currentPage, 5);
-              setCoupDeCoeurs(data.coupdeCoeurs);
-              setSelectedType("coupdecoeur"); // ✅ Définir le type pour le rendu
-              setTotalPages(data.totalPages);
-            } else if (selectedFilter === "Suggestions") {
-              const data = await fetchSuggestions(currentPage, 5);
-              setSuggestions(data.suggestions);
-              setSelectedType("suggestion"); // ✅ Définir le type pour le rendu
-              setTotalPages(data.totalPages);
-            } else {
-              const data = await fetchReports(currentPage, 5);
-              setReports(data.reports);
-              setTotalPages(data.totalPages);
-              setSelectedType("report"); // ✅ Définir le type pour le rendu
-            }
-          } catch (error) {
-            console.error("❌ Erreur lors du chargement des données :", error);
-            setError("Erreur lors du chargement des données.");
-          } finally {
-            setLoading(false);
-          }
-        };
-
-        loadData();
-      }
-    }, [selectedFilter, currentPage]);
-
-/*   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (selectedType === "report") {
-          const response = await fetchReports(currentPage, 5); // API pour récupérer les reports
-          setReports(response.reports);
-        } else if (selectedType === "coupdecoeur") {
-          const response = await fetchCoupsdeCoeur(currentPage, 5); // API pour récupérer les coups de cœur
-          setCoupDeCoeurs(response.coupsdeCoeur);
-        } else if (selectedType === "suggestion") {
-          const response = await fetchSuggestions(currentPage, 5); // API pour récupérer les suggestions
-          setSuggestions(response.suggestions);
-        }
-      } catch (error) {
-        console.error("Erreur lors du chargement des données :", error);
-      }
-    };
-
-    fetchData();
-  }, [selectedType]); // Rechargement quand l'utilisateur change de type */
-
-  useEffect(() => {
-    setCurrentPage(1); // 🔄 Réinitialise la pagination à la première page quand on change de filtre
-  }, [selectedFilter]);
+  const handleInputClick = () => setShowPopup(true);
+  const handleClosePopup = () => setShowPopup(false);
 
   // 📌 Gérer les nouveaux posts créés
-/*   const handleNewPost = (newPost: Post) => {
+  const handleNewPost = async (newPost: Post) => {
     console.log("🚀 Nouveau post ajouté :", newPost);
-    setPosts((prevPosts) => [newPost, ...prevPosts]);
-    setSelectedFilter("Actualité");
-  }; */
+
+    // 🔥 On affiche d'abord un post temporaire avec un loader
+    const tempPost = {
+      ...newPost,
+      isLoading: true,
+      author: {
+        id: newPost.author?.id ?? userProfile?.id ?? "unknown_id",
+        pseudo:
+          newPost.author?.pseudo ??
+          userProfile?.pseudo ??
+          "Utilisateur inconnu",
+        avatar:
+          newPost.author?.avatar ?? userProfile?.avatar ?? "default-avatar.png",
+      },
+      brand: {
+        id: newPost.brand?.id ?? "unknown_brand",
+        name: newPost.brand?.name ?? "Marque inconnue",
+        avatar: newPost.brand?.avatar ?? "default-brand-avatar.png",
+      },
+    };
+
+    setPosts((prevPosts) => [tempPost, ...prevPosts]);
+
+    // ✅ Si on est déjà sur "Actualité", on force une mise à jour des posts après un petit délai
+    if (selectedFilter === "Actualité") {
+      setTimeout(async () => {
+        try {
+          const updatedPosts = await fetchPosts(1, 5); // 🔥 Recharge les posts à jour
+          setPosts(updatedPosts.posts);
+        } catch (error) {
+          console.error(
+            "❌ Erreur lors du rafraîchissement des posts :",
+            error
+          );
+        }
+      }, 1000); // 🔥 Délai court pour donner un effet de transition
+    } else {
+      setSelectedFilter("Actualité"); // 🔄 Change de filtre et recharge les posts
+    }
+  };
+
+  const handleReactionUpdate = (postId: string, reactions: Reaction[]) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId ? { ...post, reactions } : post
+      )
+    );
+  };
 
   return (
-    <div className="main-content">
-      <div className="filter-bar">
-        {/* Bouton Actualité */}
-        <button
-          className={`filter-button ${
-            selectedFilter === "Actualité" ? "active" : ""
-          }`}
-          onClick={() => {
-            setSelectedFilter("Actualité");
-            setSelectedAbonnement(""); // Réinitialise pour éviter un conflit avec l'abonnement actif
-          }}
-        >
-          Actualité
-        </button>
+    <div ref={mainContentRef} className="main-content">
+      <FilterBar
+        selectedFilter={selectedFilter}
+        setSelectedFilter={setSelectedFilter}
+        setPostsPage={setPostsPage} // ✅ On passe setPostsPage ici
+        onSearchChange={setSearchTerm} // ✅ Ajout du support de recherche
+        onSortChange={setSelectedSort} // ✅ Gestion du tri
+      />
 
-        {/* Boutons pour les filtres Signalements, Coup de Cœur, Suggestions */}
-        {["Signalements", "Coup de Cœur", "Suggestions"].map((filter) => (
-          <button
-            key={filter}
-            className={`filter-button ${
-              selectedFilter === filter ? "active" : ""
-            }`}
-            onClick={() => {
-              setSelectedFilter(filter);
-              setSelectedAbonnement(filter); // ✅ Met à jour correctement l'abonnement sélectionné
-            }}
-          >
-            {filter}
-          </button>
-        ))}
+      <div className="alert-box" onClick={handleInputClick}>
+        <img
+          src={
+            userProfile?.avatar
+              ? `${import.meta.env.VITE_API_BASE_URL}/${userProfile.avatar}`
+              : defaultAvatar
+          }
+          alt="User Avatar"
+        />
+        <input
+          type="text"
+          placeholder="C'est moi ou 'nom de la marque' bug ?"
+          readOnly
+        />
       </div>
+      {showPopup && (
+        <CreatePostPopup
+          brands={brands} // ✅ Liste des marques
+          onPostCreated={handleNewPost} // ✅ Ajoute le post immédiatement
+          onClose={handleClosePopup} // ✅ Ferme le popup après soumission
+        />
+      )}
 
       {/* 📌 Affichage des posts */}
       {selectedFilter === "Actualité" ? (
-        <>
-          {loading && (
-            <p className="loading-message">Chargement des posts...</p>
-          )}
-          {error && <p className="error-message">{error}</p>}
-          {posts.length > 0 ? (
-            posts.map((post) => <PostList key={post.id} post={post} />)
-          ) : (
-            <p>Aucun post disponible.</p>
-          )}
-        </>
+        <PostFeed
+          posts={posts}
+          setPosts={setPosts} // ✅ Ajout de setPosts ici
+          loading={loading}
+          error={error}
+          onReactionUpdate={handleReactionUpdate}
+        />
       ) : (
-        <>
-          {loading && <p className="loading-message">Chargement en cours...</p>}
-          {error && <p className="error-message">{error}</p>}
-          {selectedFilter === "Coup de Cœur" && coupDeCoeurs.length > 0 ? (
-            coupDeCoeurs.map((coupDeCoeur) => (
-              <CoupDeCoeurCard
-                key={coupDeCoeur.id}
-                coupDeCoeur={coupDeCoeur}
-                selectedFilter={selectedFilter}
-                getIconByFilter={getIconByFilter}
-              />
-            ))
-          ) : selectedFilter === "Suggestions" && suggestions.length > 0 ? (
-            suggestions.map((suggestion) => (
-              <SuggestionCard
-                key={suggestion.id}
-                suggestion={suggestion}
-                selectedFilter={selectedFilter}
-                getIconByFilter={getIconByFilter}
-              />
-            ))
-          ) : selectedFilter === "Signalements" && reports.length > 0 ? (
-            reports.map((report) => (
-              <ReportCard
-                key={report.id}
-                report={report}
-                selectedFilter={selectedFilter}
-                getIconByFilter={getIconByFilter}
-              />
-            ))
-          ) : (
-            <p>Aucun {selectedFilter.toLowerCase()} trouvé.</p>
-          )}
-        </>
+        <ReportFeed
+          selectedFilter={selectedFilter}
+          reports={reports}
+          coupDeCoeurs={coupDeCoeurs}
+          suggestions={suggestions}
+          loading={loading}
+          error={error}
+          getIconByFilter={getIconByFilter} // ✅ On passe la fonction en prop
+        />
       )}
 
       {/* 📌 Pagination */}
-      <div className="pagination">
-        {selectedFilter === "Actualité" ? (
-          <>
-            <button
-              onClick={() => setPostsPage(postsPage - 1)}
-              disabled={postsPage === 1}
-            >
-              Précédent
-            </button>
-            <span>
-              Page {postsPage} sur {postsTotalPages}
-            </span>
-            <button
-              onClick={() => setPostsPage(postsPage + 1)}
-              disabled={postsPage === postsTotalPages}
-            >
-              Suivant
-            </button>
-          </>
-        ) : (
-          <>
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-              disabled={currentPage <= 1}
-            >
-              Précédent
-            </button>
-            <span>
-              Page {currentPage} sur {totalPages}
-            </span>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-              }
-              disabled={currentPage >= totalPages || totalPages === 0}
-            >
-              Suivant
-            </button>
-          </>
-        )}
-      </div>
+      <Pagination
+        currentPage={selectedFilter === "Actualité" ? postsPage : currentPage}
+        totalPages={
+          selectedFilter === "Actualité" ? postsTotalPages : totalPages
+        }
+        onPageChange={(newPage) => {
+          if (selectedFilter === "Actualité") {
+            setPostsPage(newPage);
+          } else {
+            setCurrentPage(newPage);
+          }
+          contentRef.current?.scrollIntoView({ behavior: "smooth" });
+        }}
+      />
     </div>
   );
 };

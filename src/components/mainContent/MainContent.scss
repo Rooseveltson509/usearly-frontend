@@ -378,28 +378,7 @@
     }
   }
 
-  // style 1 de la pagination
-  .pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-block-start: 20px;
-    margin-block-end: 100px;
-  }
 
-  .pagination button {
-    padding: 10px 20px;
-    border: none;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .pagination button:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
-  }
 
   .card-header {
     display: flex;

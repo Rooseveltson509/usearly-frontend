@@ -170,10 +170,6 @@ export const confirmEmail = async (
 };
 
 
-
-
-
-
 // ✅ Récupérer tous les posts
 export const fetchPosts = async (
   page = 1,
@@ -350,42 +346,35 @@ export const addReactionToPost = async (postId: string, emoji: string) => {
 };
 
 
-
-
-
-
-
-
 export const fetchReactionUsers = async (
   postId: string,
-  emoji: string
+  emoji?: string
 ): Promise<{ users: User[] }> => {
   try {
     const response = await apiService.get(
-      `/posts/${postId}/reactions/${emoji}`
+      `/posts/${postId}/reactions/${emoji}` // 🔥 Ici, l'emoji est obligatoire !
     );
-
-    // ✅ Type explicite : on force le type `User`
-    const formattedUsers: User[] = response.data.users.map(
-      (user: {
-        id: string;
-        pseudo: string;
-        avatar: string;
-        email?: string;
-      }) => ({
-        id: user.id,
-        pseudo: user.pseudo,
-        avatar: user.avatar,
-        email: user.email || "", // ✅ Ajoute un email vide par défaut si non fourni
-      })
-    );
-
-    return { users: formattedUsers }; // ✅ Retourne bien un `User[]`
+    return response.data;
   } catch (error) {
     console.error("Erreur lors de la récupération des utilisateurs :", error);
-    return { users: [] }; // ✅ Retourne un tableau vide en cas d'erreur
+    return { users: [] };
   }
 };
+
+export const fetchPostReactions = async (postId: string) => {
+  try {
+    const url = `/posts/${postId}/reactions`; // ✅ Appelle le nouvel endpoint
+
+    const response = await apiService.get(url);
+    return response.data; // ✅ Retourne bien { success: true, reactions: [...] }
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération des réactions :", error);
+    return { reactions: [] }; // ✅ Retourne un tableau vide en cas d'erreur
+  }
+};
+
+
+
 
 // 📌 Ajouter un commentaire à un post
 export const addCommentToPost = async (postId: string, content: string) => {
@@ -434,6 +423,25 @@ export const deleteComment = async (commentId: string) => {
     return { success: true, message: "Commentaire supprimé avec succès" };
   } catch (error) {
     console.error("Erreur lors de la suppression du commentaire :", error);
+
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Une erreur inconnue s'est produite",
+    };
+  }
+};
+
+export const deletePost = async (postId: string) => {
+  try {
+    await apiService.delete(`/posts/${postId}`, {
+      headers: authHeaders(),
+    });
+    return { success: true, message: "Post supprimé avec succès" };
+  } catch (error) {
+    console.error("Erreur lors de la suppression du post :", error);
 
     return {
       success: false,
@@ -785,34 +793,6 @@ export const fetchUserStats = async () => {
 };
 
 // Fonction pour récupérer les coups de cœur
-/* export const fetchCoupsdeCoeursss = async (page: number, limit: number) => {
-  try {
-    const token = getAccessToken();
-    if (!token) {
-      throw new Error("Utilisateur non authentifié.");
-    }
-    const response = await apiService.get(
-      `/user/coupsdecoeur?page=${page}&limit=${limit}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    return {
-      coupsdeCoeur: response.data.coupdeCoeur,
-      totalCoupsdeCoeur: response.data.totalCoupsdeCoeur,
-      currentPage: response.data.currentPage,
-      totalPages: response.data.totalPages,
-    };
-  } catch (error) {
-    console.error("Erreur lors de la récupération des coups de cœur :", error);
-    throw error;
-  }
-}; */
-
 export const fetchCoupsdeCoeur = async (
   page: number,
   limit: number
@@ -995,4 +975,49 @@ export const deleteAccount = async () => {
       Authorization: `Bearer ${token}`,
     },
   });
+};
+
+
+
+export const fetchReportCommentCount = async (reportId: string) => {
+  try {
+    const response = await apiService.get(
+      `/reports/${reportId}/comments/count`
+    );
+    return response.data.count;
+  } catch (error) {
+    console.error(
+      "❌ Erreur lors de la récupération du nombre de commentaires :",
+      error
+    );
+    return 0;
+  }
+};
+
+export const fetchSuggestionCommentCount = async (suggestionId: string) => {
+  try {
+    const response = await apiService.get(
+      `/suggestions/${suggestionId}/comments/count`
+    );
+    return response.data.count;
+  } catch (error) {
+    console.error(
+      "❌ Erreur lors de la récupération du nombre de commentaires :",
+      error
+    );
+    return 0;
+  }
+};
+
+export const fetchCdcCommentCount = async (cdcId: string) => {
+  try {
+    const response = await apiService.get(`/cdc/${cdcId}/comments/count`);
+    return response.data.count;
+  } catch (error) {
+    console.error(
+      "❌ Erreur lors de la récupération du nombre de commentaires :",
+      error
+    );
+    return 0;
+  }
 };

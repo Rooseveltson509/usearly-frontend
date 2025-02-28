@@ -2,6 +2,7 @@ import { getAccessToken, storeToken } from "@src/utils/tokenUtils";
 import axios, { AxiosError } from "axios";
 //import { fetchUserProfile } from './apiService';
 import { ErrorResponse, ResetPasswordResponse } from "@src/types/types";
+import { getCsrfToken } from "./csrfService";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
@@ -24,12 +25,12 @@ export const apiService = axios.create({
 export const login = async (
   email: string,
   password: string,
-  rememberMe: boolean,
+  rememberMe: boolean
 ) => {
   const { data } = await apiService.post(
     `/user/login`,
     { email, password, rememberMe },
-    { withCredentials: true },
+    { withCredentials: true }
   );
 
   if (!data.success || !data.accessToken) {
@@ -45,7 +46,6 @@ export const login = async (
     message: data.message,
   };
 };
-
 
 /* Login en tant que marque */
 export const loginBrand = async (
@@ -81,28 +81,34 @@ export const loginBrand = async (
   }
 };
 
-
-
-
 /**
  *
  * @returns
  */
 export const refreshToken = async (): Promise<string> => {
   try {
+    const csrfToken = await getCsrfToken(); // 🔥 Récupère le CSRF Token avant
+
     const response = await apiService.post(
       "/user/refresh-token",
       {},
-      { withCredentials: true },
+      {
+        withCredentials: true, // ✅ Envoie le cookie refreshToken
+        headers: { "X-CSRF-Token": csrfToken }, // ✅ Ajoute le CSRF Token
+      }
     );
+
     const { accessToken } = response.data;
-    console.log("Nouveau token récupéré :", accessToken);
+    console.log("🔄 Nouveau token récupéré :", accessToken);
     return accessToken; // Retourne le nouveau token
   } catch (error) {
-    console.error("Erreur lors de la récupération du nouveau token :", error);
+    console.error("❌ Erreur lors du rafraîchissement du token :", error);
     throw new Error("Impossible de rafraîchir le token.");
   }
 };
+
+
+
 
 export const clearToken = () => {
   localStorage.removeItem("accessToken");
@@ -128,15 +134,17 @@ export const resetPassword = async (
   userId: string,
   token: string,
   password: string,
-  password_confirm: string,
+  password_confirm: string
 ): Promise<ResetPasswordResponse> => {
   try {
     const response = await apiService.post<ResetPasswordResponse>(
-      `/user/resetpwd/${encodeURIComponent(userId)}/${encodeURIComponent(token)}`,
+      `/user/resetpwd/${encodeURIComponent(userId)}/${encodeURIComponent(
+        token
+      )}`,
       {
         password,
         password_confirm,
-      },
+      }
     );
 
     if (response.data?.success) {
@@ -154,7 +162,7 @@ export const resetPassword = async (
     } else {
       throw new Error(
         response.data?.message ||
-          "Erreur lors de la réinitialisation du mot de passe.",
+          "Erreur lors de la réinitialisation du mot de passe."
       );
     }
   } catch (error) {
@@ -186,7 +194,7 @@ export const updatePassword = async (passwordData: {
 
     if (!response.data.success) {
       throw new Error(
-        response.data.error || "Erreur inconnue lors de la mise à jour.",
+        response.data.error || "Erreur inconnue lors de la mise à jour."
       );
     }
 
@@ -195,7 +203,7 @@ export const updatePassword = async (passwordData: {
     if (axios.isAxiosError(error) && error.response) {
       throw new Error(
         error.response.data?.error ||
-          "Une erreur s'est produite lors de la mise à jour du mot de passe.",
+          "Une erreur s'est produite lors de la mise à jour du mot de passe."
       );
     }
     throw new Error("Erreur interne. Veuillez réessayer plus tard.");
@@ -213,13 +221,13 @@ export const forgetPassword = async (email: string): Promise<void> => {
       `/user/forgot-password`,
       {
         email,
-      },
+      }
     );
     console.log("Réponse de l'API :", response.data);
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
       throw new Error(
-        error.response.data?.message || "Une erreur est survenue.",
+        error.response.data?.message || "Une erreur est survenue."
       );
     } else {
       throw new Error("Erreur interne. Veuillez réessayer plus tard.");
