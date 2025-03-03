@@ -8,7 +8,6 @@ import "react-confirm-alert/src/react-confirm-alert.css"; // 📌 Style par déf
 import ReactionSection from "@src/components/reactions/reaction-section/ReactionSection";
 import CommentSection from "@src/components/comment-section/CommentSection";
 import { deletePost } from "@src/services/apiService";
-import { FaEllipsisV } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 interface PostProps {
@@ -145,9 +144,8 @@ useEffect(() => {
           </span>
         </div>
 
-        <div className="report-options">
-          <FaEllipsisV onClick={toggleMenu} className="options-icon" />
-
+        <div className="report-options" onClick={toggleMenu}>
+          ⋮
           {isMenuOpen && (
             <ul className="menu-list">
               <li onClick={handleDeleteComment}>🗑 Supprimer</li>
@@ -162,8 +160,8 @@ useEffect(() => {
         </div>
         <div className="post-details">
           <h3>
-            {post.title} 🔥
-            <strong className="report-title">{post.brand?.name}</strong>?
+            {post.title}
+            <strong className="report-title"> {post.brand?.name} </strong>?
           </h3>
           <p className="report-desc">
             {expandedPost[post.id] ? (

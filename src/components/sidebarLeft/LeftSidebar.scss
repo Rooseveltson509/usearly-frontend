@@ -1,24 +1,25 @@
 .sidebar-left {
   inline-size: 100%;
   max-inline-size: 300px;
-  font-family: 'Raleway';
+  font-family: "Inter";
+  margin-block-start: 7px;
 
   h3 {
-    font-family: 'Urbanist';
+    font-family: "Urbanist";
     font-size: 20px;
     margin-block-start: -60px;
   }
 
   h4 {
-    font-family: 'Inter';
+    font-family: "Inter";
     font-size: 12px;
     font-weight: 300;
     color: #808896;
     line-height: 0;
   }
- 
+
   p {
-    font-family: 'Inter';
+    font-family: "Inter";
     font-size: 18px;
     font-weight: 600;
     line-height: 1.2;
@@ -42,8 +43,8 @@
       border-radius: 50%;
       overflow: hidden;
       margin: 0 auto 10px;
-      background-color: #BAC0C9;
-      border: 2px solid rgb(205, 205, 205)0C9;
+      background-color: #bac0c9;
+      border: 2px solid rgb(205, 205, 205) 0C9;
       position: relative;
       inset-block-start: -60px;
 
@@ -54,10 +55,10 @@
       }
 
       &::before {
-        font-family: 'Font Awesome 5 Free';
+        font-family: "Font Awesome 5 Free";
         font-weight: 900;
         font-size: 72px;
-        color:#7E8999;
+        color: #7e8999;
         position: absolute;
         inset-block-start: 60%;
         inset-inline-start: 50%;
@@ -78,13 +79,13 @@
       padding: 16px 0 0 0;
       inline-size: 100%; /* Assurer que la div occupe toute la largeur */
     }
-    
+
     .stat-item {
       flex: 1; /* Assurer que les autres items prennent une taille égale */
       text-align: center;
       position: relative;
     }
-    
+
     .large-item {
       flex: 1.14; /* Ajuste la taille (test avec 1.8 pour plus d'effet) */
       min-inline-size: 100px; /* Forcer un minimum de largeur */
@@ -102,9 +103,7 @@
       background-color: #f1f1f1; /* Gris pour un style plus propre */
       display: block;
     }
-    
-  
-    
+
     .user-power {
       display: flex; /* Met les éléments sur la même ligne */
       align-items: center; /* Aligne verticalement */
@@ -113,30 +112,30 @@
       margin-block-start: 16px;
       margin-block-end: 30px;
     }
-    
+
     .power-label {
       font-size: 14px;
       color: #808896;
       font-weight: 400;
       white-space: nowrap;
-      font-family: 'Inter';
+      font-family: "Inter";
       margin: 0 10px 0 20px;
     }
-    
+
     .power-value {
       font-size: 20px;
-      font-family: 'Inter';
+      font-family: "Inter";
       font-weight: bold;
       color: #000;
       display: flex; /* Pour aligner l'icône et le nombre */
       align-items: center;
       margin-inline-end: 30px;
     }
-    
+
     .icon {
       font-size: 16px;
-      block-size:16px;
-      inline-size:16px;
+      block-size: 16px;
+      inline-size: 16px;
       font-weight: bold;
       margin-inline-end: 8px;
       color: #b300b3;
@@ -146,7 +145,6 @@
       text-align: center;
       background-color: #ffffff;
     }
-    
 
     .view-more {
       padding: 8px 20px;
@@ -159,7 +157,7 @@
       transition: all 0.3s ease;
       margin-block-end: 10px;
       margin-block-start: 10px;
-  
+
       &:hover {
         background-color: #000;
         color: #fff;

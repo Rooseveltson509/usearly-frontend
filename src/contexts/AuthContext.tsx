@@ -6,9 +6,9 @@ import React, {
   ReactNode,
 } from "react";
 import { logout as performLogout, refreshToken } from "../services/authService";
-import { fetchBrandProfile, fetchUserProfile } from "../services/apiService";
+import { fetchBrandProfile, fetchUserProfile, isTokenExpired } from "../services/apiService";
 import { UserProfile } from "../types/types";
-import { getAccessToken } from "@src/utils/tokenUtils";
+import { getAccessToken, storeTokenInCurrentStorage } from "@src/utils/tokenUtils";
 //import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
@@ -22,12 +22,12 @@ interface AuthContextType {
   setIsAuthenticated: (authState: boolean) => void; // Ajout de la fonction ici
   login: (username: string, type?: "user" | "brand") => void;
   //login: (username: string) => void;
-   setUserType: (type: "user" | "brand" | null) => void; 
+  setUserType: (type: "user" | "brand" | null) => void;
   logout: () => void;
   setUserProfile: (profile: UserProfile | null) => void;
   setFlashMessage: (
     message: string,
-    type: "success" | "error" | "info",
+    type: "success" | "error" | "info"
   ) => void;
   clearFlashMessage: () => void;
 }
@@ -49,124 +49,63 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [userType, setUserType] = useState<"user" | "brand" | null>(null);
 
   // Récupérer et valider les tokens au chargement
-/*   useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
-      const token = getAccessToken(); // Vérifie dans les deux
-      console.log("Token récupéré :", token);
-      if (token) {
-        try {
-          const storedUserType = localStorage.getItem("userType") || sessionStorage.getItem("userType");
-          let profile: UserProfile;
-          if (storedUserType === "brand") {
-            profile = await fetchBrandProfile();
-          } else {
-            profile = await fetchUserProfile();
-          }
+      let token = getAccessToken();
 
-          if (!profile.type) {
-            console.error("⚠️ Type d'utilisateur manquant !");
+      if (!token || isTokenExpired(token)) {
+        console.log("🔄 Aucun token valide, tentative de refresh...");
+        try {
+          token = await refreshToken(); // ✅ Appelle ton `refreshToken()`
+          if (token) {
+            storeTokenInCurrentStorage(token); // ✅ Stocke dans le bon emplacement
+          } else {
+            console.warn("⚠️ Échec du refresh, utilisateur non authentifié.");
+            setIsAuthenticated(false);
+            setIsLoadingProfile(false);
             return;
           }
-
-          //const profile = await fetchUserProfile(); // Appel API pour récupérer le profil
-          setUserProfile(profile);
-          setIsAuthenticated(true);
-          setUserType(profile.type);
         } catch (error) {
-          console.error(
-            "Erreur lors de la récupération du profil utilisateur :",
-            error,
-          );
-          // Rafraîchir le token si nécessaire
-          try {
-            const newAccessToken = await refreshToken();
-            localStorage.setItem("accessToken", newAccessToken); // Mettre à jour le token
-            const profile = await fetchUserProfile(); // Réessayer de récupérer le profil
-            setUserProfile(profile);
-            setIsAuthenticated(true);
-          } catch (refreshError) {
-            console.error(
-              "Erreur lors du rafraîchissement du token :",
-              refreshError,
-            );
-            handleLogout(); // Déconnecte si le refresh échoue
-          }
-        } finally {
-          setIsLoadingProfile(false); // Fin du chargement
+          console.error("❌ Erreur lors du refresh token :", error);
+          setIsAuthenticated(false);
+          setIsLoadingProfile(false);
+          return;
         }
-      } else {
-        setIsAuthenticated(false);
-        setIsLoadingProfile(false); // Fin du chargement si pas de token
       }
-    };
-
-    fetchData();
-  }, [localStorage.getItem("accessToken")]); */
-
-useEffect(() => {
-  const fetchData = async () => {
-    const token = getAccessToken();
-    if (!token) {
-      setIsAuthenticated(false);
-      setIsLoadingProfile(false);
-      return;
-    }
-
-    try {
-      const storedUserType = localStorage.getItem("userType") || sessionStorage.getItem("userType");
-
-      // ✅ Vérification et assignation correcte de userType
-      if (storedUserType === "user" || storedUserType === "brand") {
-        setUserType(storedUserType);
-      } else {
-        console.error("⚠️ Type d'utilisateur invalide !");
-        setUserType(null);
-        setIsAuthenticated(false);
-        setIsLoadingProfile(false);
-        return;
-      }
-
-      const profile = storedUserType === "brand" ? await fetchBrandProfile() : await fetchUserProfile();
-
-      setUserProfile(profile);
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error("Erreur lors de la récupération du profil :", error);
 
       try {
-        const newAccessToken = await refreshToken();
-        localStorage.setItem("accessToken", newAccessToken);
-
-        const storedUserType = localStorage.getItem("userType") || sessionStorage.getItem("userType");
+        const storedUserType =
+          localStorage.getItem("userType") ||
+          sessionStorage.getItem("userType");
 
         if (storedUserType === "user" || storedUserType === "brand") {
           setUserType(storedUserType);
         } else {
-          throw new Error("UserType invalide après refresh");
+          console.error("⚠️ Type d'utilisateur invalide !");
+          setUserType(null);
+          setIsAuthenticated(false);
+          setIsLoadingProfile(false);
+          return;
         }
 
-        const profile = storedUserType === "brand" ? await fetchBrandProfile() : await fetchUserProfile();
+        const profile =
+          storedUserType === "brand"
+            ? await fetchBrandProfile()
+            : await fetchUserProfile();
 
         setUserProfile(profile);
         setIsAuthenticated(true);
-      } catch (refreshError) {
-        console.error("Erreur lors du rafraîchissement du token :", refreshError);
+      } catch (error) {
+        console.error("❌ Erreur lors de la récupération du profil :", error);
         handleLogout();
+      } finally {
+        setIsLoadingProfile(false);
       }
-    } finally {
-      setIsLoadingProfile(false);
-    }
-  };
+    };
 
-  fetchData();
-
-  const handleStorageChange = () => fetchData();
-  window.addEventListener("storage", handleStorageChange);
-
-  return () => window.removeEventListener("storage", handleStorageChange);
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
-
+    fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Effacement automatique des messages flash
   useEffect(() => {
@@ -178,16 +117,13 @@ useEffect(() => {
     }
   }, [flashMessage]);
 
-
-const login = (username: string, type: "user" | "brand" = "user") => {
-  setIsAuthenticated(true);
-  setUsername(username);
-  setUserType(type);
-  localStorage.setItem("userType", type);
-  setFlashMessage("Connexion réussie!", "success");
-};
-
-
+  const login = (username: string, type: "user" | "brand" = "user") => {
+    setIsAuthenticated(true);
+    setUsername(username);
+    setUserType(type);
+    localStorage.setItem("userType", type);
+    setFlashMessage("Connexion réussie!", "success");
+  };
 
   const handleLogout = async () => {
     try {
@@ -222,7 +158,7 @@ const login = (username: string, type: "user" | "brand" = "user") => {
 
   const setFlashMessage = (
     message: string,
-    type: "success" | "error" | "info",
+    type: "success" | "error" | "info"
   ) => {
     setFlashMessageState(message);
     setFlashType(type);

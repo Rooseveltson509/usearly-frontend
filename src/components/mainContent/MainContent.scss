@@ -14,93 +14,6 @@
     display: flex;
   }
 
-  .report-card {
-    background-color: #fff;
-    padding: 20px 30px;
-    margin-block-end: 5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border: 0px solid #ddd;
-    border-radius: 4px;
-
-    h3 {
-      margin: 0 0 10px;
-    }
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      color: #666;
-      font-weight: bold;
-      margin-block-end: 10px;
-
-      .alert-info {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: bold;
-      }
-
-      .time-info {
-        font-style: italic;
-        color: #888;
-      }
-    }
-
-    .card-content {
-      padding: 10px 0;
-
-      .report-title {
-        font-size: 18px;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .report-description {
-        font-size: 14px;
-        color: #444;
-        margin-block-start: 5px;
-        line-height: 1.4;
-      }
-    }
-
-    .card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-block-start: 15px;
-
-      .reactions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 14px;
-
-        .emoji {
-          font-size: 18px;
-        }
-
-        .signalement-count {
-          font-weight: bold;
-        }
-      }
-
-      .check-button {
-        background: black;
-        color: white;
-        font-size: 14px;
-        padding: 8px 16px;
-        cursor: pointer;
-        transition: 0.2s;
-
-        &:hover {
-          opacity: 0.8;
-        }
-      }
-    }
-  }
 
   .filter-bar {
     display: flex;
@@ -247,8 +160,9 @@
     img {
       inline-size: 40px;
       block-size: 40px;
-      border-radius: 50%;
       margin-inline-end: 10px;
+      border-radius: 50%;
+      border: 1px solid rgb(210, 210, 210);
     }
 
     input {
@@ -378,8 +292,6 @@
     }
   }
 
-
-
   .card-header {
     display: flex;
     justify-content: space-between;
@@ -424,27 +336,6 @@
       color: #555;
     }
   }
-
-  .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-block-start: 15px;
-
-    .check-button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 80px;
-      background-color: #000;
-      color: #fff;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #333;
-      }
-    }
-  }
-
   .filter-bar {
     display: flex;
     gap: 10px;
@@ -555,32 +446,24 @@
       }
     }
   }
-.reaction-list {
-  display: flex;
-  gap: 8px;
-  margin-block-start: 5px;
-}
-
-.reaction-icon {
-  background-color: #f4f4f4;
-  border-radius: 12px;
-  padding: 5px 10px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.reaction-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  margin-inline-start: 8px;
-  transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: scale(1.2);
+  .reaction-list {
+    display: flex;
+    gap: 8px;
+    margin-block-start: 5px;
   }
-}
+
+  .reaction-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin-inline-start: 8px;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
 
   // style 2 Pagination
   /* .pagination {
@@ -628,47 +511,67 @@
 } */
 }
 
-
-
 /* Responsive styles */
 .report-card {
-  border-radius: 10px;
-  padding: 15px;
   background: #fff;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 15px;
+  padding: 16px 16px 12px 16px;
+  margin-block-end: 16px;
+  border-radius: 2px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
 
   .report-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #333;
+    padding-block-end: 8px;
+    border-block-end: 1px solid #eee;
+
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid rgb(210, 210, 210);
+    }
+
+    .post-author {
+      color: #565656;
+    }
+    .report-author {
+      margin-left: 5px;
+      color: #000;
+    }
+
+    .report-time {
+      padding-left: 4px;
+    }
+
+    .report-options {
+      margin-inline-start: auto; /* ✅ Pousse l'élément vers la droite */
+      display: flex; /* ✅ Permet de mieux contrôler son placement */
+      align-items: center; /* ✅ Centre verticalement s'il y a d'autres éléments */
+    }
 
     .user-info {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 4px;
+      font-family: "Inter";
+    }
 
-      .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-      }
+    .user-icon {
+      font-size: 18px;
+      margin-inline-end: 5px;
+    }
 
-      .report-author {
-        font-weight: bold;
-      }
-
-      .report-time {
-        color: gray;
-        font-size: 0.9rem;
-      }
+    .user-name {
+      font-weight: 500;
+      color: #333;
     }
   }
 
-  .report-content {
-    margin: 10px 0;
-    font-size: 1rem;
-  }
 
   .report-footer {
     display: flex;

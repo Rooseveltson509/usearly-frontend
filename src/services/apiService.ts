@@ -40,7 +40,7 @@ export const authHeaders = () => {
 };
 
 // Fonction pour vérifier si un token est expiré
-const isTokenExpired = (token: string): boolean => {
+export const isTokenExpired = (token: string): boolean => {
   try {
     const [, payloadBase64] = token.split(".");
     const payload = JSON.parse(atob(payloadBase64));
@@ -56,15 +56,19 @@ const isTokenExpired = (token: string): boolean => {
 apiService.interceptors.request.use(
   async (config) => {
     let token = getAccessToken();
+    console.log("🔍 Vérification du token avant requête :", token);
 
     if (token && isTokenExpired(token)) {
+      console.log("⚠️ Token expiré, tentative de rafraîchissement...");
       try {
-        token = await refreshToken();
+        token = await refreshToken(); // ✅ Rafraîchir immédiatement
+        console.log("✅ Nouveau token après refresh :", token);
+
         if (token) {
-          storeTokenInCurrentStorage(token); // Stocke dans l'emplacement actuel (localStorage ou sessionStorage)
+          storeTokenInCurrentStorage(token); // ✅ Stocker le token dans localStorage/sessionStorage
         }
       } catch (error) {
-        console.error("Erreur lors du rafraîchissement du token :", error);
+        console.error("❌ Erreur lors du rafraîchissement du token :", error);
         localStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessToken");
         throw error;
@@ -82,29 +86,25 @@ apiService.interceptors.request.use(
 
 // Intercepteur de réponses
 apiService.interceptors.response.use(
-  (response) => response, // Retourne la réponse si elle est réussie
+  (response) => response, // ✅ Retourne la réponse si elle est réussie
   async (error) => {
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      console.log("🔄 401 détecté, tentative de rafraîchissement...");
       originalRequest._retry = true;
 
       try {
-        // Rafraîchir le token
-        const newAccessToken = await refreshToken(); // Rafraîchit le token via l'API
+        const newAccessToken = await refreshToken(); // ✅ Rafraîchit le token via l'API
+        console.log("✅ Nouveau token après 401 :", newAccessToken);
 
-        // Vérifiez où stocker le token
-        const rememberMe = localStorage.getItem("accessToken") !== null; // Détermine si le stockage est local
+        const rememberMe = localStorage.getItem("accessToken") !== null; // ✅ Vérifie où stocker le token
         storeToken(newAccessToken, rememberMe);
 
-        // Mettre à jour les headers
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return apiService(originalRequest); // Réessayer la requête originale
+        return apiService(originalRequest); // ✅ Réessayer la requête originale
       } catch (refreshError) {
-        console.error(
-          "Erreur lors du rafraîchissement du token :",
-          refreshError
-        );
+        console.error("❌ Erreur lors du rafraîchissement du token :", refreshError);
         localStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessToken");
         return Promise.reject(refreshError);
@@ -114,6 +114,7 @@ apiService.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 
 export const registerUser = async (
   data: RegisterData
