@@ -286,7 +286,7 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
             ) : (
               <>
                 <img src={handsUp} alt="Main" width="20" height="20" />
-                <p>Me too</p>
+                <span>Me too</span>
               </>
             )}
           </span>

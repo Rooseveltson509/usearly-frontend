@@ -1,22 +1,24 @@
 .report-card {
-
+  h3 {
+    margin: 0;
+    font-family: "Raleway";
+  }
 
   .img-round {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    inline-size: 50px; // Largeur fixe
-    block-size: 50px; // Hauteur fixe pour garder le cercle
+    inline-size: 64px; // Largeur fixe
+    block-size: 64px; // Hauteur fixe pour garder le cercle
     border-radius: 50%;
     overflow: hidden; // Coupe tout ce qui dépasse du cercle
     background-color: #fff; // Fond blanc pour uniformiser
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
     .brand-logo {
       position: absolute;
-      inline-size: 80%; // ✅ Ajuste la taille du logo pour qu'il soit bien contenu
-      block-size: 80%;
+      inline-size: 100%; // ✅ Ajuste la taille du logo pour qu'il soit bien contenu
+      block-size: 100%;
       object-fit: contain; // ✅ Empêche le logo d'être coupé
       padding: 5px; // ✅ Ajoute un petit espace autour du logo pour éviter qu'il touche les bords
     }
@@ -29,6 +31,7 @@
 
   .img-round {
     flex-shrink: 0; // Empêche l'image de rétrécir ou de se déplacer
+    border: 1px solid #f0f0f0; // ajout d'une bordure
   }
 
   .flex-element {
@@ -41,7 +44,8 @@
     font-size: 24px;
     margin-inline-start: 15px;
   }
-  .report-content {background-color: #f7f7f7;
+  .report-content {
+    background-color: #f7f7f7;
     display: flex;
     justify-content: space-between; /* ✅ Aligne le texte à gauche et le logo à droite */
     align-items: start;
@@ -49,7 +53,7 @@
     padding: 25px 15px 0 15px;
     margin-block-start: 15px;
     margin-block-end: 10px;
-    gap: 12px;
+    gap: 8px;
 
     .report-desc {
       font-family: "Inter";
@@ -70,6 +74,7 @@
     color: #777;
     margin-block-end: 10px;
     gap: 20px;
+    font-family:'inter';
   }
 
   .comment-section {
@@ -373,12 +378,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 24px;
       //background: white;
       border-radius: 50%;
-      padding: 16px;
-      //box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       transition: transform 0.1s ease-in-out;
+      margin-inline-end: -16px; // ✅ Effet de superposition comme LinkedIn
 
       &:hover {
         transform: scale(1.1);
@@ -394,11 +400,6 @@
     .reaction-icons {
       display: flex;
       align-items: center;
-
-      .reaction-icon {
-        font-size: 24px;
-        margin-inline-end: -16px; // ✅ Effet de superposition comme LinkedIn
-      }
     }
 
     .reaction-total {
@@ -532,15 +533,15 @@
   }
 
   .see-more {
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
-    color: #007bff;
+    color: #000000;
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
     display: inline-block;
 
     &:hover {
-      color: #0056b3;
+      color: #000000;
       text-decoration: underline;
       transform: scale(1.05);
     }
@@ -549,7 +550,6 @@
   .image-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
     margin-block-start: 10px;
 
     .report-image {
@@ -566,10 +566,13 @@
     }
 
     .see-more {
-      color: blue;
+      color: rgb(0, 0, 0);
       cursor: pointer;
       text-decoration: underline;
       margin-block-start: 5px;
+      margin-block-end: 25px;
+      font-family: "Inter";
+      font-size: 13px;
     }
   }
 
