@@ -125,6 +125,7 @@
     padding-block-start: 12px;
     border-block-start: 1px solid #eee;
     align-items: center;
+    font-family: 'inter';
 
     .action-button {
       padding: 8px 12px;
@@ -164,11 +165,12 @@
 .emoji-picker {
   position: relative;
   display: flex;
-  gap: 8px;
+  gap: 4px;
   background: #fff;
   border-radius: 8px;
-  padding: 8px;
+  padding: 8px 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-left:85px;
 
   .emoji-btn {
     position: relative;
