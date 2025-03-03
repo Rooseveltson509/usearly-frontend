@@ -12,7 +12,13 @@ import { Reaction } from "@src/types/types";
 import CommonReactionsModal from "@src/components/commons/CommonReactionsModal";
 import { getEmojisForType } from "@src/components/config/emojisConfig";
 import "./ReactionSection.scss";
-import { addReactionToPost, fetchPostReactions } from "@src/services/apiService";
+import {
+  addReactionToPost,
+  fetchPostReactions,
+} from "@src/services/apiService";
+import commentIcon from "../../../assets/card/comment.svg";
+import handsUp from "../../../assets/card/handsup.svg";
+import solution from "../../../assets/card/solution.svg";
 
 interface ReactionSectionProps {
   parentId: string;
@@ -44,8 +50,6 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
   >("report");
   const [selectedParentId, setSelectedParentId] = useState<string | null>(null);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
-  
-
 
   // Sélectionne les méthodes dynamiquement
   const fetchReactions =
@@ -65,21 +69,21 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
       : type === "coupdecoeur"
       ? addReactionToCdc
       : addReactionToSuggestion;
-  
-    useEffect(() => {
-      const loadReactions = async () => {
-        try {
-          const response = await fetchReactions(parentId);
-          setReactions(response.reactions || []);
-          console.log("Reactions chargées :", response.reactions);
-        } catch (error) {
-          console.error("Erreur lors du chargement des réactions :", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      loadReactions();
-    }, [fetchReactions, parentId]);
+
+  useEffect(() => {
+    const loadReactions = async () => {
+      try {
+        const response = await fetchReactions(parentId);
+        setReactions(response.reactions || []);
+        console.log("Reactions chargées :", response.reactions);
+      } catch (error) {
+        console.error("Erreur lors du chargement des réactions :", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadReactions();
+  }, [fetchReactions, parentId]);
 
   // ✅ Vérifie si l'utilisateur a déjà réagi
   const userReaction = reactions.find((reaction) => reaction.userId === userId);
@@ -97,71 +101,72 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
     }, 300); // Petit délai pour éviter une disparition trop rapide
   };
 
-const handleReaction = async (parentId: string, emoji: string) => {
-  if (!userId) {
-    console.error("Utilisateur non authentifié !");
-    return;
-  }
-
-  const normalizedEmoji = normalizeEmoji(emoji);
-
-  let newReactions = [...reactions];
-
-  console.log("🔍 Emoji reçu :", emoji); // ✅ Vérification
-  console.log("🔍 Emoji normalizedEmoji :", normalizedEmoji); // ✅ Vérification
-  console.log("🔍 ParentId reçu :", parentId); // ✅ Vérification
-
-  if (!emoji) {
-    console.error("❌ Emoji non défini !");
-    return;
-  }
-  const userReactionIndex = newReactions.findIndex((r) => r.userId === userId);
-
-  if (userReactionIndex !== -1) {
-    if (newReactions[userReactionIndex].emoji === normalizedEmoji) {
-      // ✅ Supprime la réaction immédiatement
-      newReactions = newReactions.filter((r) => r.userId !== userId);
-    } else {
-      // ✅ Change la réaction immédiatement
-      newReactions[userReactionIndex].emoji = normalizedEmoji;
-    }
-  } else {
-    // ✅ Ajoute la réaction immédiatement
-    newReactions.push({ userId, emoji: normalizedEmoji, count: 1 });
-  }
-
-  // ✅ Mise à jour optimiste
-  setReactions(newReactions);
-
-  // ✅ Notifie `PostList` si `onReactionUpdate` est fourni
-  if (onReactionUpdate) {
-    onReactionUpdate(parentId, newReactions);
-  }
-
-  try {
-    const response = await addReaction(parentId, normalizedEmoji);
-
-    if (!response.success) {
-      throw new Error("Échec de la mise à jour des réactions !");
+  const handleReaction = async (parentId: string, emoji: string) => {
+    if (!userId) {
+      console.error("Utilisateur non authentifié !");
+      return;
     }
 
-    // 🔄 Synchronise avec l'API
-    setReactions(response.reactions);
+    const normalizedEmoji = normalizeEmoji(emoji);
 
-    // 🔄 Notifie `PostList` pour assurer la cohérence des données
-    if (onReactionUpdate) {
-      onReactionUpdate(parentId, response.reactions);
+    let newReactions = [...reactions];
+
+    console.log("🔍 Emoji reçu :", emoji); // ✅ Vérification
+    console.log("🔍 Emoji normalizedEmoji :", normalizedEmoji); // ✅ Vérification
+    console.log("🔍 ParentId reçu :", parentId); // ✅ Vérification
+
+    if (!emoji) {
+      console.error("❌ Emoji non défini !");
+      return;
     }
-  } catch (error) {
-    console.error("❌ Erreur lors de l'ajout de la réaction :", error);
-
-    // 🔄 Annule la mise à jour en cas d'échec
-    setReactions((prevReactions) =>
-      prevReactions.filter((r) => r.userId !== userId)
+    const userReactionIndex = newReactions.findIndex(
+      (r) => r.userId === userId
     );
-  }
-};
 
+    if (userReactionIndex !== -1) {
+      if (newReactions[userReactionIndex].emoji === normalizedEmoji) {
+        // ✅ Supprime la réaction immédiatement
+        newReactions = newReactions.filter((r) => r.userId !== userId);
+      } else {
+        // ✅ Change la réaction immédiatement
+        newReactions[userReactionIndex].emoji = normalizedEmoji;
+      }
+    } else {
+      // ✅ Ajoute la réaction immédiatement
+      newReactions.push({ userId, emoji: normalizedEmoji, count: 1 });
+    }
+
+    // ✅ Mise à jour optimiste
+    setReactions(newReactions);
+
+    // ✅ Notifie `PostList` si `onReactionUpdate` est fourni
+    if (onReactionUpdate) {
+      onReactionUpdate(parentId, newReactions);
+    }
+
+    try {
+      const response = await addReaction(parentId, normalizedEmoji);
+
+      if (!response.success) {
+        throw new Error("Échec de la mise à jour des réactions !");
+      }
+
+      // 🔄 Synchronise avec l'API
+      setReactions(response.reactions);
+
+      // 🔄 Notifie `PostList` pour assurer la cohérence des données
+      if (onReactionUpdate) {
+        onReactionUpdate(parentId, response.reactions);
+      }
+    } catch (error) {
+      console.error("❌ Erreur lors de l'ajout de la réaction :", error);
+
+      // 🔄 Annule la mise à jour en cas d'échec
+      setReactions((prevReactions) =>
+        prevReactions.filter((r) => r.userId !== userId)
+      );
+    }
+  };
 
   // ✅ Fonction pour ouvrir le modal
   const handleOpenReactionModal = async (
@@ -225,9 +230,9 @@ const handleReaction = async (parentId: string, emoji: string) => {
             className="meta-info"
             onClick={() => setShowCommentInput(!showCommentInput)}
           >
-            💬 {commentCount} commentaires
+            {commentCount} commentaires{" "}
           </span>
-          <span className="meta-info">💡 solution</span>
+          <span className="meta-info">solution</span>
           <span className="meta-info transmitted">
             <svg
               width="16"
@@ -267,7 +272,23 @@ const handleReaction = async (parentId: string, emoji: string) => {
             className={`action-button ${userHasReacted ? "active-button" : ""}`}
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
           >
-            {userReaction?.emoji || "✋"} J’ai aussi ce problème
+            {userReaction?.emoji ? (
+              <>
+                {userReaction.emoji} {/* ✅ Affichage de l’émoji */}
+                <span className="emoji-label">
+                  {
+                    getEmojisForType(type).find(
+                      (e) => e.emoji === userReaction.emoji
+                    )?.label
+                  }
+                </span>
+              </>
+            ) : (
+              <>
+                <img src={handsUp} alt="Main" width="20" height="20" />
+                <p>Me too</p>
+              </>
+            )}
           </span>
 
           {/* ✅ Affichage conditionnel des emojis */}
@@ -298,10 +319,20 @@ const handleReaction = async (parentId: string, emoji: string) => {
           className="action-button"
           onClick={() => setShowCommentInput(!showCommentInput)}
         >
-          {showCommentInput ? "❌ Masquer" : "💬 Commenter"}
+          {showCommentInput ? (
+            "❌ Masquer "
+          ) : (
+            <>
+              <img src={commentIcon} alt="Commenter" width="20" height="20" />
+              <span>Commenter</span>
+            </>
+          )}
         </span>
 
-        <span className="action-button">💡 Solutionner</span>
+        <span className="action-button">
+          <img src={solution} alt="solution" width="20" height="20" />
+          Solutionner
+        </span>
         <span className="check-button">Je check</span>
       </div>
 

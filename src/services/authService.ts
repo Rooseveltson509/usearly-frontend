@@ -85,22 +85,29 @@ export const loginBrand = async (
  *
  * @returns
  */
-export const refreshToken = async (): Promise<string> => {
+export const refreshToken = async () => {
   try {
-    const csrfToken = await getCsrfToken(); // 🔥 Récupère le CSRF Token avant
+    console.log("🔄 Tentative de refresh token...");
+
+    const csrfToken = await getCsrfToken();
+    if (!csrfToken) {
+      console.error("❌ CSRF Token introuvable !");
+      throw new Error("CSRF Token manquant.");
+    }
+
+    console.log("✅ CSRF Token à envoyer :", csrfToken);
 
     const response = await apiService.post(
       "/user/refresh-token",
       {},
       {
-        withCredentials: true, // ✅ Envoie le cookie refreshToken
-        headers: { "X-CSRF-Token": csrfToken }, // ✅ Ajoute le CSRF Token
+        withCredentials: true,
+        headers: { "X-CSRF-Token": csrfToken },
       }
     );
 
-    const { accessToken } = response.data;
-    console.log("🔄 Nouveau token récupéré :", accessToken);
-    return accessToken; // Retourne le nouveau token
+    console.log("✅ Token d'accès rafraîchi :", response.data.accessToken);
+    return response.data.accessToken;
   } catch (error) {
     console.error("❌ Erreur lors du rafraîchissement du token :", error);
     throw new Error("Impossible de rafraîchir le token.");

@@ -154,11 +154,11 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             <strong>{report.User?.pseudo}</strong>
           </span>
           <span className="post-author">
-            C’est moi ou <strong>{extractBrandName(report.marque)} bug</strong>{" "}
+            C’est moi ou {extractBrandName(report.marque)} bug
             ?
           </span>
           <span className="report-time">
-            {" "}
+          ﹒{" "}
             {formatRelativeTime(report.createdAt)}
           </span>
         </div>

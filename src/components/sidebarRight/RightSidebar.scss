@@ -3,14 +3,14 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-block-start: 20px;
+  margin-block-start: 30px;
 
   .section {
     padding:0; /* Suppression des padding internes */
     background-color: transparent; /* Suppression de la couleur de fond */
     box-shadow: none; /* Suppression de l'ombre */
     border-radius: 0; /* Suppression des bordures arrondies */
-    border-bottom: 1px solid rgba(0, 0, 0, 0.051);
+    border-block-end: 1px solid rgba(0, 0, 0, 0.051);
 
     h3 {
       font-size: 20px;
