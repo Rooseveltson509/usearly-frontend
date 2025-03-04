@@ -12,7 +12,7 @@ import { CommentType } from "@src/types/types";
 import {
   fetchReportReactions,
 } from "@src/services/apiReactions";
-import signalIcon from "../../assets/images/signalIcon.svg";
+import signalIcon from "../../assets/images/signals.svg";
 import defaultBrandAvatar from "../../assets/images/img-setting.jpeg";
 import { AnimatePresence, motion } from "framer-motion";
 import ReactionSection from "../reactions/reaction-section/ReactionSection";
@@ -36,9 +36,6 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
   }>({});
   const [commentCount, setCommentCount] = useState(0);
   const [, setLoading] = useState(true); // ✅ Ajout du state de chargement
-  const [expandedImages, setExpandedImages] = useState<{
-    [key: string]: boolean;
-  }>({}); // 🔥 Nouvel état pour gérer l'affichage des images
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // 🚀 Stocke le logo de la marque
@@ -47,13 +44,6 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
   const extractBrandName = (marque: string): string => {
     if (!marque) return "";
     return marque.replace(/\.\w+$/, "").toLowerCase();
-  };
-
-  const toggleImageExpand = (postId: string) => {
-    setExpandedImages((prev) => ({
-      ...prev,
-      [postId]: !prev[postId], // ✅ Basculer l'état de l'image
-    }));
   };
 
   // 🚀 Récupération du logo de la marque si elle existe en BDD
@@ -154,12 +144,10 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             <strong>{report.User?.pseudo}</strong>
           </span>
           <span className="post-author">
-            C’est moi ou {extractBrandName(report.marque)} bug
-            ?
+            C’est moi ou {extractBrandName(report.marque)} bug ?
           </span>
           <span className="report-time">
-          ﹒{" "}
-            {formatRelativeTime(report.createdAt)}
+            ﹒ {formatRelativeTime(report.createdAt)}
           </span>
         </div>
         <div className="report-options">⋮</div>
@@ -184,17 +172,21 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                   >
                     {report.description}
                   </motion.span>
-                  <motion.span
-                    key="less"
-                    className="see-more"
-                    onClick={() => toggleExpand(report.id)}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    Voir moins
-                  </motion.span>
+
+                  {/* 📌 Affichage de l'image uniquement si "Voir plus" est actif */}
+                  {report.capture && (
+                    <motion.img
+                      src={report.capture}
+                      alt="Capture"
+                      className="report-image"
+                      onClick={() =>
+                        report.capture && setSelectedImage(report.capture)
+                      }
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
                 </>
               ) : (
                 <>
@@ -209,57 +201,39 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                       ? `${report.description.substring(0, 150)}... `
                       : report.description}
                   </motion.span>
-                  {report.description.length > 150 && (
-                    <motion.span
-                      key="more"
-                      className="see-more"
-                      onClick={() => toggleExpand(report.id)}
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -5 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      Voir plus
-                    </motion.span>
-                  )}
                 </>
               )}
             </AnimatePresence>
-          </p>
-          {/* 📌 Affichage de l'image avec contrôle d'expansion */}
-          {report.capture && (
-            <div className="image-container">
-              {expandedImages[report.id] ? (
-                <>
-                  <motion.img
-                    src={report.capture}
-                    alt="Capture"
-                    className="report-image"
-                    onClick={() =>
-                      report.capture && setSelectedImage(report.capture)
-                    }
-                    // ✅ Lightbox sur clic
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                  <span
-                    className="see-more"
-                    onClick={() => toggleImageExpand(report.id)}
-                  >
-                    Masquer l’image
-                  </span>
-                </>
-              ) : (
+
+            {/* 📌 Bouton "Voir plus" ou "Voir moins" avec chevron dynamique */}
+            {(report.description.length > 150 || report.capture) && (
+              <motion.span
+                key="toggle"
+                className="see-more"
+                onClick={() => toggleExpand(report.id)}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -5 }}
+                transition={{ duration: 0.3 }}
+              >
+                {expandedPosts[report.id] ? "Voir moins" : "Voir plus"}
                 <span
-                  className="see-more"
-                  onClick={() => toggleImageExpand(report.id)}
+                  className={`chevron ${
+                    expandedPosts[report.id] ? "up" : "down"
+                  }`}
                 >
-                  Voir l’image
+                  ▼
                 </span>
-              )}
-            </div>
-          )}
+              </motion.span>
+            )}
+
+            {/* ✅ Lightbox pour afficher l’image en grand */}
+            {selectedImage && (
+              <div className="lightbox" onClick={() => setSelectedImage(null)}>
+                <img src={`${selectedImage}`} alt="Zoomed" />
+              </div>
+            )}
+          </p>
 
           {/* ✅ Lightbox / Modal pour l’image en grand */}
           {selectedImage && (
@@ -268,6 +242,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             </div>
           )}
         </div>
+
         <div className="img-round">
           {brandLogo && (
             <img
@@ -295,7 +270,6 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
           setCommentCount={setCommentCount} // ✅ Passe la mise à jour à `CommentSection`
         />
       )}
-
     </div>
   );
 };

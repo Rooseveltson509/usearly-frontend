@@ -3,7 +3,7 @@ import "./PostList.scss";
 import defaultAvatar from "../../../assets/images/user.png";
 import { Post, Reaction } from "@src/types/types";
 import { formatRelativeTime } from "@src/utils/formatRelativeTime";
-import postIcon from "../../../assets/images/icon-post.svg";
+import postIcon from "../../../assets/images/signalIcon.svg";
 import "react-confirm-alert/src/react-confirm-alert.css"; // 📌 Style par défaut
 import ReactionSection from "@src/components/reactions/reaction-section/ReactionSection";
 import CommentSection from "@src/components/comment-section/CommentSection";
