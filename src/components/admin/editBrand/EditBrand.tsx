@@ -49,25 +49,25 @@ const EditBrand: React.FC<EditBrandProps> = ({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
+  setSuccess(null);
 
+  try {
     const dataToSend = new FormData();
     dataToSend.append("name", formData.name);
     dataToSend.append("email", formData.email);
     dataToSend.append("offres", formData.offres);
 
-    if (isEditingPassword && formData.mdp && formData.mdp.trim() !== "") {
-      dataToSend.append("mdp", formData.mdp);
-    }
     if (formData.avatar) {
+      console.log("📤 Avatar ajouté au FormData :", formData.avatar.name);
       dataToSend.append("avatar", formData.avatar);
     }
 
     const response = await updateBrand(brand.id, dataToSend);
+    console.log("🛠️ Réponse reçue :", response);
 
     if (response.success && response.updatedBrand) {
       setSuccess("Marque mise à jour avec succès !");
@@ -76,9 +76,14 @@ const EditBrand: React.FC<EditBrandProps> = ({
     } else {
       setError(response.error || "Une erreur est survenue.");
     }
-
+  } catch (err) {
+    console.error("Erreur lors de la mise à jour de la marque :", err);
+    setError("Erreur inattendue. Veuillez réessayer.");
+  } finally {
     setLoading(false);
-  };
+    console.log("🔽 Fin de la mise à jour.");
+  }
+};
 
   return (
     <div className="edit-brand-modal">

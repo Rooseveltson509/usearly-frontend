@@ -8,7 +8,7 @@ import {
   fetchBrands,
 } from "../../services/apiService";
 import { Cdc, Reports, Suggestion } from "../../types/Reports";
-import signalIcon from "../../assets/images/signalIcon.svg";
+import signalIcon from "../../assets/images/signals.svg";
 import baguette from "../../assets/images/baguette.svg";
 import cdc from "../../assets/images/cdc.svg";
 import { Brand, Post, Reaction } from "@src/types/types";
@@ -63,6 +63,15 @@ const MainContent: React.FC = () => {
 
 
 
+  useEffect(() => {
+    // Désactiver le scroll global quand cette page est affichée
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      // Réactiver le scroll global quand l'utilisateur quitte la page
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   useEffect(() => {
     if (selectedFilter !== "Actualité") {

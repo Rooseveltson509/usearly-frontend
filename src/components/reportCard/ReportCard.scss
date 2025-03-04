@@ -1,4 +1,50 @@
 .report-card {
+
+.see-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px; // Espacement entre l'icône et le texte
+  margin-inline-start: 8px; // Espace après la description
+  margin-block-start: 10px; // Ajoute un petit espace quand "Voir plus" apparaît
+  cursor: pointer;
+  font-weight: 600;
+  color: #007bff; // Bleu propre
+  transition: color 0.3s ease, transform 0.2s ease, margin-top 0.2s ease;
+
+  &:hover {
+    color: #0056b3; // Bleu plus foncé au survol
+    transform: translateY(-1px); // Effet léger au hover
+  }
+
+  &.expanded {
+    margin-block-start: 12px; // Ajoute encore plus d'espace quand c'est ouvert
+
+    &::after {
+      transform: rotate(180deg); // Flèche vers le haut quand c'est ouvert
+    }
+  }
+}
+
+.chevron {
+  display: inline-block;
+  margin-inline-start: 5px;
+  transition: transform 0.3s ease;
+}
+
+.chevron.up {
+  transform: rotate(180deg);
+}
+
+.chevron.down {
+  transform: rotate(0deg);
+}
+
+
+  .report-image {
+    margin-block-start: 12px; // Ajoute un espace entre l'image et le texte "Voir moins"
+    border-radius: 6px; // Arrondi les bords pour un look plus propre
+  }
+
   h3 {
     margin: 0;
     font-family: "Raleway";
@@ -74,7 +120,7 @@
     color: #777;
     margin-block-end: 10px;
     gap: 20px;
-    font-family:'inter';
+    font-family: "inter";
   }
 
   .comment-section {

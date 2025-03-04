@@ -104,7 +104,10 @@ apiService.interceptors.response.use(
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return apiService(originalRequest); // ✅ Réessayer la requête originale
       } catch (refreshError) {
-        console.error("❌ Erreur lors du rafraîchissement du token :", refreshError);
+        console.error(
+          "❌ Erreur lors du rafraîchissement du token :",
+          refreshError
+        );
         localStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessToken");
         return Promise.reject(refreshError);
@@ -114,7 +117,6 @@ apiService.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
 
 export const registerUser = async (
   data: RegisterData
@@ -169,7 +171,6 @@ export const confirmEmail = async (
     );
   }
 };
-
 
 // ✅ Récupérer tous les posts
 export const fetchPosts = async (
@@ -346,7 +347,6 @@ export const addReactionToPost = async (postId: string, emoji: string) => {
   }
 };
 
-
 export const fetchReactionUsers = async (
   postId: string,
   emoji?: string
@@ -373,9 +373,6 @@ export const fetchPostReactions = async (postId: string) => {
     return { reactions: [] }; // ✅ Retourne un tableau vide en cas d'erreur
   }
 };
-
-
-
 
 // 📌 Ajouter un commentaire à un post
 export const addCommentToPost = async (postId: string, content: string) => {
@@ -454,7 +451,6 @@ export const deletePost = async (postId: string) => {
   }
 };
 
-
 // 📌 Ajouter un commentaire à un Report
 export const addCommentToReport = async (reportId: string, content: string) => {
   try {
@@ -489,7 +485,6 @@ export const fetchReportComments = async (
   }
 };
 
-
 // 📌 Supprimer un commentaire d'un Report (utilise la même route que pour les Posts)
 export const deleteReportComment = async (commentId: string) => {
   try {
@@ -498,7 +493,10 @@ export const deleteReportComment = async (commentId: string) => {
     });
     return { success: true, message: "Commentaire supprimé avec succès" };
   } catch (error) {
-    console.error("Erreur lors de la suppression du commentaire du Report :", error);
+    console.error(
+      "Erreur lors de la suppression du commentaire du Report :",
+      error
+    );
     return {
       success: false,
       error:
@@ -625,9 +623,7 @@ export const deleteCdcComment = async (commentId: string) => {
   }
 };
 
-
-
-export const updateBrand = async (
+/* export const updateBrand = async (
   brandId: string,
   data: FormData
 ): Promise<{ success: boolean; updatedBrand?: Brand; error?: string }> => {
@@ -663,7 +659,62 @@ export const updateBrand = async (
 
     return { success: false, error: "Erreur réseau ou serveur" };
   }
+}; */
+
+export const updateBrand = async (
+  brandId: string,
+  data: FormData
+): Promise<{ success: boolean; updatedBrand?: Brand; error?: string }> => {
+  try {
+    console.log("🛠️ ID de la marque envoyé :", brandId);
+
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error("Utilisateur non authentifié.");
+    }
+
+    const response = await axios.put(
+      `${API_BASE_URL}/${API_VERSION}/admin/brand/update/${brandId}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log("🛠️ Réponse API :", response);
+
+    return { success: true, updatedBrand: response.data.brand };
+  } catch (error: unknown) {
+    console.error("❌ Erreur API :", error);
+
+    if (axios.isAxiosError(error)) {
+      console.log("❌ Réponse erreur API :", error.response?.data);
+
+      // 📌 Vérifier si c'est une erreur de type d'image (400 Bad Request)
+      if (
+        error.response?.status === 400 &&
+        error.response?.data?.error?.includes("Format d'image non autorisé")
+      ) {
+        return {
+          success: false,
+          error: "⚠️ Image invalide. Utilisez JPG, PNG ou WEBP.",
+        };
+      }
+
+      return {
+        success: false,
+        error: error.response?.data?.error || "Erreur inconnue",
+      };
+    }
+
+    return { success: false, error: "Erreur réseau ou serveur" };
+  }
 };
+
+
+
 
 export const deleteBrand = async (
   brandId: string
@@ -977,8 +1028,6 @@ export const deleteAccount = async () => {
     },
   });
 };
-
-
 
 export const fetchReportCommentCount = async (reportId: string) => {
   try {

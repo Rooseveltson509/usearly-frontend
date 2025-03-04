@@ -17,8 +17,8 @@ import {
   fetchPostReactions,
 } from "@src/services/apiService";
 import commentIcon from "../../../assets/card/comment.svg";
-import handsUp from "../../../assets/card/handsup.svg";
 import solution from "../../../assets/card/solution.svg";
+import { getActionContent } from "@src/utils/getActionContent";
 
 interface ReactionSectionProps {
   parentId: string;
@@ -50,6 +50,7 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
   >("report");
   const [selectedParentId, setSelectedParentId] = useState<string | null>(null);
   const [hoveredLabel, setHoveredLabel] = useState<string | null>(null);
+  const { image, text } = getActionContent(type);
 
   // Sélectionne les méthodes dynamiquement
   const fetchReactions =
@@ -177,7 +178,6 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
     setSelectedParentId(parentId);
     setSelectedType(type); // ✅ Garde en mémoire le type pour bien charger les données
   };
-  console.log(`🎭 Emojis chargés pour ${type}:`, getEmojisForType(type));
 
   return (
     <>
@@ -285,8 +285,8 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
               </>
             ) : (
               <>
-                <img src={handsUp} alt="Main" width="20" height="20" />
-                <span>Me too</span>
+                <img src={image} alt={text} width="20" height="20" />
+                <span>{text}</span>
               </>
             )}
           </span>
