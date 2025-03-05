@@ -7,7 +7,7 @@ import postIcon from "../../../assets/images/signalIcon.svg";
 import "react-confirm-alert/src/react-confirm-alert.css"; // 📌 Style par défaut
 import ReactionSection from "@src/components/reactions/reaction-section/ReactionSection";
 import CommentSection from "@src/components/comment-section/CommentSection";
-import { deletePost } from "@src/services/apiService";
+import { deletePost, fetchPostCommentCount } from "@src/services/apiService";
 import Swal from "sweetalert2";
 
 interface PostProps {
@@ -39,31 +39,39 @@ const PostList: React.FC<PostProps> = ({
     }));
   };
 
+  useEffect(() => {
+    const loadCommentCount = async () => {
+      const count = await fetchPostCommentCount(post.id);
+      setCommentCount(count);
+    };
+
+    loadCommentCount();
+  }, [post.id]);
+
   // ✅ Fonction pour fermer le menu quand on clique ailleurs
-useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (!event.target) return;
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!event.target) return;
 
-    const menuElements = document.querySelectorAll(".menu-list");
-    let isClickInside = false;
+      const menuElements = document.querySelectorAll(".menu-list");
+      let isClickInside = false;
 
-    menuElements.forEach((menu) => {
-      if (menu.contains(event.target as Node)) {
-        isClickInside = true;
+      menuElements.forEach((menu) => {
+        if (menu.contains(event.target as Node)) {
+          isClickInside = true;
+        }
+      });
+
+      if (!isClickInside) {
+        setIsMenuOpen(false);
       }
-    });
+    };
 
-    if (!isClickInside) {
-      setIsMenuOpen(false);
-    }
-  };
-
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
-
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleDeleteComment = async () => {
     const result = await Swal.fire({

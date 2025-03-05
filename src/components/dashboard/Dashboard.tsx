@@ -22,12 +22,12 @@ const Dashboard: React.FC<DashboardProps> = () => {
     };
   }, []);
   return (
-    <div className="app-layout container">
+    <div className="app-layout container" id="sidebar-left">
       <div className="sidebar-left">
         <LeftSidebar />
       </div>
       <MainContent />
-      <div className="sidebar-right">
+      <div className="sidebar-right" id="sidebar-right">
         <RightSidebar />
       </div>
     </div>
