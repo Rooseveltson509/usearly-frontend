@@ -76,10 +76,11 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="login-container">
-      <h1>
+    <><div className="login-container">
+      <h1>Ravi de te revoir Usear !</h1>
+      <p>
         Saisis ton adresse e-mail et ton mot de passe pour rejoindre Usearly.
-      </h1>
+      </p>
       <form
         onSubmit={handleLogin}
         onClick={(e) => e.stopPropagation()}
@@ -91,22 +92,19 @@ const Login: React.FC = () => {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+            required />
           <input
             type="password"
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+            required />
           <div className="remember">
             <label className="rememberMe">
               <input
                 type="checkbox"
                 checked={rememberMe}
-                onChange={() => setRememberMe(!rememberMe)}
-              />{" "}
+                onChange={() => setRememberMe(!rememberMe)} />{" "}
               Se souvenir de moi.
             </label>
             <Link to="/forgot-password" className="forgot-password-link">
@@ -122,15 +120,28 @@ const Login: React.FC = () => {
         <img
           src={backgroundImage}
           alt="Usearly Background"
-          className="background-image"
-        />
+          className="background-image" />
       </div>
-      <footer className="signup-footer">
-        <a href="#">Conditions générales d'utilisation</a>
-        <a href="#">Nous contacter</a>
-        <p>© Usearly 2024</p>
-      </footer>
-    </div>
+
+    </div><footer className="landing-footer">
+        <ul className="footer-cgpu">
+          <li>
+            {" "}
+            <p>
+              <a href="#">Conditions générales d'utilisation</a>
+            </p>
+          </li>
+          <li>
+            {" "}
+            <p>
+              <a href="#">Nous contacter</a>
+            </p>
+          </li>
+          <li>
+            <p>© Usearly 2024</p>
+          </li>
+        </ul>
+      </footer></>
   );
 };
 

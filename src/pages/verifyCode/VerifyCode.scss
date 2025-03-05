@@ -2,23 +2,27 @@
   max-inline-size: 400px;
   margin: 50px auto;
   text-align: center;
-  font-family: Arial, sans-serif;
+  font-family: "Inter";
 
   h2 {
-    font-size: 24px;
+    font-family: "Urbanist";
+    font-size: 36px;
+    margin-block-start: 60px;
     margin-block-end: 20px;
   }
 
   p {
-    font-size: 16px;
+    font-size: 15px;
     margin-block-end: 20px;
     color: #666;
+    font-weight: 400;
   }
 
   .code-inputs {
     display: flex;
     justify-content: center;
     gap: 10px;
+    margin-block-start: 40px;
 
     .code-input {
       inline-size: 40px;
@@ -31,7 +35,7 @@
       transition: border-color 0.3s ease;
 
       &:focus {
-        border-color: #007bff;
+        border-color: #000000;
       }
     }
   }
@@ -43,18 +47,18 @@
   }
 
   .submit-button {
-    margin-block-start: 20px;
+    margin-block-start: 10px;
     padding: 10px 20px;
     font-size: 16px;
     color: #fff;
-    background-color: #007bff;
+    background-color: #ff334e;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: #0056b3;
+      background-color: #ff334e;
     }
   }
   .signup-button {
@@ -63,13 +67,14 @@
     margin-block-start: 10px;
     font-size: 16px;
     color: #fff;
-    background-color: #5c0d91;
+    background-color: #000000;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 40px;
   }
 
   .signup-button:hover {
-    background-color: #450b6d;
+    background-color: #181818;
   }
 }

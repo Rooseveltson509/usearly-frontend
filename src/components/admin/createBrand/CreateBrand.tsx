@@ -134,11 +134,11 @@ const CreateBrand: React.FC<CreateBrandProps> = ({
         />
 
         <div className="form-actions">
-          <button type="button" className="cancel-btn" onClick={onClose}>
-            Annuler
-          </button>
           <button type="submit" className="create-btn" disabled={isLoading}>
             {isLoading ? "Création en cours..." : "Créer la marque"}
+          </button>
+          <button type="button" className="cancel-btn" onClick={onClose}>
+            Annuler
           </button>
         </div>
       </form>

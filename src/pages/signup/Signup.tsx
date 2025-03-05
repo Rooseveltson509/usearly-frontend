@@ -122,110 +122,126 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div className="signup-container">
-      <h1>Faisons de toi un Usear !</h1>
-      {error && <p className="error-message">{error}</p>}
-      <form className="signup-form" onSubmit={handleSignup}>
-        <label htmlFor="pseudo">Pseudo :</label>
-        <input
-          type="text"
-          id="pseudo"
-          name="pseudo"
-          value={formData.pseudo}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Mot de passe*"
-          id="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <ul className="password-criteria">
-          {passwordCriteria.map((criterion, index) => (
-            <li
-              key={index}
-              className={
-                criterion.isValid(formData.password) ? "valid" : "invalid"
-              }
-            >
-              {criterion.label}
-            </li>
-          ))}
-        </ul>
-        <input
-          type="password"
-          placeholder="Confirmation Mot de passe*"
-          id="password_confirm"
-          name="password_confirm"
-          value={formData.password_confirm}
-          onChange={handleChange}
-          required
-        />
-        <div className="form-row">
-          <DatePicker
-            selected={birthDate}
-            onChange={handleDateChange}
-            dateFormat="dd/MM/yyyy"
-            placeholderText="Date de naissance*"
-            minDate={new Date(1900, 0, 1)}
-            maxDate={new Date()}
-            showYearDropdown
-            showMonthDropdown
-            dropdownMode="select"
-          />
-          <select
-            className="gender-select"
-            id="gender"
-            name="gender"
-            value={formData.gender}
+    <>
+      <div className="signup-container">
+        <h1>Faisons de toi un Usear !</h1>
+        {error && <p className="error-message">{error}</p>}
+        <form className="signup-form" onSubmit={handleSignup}>
+          <label htmlFor="pseudo">Pseudo (visible par tous) :</label>
+          <input
+            type="text"
+            id="pseudo"
+            name="pseudo"
+            value={formData.pseudo}
             onChange={handleChange}
             required
-          >
-            <option value="">Genre</option>
-            <option value="monsieur">Monsieur</option>
-            <option value="madame">Madame</option>
-            <option value="N/A">N/A</option>
-          </select>
-        </div>
-        <label className="terms-label">
-          <input
-            type="checkbox"
-            checked={isTermsAccepted}
-            onChange={() => setIsTermsAccepted(!isTermsAccepted)}
           />
-          J'accepte les conditions d'utilisation et je confirme avoir lu la{" "}
-          politique de confidentialité de Usearly.
-        </label>
-        <button type="submit" className="signup-button" disabled={isLoading}>
-          {isLoading ? "chargement en cours..." : "Créer un compte"}
-        </button>
-      </form>
-      <div className="background-text">
-        <img
-          src={backgroundImage}
-          alt="Usearly Background"
-          className="background-image"
-        />
+          <input
+            type="email"
+            placeholder="Email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Mot de passe*"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <ul className="password-criteria">
+            {passwordCriteria.map((criterion, index) => (
+              <li
+                key={index}
+                className={
+                  criterion.isValid(formData.password) ? "valid" : "invalid"
+                }
+              >
+                {criterion.label}
+              </li>
+            ))}
+          </ul>
+          <input
+            type="password"
+            placeholder="Confirmation Mot de passe*"
+            id="password_confirm"
+            name="password_confirm"
+            value={formData.password_confirm}
+            onChange={handleChange}
+            required
+          />
+          <div className="form-row">
+            <DatePicker
+              selected={birthDate}
+              onChange={handleDateChange}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Date de naissance*"
+              minDate={new Date(1900, 0, 1)}
+              maxDate={new Date()}
+              showYearDropdown
+              showMonthDropdown
+              dropdownMode="select"
+            />
+            <select
+              className="gender-select"
+              id="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Genre</option>
+              <option value="monsieur">Monsieur</option>
+              <option value="madame">Madame</option>
+              <option value="N/A">N/A</option>
+            </select>
+          </div>
+          <label className="terms-label">
+            <input
+              type="checkbox"
+              checked={isTermsAccepted}
+              onChange={() => setIsTermsAccepted(!isTermsAccepted)}
+            />
+            J'accepte les conditions d'utilisation et je confirme avoir lu la{" "}
+            politique de confidentialité de Usearly.
+          </label>
+          <button type="submit" className="signup-button" disabled={isLoading}>
+            {isLoading ? "chargement en cours..." : "Créer un compte"}
+          </button>
+        </form>
+        <div className="background-text">
+          <img
+            src={backgroundImage}
+            alt="Usearly Background"
+            className="background-image"
+          />
+        </div>
       </div>
-      <footer className="signup-footer">
-        <a href="#">Conditions générales d'utilisation</a>
-        <a href="#">Nous contacter</a>
-        <p>© Usearly 2024</p>
+      <footer className="landing-footer">
+        <ul className="footer-cgpu">
+          <li>
+            {" "}
+            <p>
+              <a href="#">Conditions générales d'utilisation</a>
+            </p>
+          </li>
+          <li>
+            {" "}
+            <p>
+              <a href="#">Nous contacter</a>
+            </p>
+          </li>
+          <li>
+            <p>© Usearly 2024</p>
+          </li>
+        </ul>
       </footer>
-    </div>
+    </>
   );
 };
 

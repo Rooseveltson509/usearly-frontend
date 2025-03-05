@@ -143,9 +143,10 @@ const PostList: React.FC<PostProps> = ({
             alt="Avatar"
             className="user-avatar"
           />
-          <p>{post.author?.pseudo}</p>
+
           <span className="report-author">
-            C’est moi ou <strong>{post.title}</strong> ?
+            <strong>{post.author?.pseudo} </strong>
+            C’est moi ou {post.title} ?
           </span>
           <span className="report-time">
             • {formatRelativeTime(post.createdAt)}
@@ -178,7 +179,7 @@ const PostList: React.FC<PostProps> = ({
                 <span
                   className="see-more"
                   onClick={() => toggleExpand(post.id)} // ✅ Masquer le texte quand cliqué
-                  style={{ cursor: "pointer", color: "blue" }}
+                  style={{ cursor: "pointer" }}
                 >
                   Voir moins
                 </span>
@@ -192,7 +193,7 @@ const PostList: React.FC<PostProps> = ({
                   <span
                     className="see-more"
                     onClick={() => toggleExpand(post.id)} // ✅ Afficher plus quand cliqué
-                    style={{ cursor: "pointer", color: "blue" }}
+                    style={{ cursor: "pointer" }}
                   >
                     Voir plus
                   </span>

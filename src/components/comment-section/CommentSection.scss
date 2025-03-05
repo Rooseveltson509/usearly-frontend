@@ -3,28 +3,42 @@
   padding: 0;
   list-style: none;
 
+    /* 🎨 Barre de scroll minimaliste */
+  &::-webkit-scrollbar {
+    width: 5px; /* ✅ Barre fine */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent; /* ✅ Pas de fond */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3); /* ✅ Couleur sobre */
+    border-radius: 10px; /* ✅ Arrondi */
+    transition: background 0.3s ease;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5); /* ✅ Plus visible au survol */
+  }
+
+
   .comment-item {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    padding: 12px;
     background: #fff;
     border-radius: 10px;
-    border: 1px solid #e0e0e0;
-    margin-block-end: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.06);
+    margin-bottom: 4px;
     transition: all 0.2s ease-in-out;
-
-    &:hover {
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
-    }
+    margin-block-end: 30px;
 
     .comment-avatar {
       inline-size: 36px;
       block-size: 36px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid #ddd;
+      border: 1px solid #ddd;
     }
 
     .comment-content {
@@ -32,23 +46,25 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 5px;
+      gap: 2px;
 
       .comment-header {
+        font-family: "Raleway";
         font-weight: bold;
         font-size: 14px;
-        color: #333;
+        color: #000000;
         display: flex;
         align-items: center;
         gap: 8px;
       }
 
       .comment-text {
+        font-family: "Inter";
         font-size: 14px;
         color: #444;
         background: #f5f5f5;
-        padding: 12px;
-        border-radius: 8px;
+        padding: 5px 20px;
+        border-radius: 5px;
         margin-block-start: 5px;
       }
     }
@@ -57,61 +73,83 @@
       background: none;
       border: none;
       font-size: 18px;
-      color: #e74c3c;
+      color: #6c6c6c;
       cursor: pointer;
       transition: all 0.2s ease-in-out;
 
       &:hover {
-        color: #c0392b;
+        color: #787878;
         transform: scale(1.1);
       }
     }
   }
 
+  .comment-section {
+    margin-block-start: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    border-block-start: 1px solid #ddd;
+    margin-block-end: 30px;
 
-  .loading-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #555;
-}
+    .comment-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-size: 14px;
+      outline: none;
+      transition: 0.2s ease-in-out;
 
-.spinner {
-  inline-size: 16px;
-  block-size: 16px;
-  border: 3px solid rgba(0, 0, 0, 0.1);
-  border-inline-end-color: #007bff;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+      }
+    }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+    .loading-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .spinner {
+      inline-size: 16px;
+      block-size: 16px;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-inline-end-color: #007bff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .no-comments {
+      text-align: center;
+      color: #777;
+      font-style: italic;
+      margin-block-start: 10px;
+    }
   }
-  100% {
-    transform: rotate(360deg);
+
+  .comment-list {
+    list-style: none;
+    padding: 0;
+    margin-block-start: 10px;
+    max-block-size: 300px; // ✅ Ajout d’un scroll après 3 commentaires
+    overflow-y: auto;
   }
-}
-
-.no-comments {
-  text-align: center;
-  color: #777;
-  font-style: italic;
-  margin-block-start: 10px;
-}
-
-}
-
-
-.comment-list {
-  list-style: none;
-  padding: 0;
-  margin-block-start: 10px;
-  max-block-size: 300px; // ✅ Ajout d’un scroll après 3 commentaires
-  overflow-y: auto;
 }

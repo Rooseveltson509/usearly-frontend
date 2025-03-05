@@ -1,29 +1,36 @@
 .login-container {
-  max-inline-size: 600px;
+ max-width: 500px; /* ✅ Ajustement de la largeur */
   margin: 0 auto;
   padding: 40px;
   font-family: Arial, sans-serif;
   color: #333;
   position: relative;
+  text-align: left; /* ✅ Centrer le texte */
 
   .remember {
-    display: flex;
-    justify-content: space-between;
-    margin-block-end: 5px;
+     display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* ✅ Alignement correct */
+  font-size: 14px;
+  margin-bottom: 15px;
   }
 
   h1 {
-    font-size: 28px;
+    font-family:'Urbanist';
+    color:black;
+    font-size: 36px;
     margin-block-end: 10px;
   }
 
   p {
     margin: 10px 0;
     line-height: 1.5;
+    margin-bottom:30px;
   }
 
   .edit-email-link {
-    color: #007bff;
+    color: #383838;
     text-decoration: none;
   }
 
@@ -32,19 +39,34 @@
   }
 
   .login-form {
-    margin-block-start: 20px;
+    display: flex;
+  flex-direction: column;
+  align-items: left; /* ✅ Centrage */
+  width: 100%;
   }
 
   .login-form input[type="email"],
   .login-form input[type="password"] {
-    inline-size: 100%;
-    padding: 10px;
-    margin-block-end: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+     width: 100%; /* ✅ Les inputs prennent toute la largeur */
+  padding: 12px;
+  margin: 10px 0; /* ✅ Espacement entre les champs */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box; /* ✅ Évite que la largeur dépasse */
   }
-
+  /* ✅ Effet hover & focus : contour noir */
+  input[type="text"]:hover,
+  input[type="text"]:focus,
+  input[type="email"]:hover,
+  input[type="email"]:focus,
+  input[type="password"]:hover,
+  input[type="password"]:focus,
+  .gender-select:hover,
+  .gender-select:focus {
+    border-color: #000; /* ✅ Contour noir */
+    outline: none; /* ✅ Supprime l'effet natif */
+  }
   .password-helper {
     font-size: 14px;
     color: #888;
@@ -63,28 +85,30 @@
     padding: 12px;
     font-size: 16px;
     color: #fff;
-    background-color: #5c0d91;
+    background-color: #000000;
     border: none;
     border-radius: 5px;
     cursor: pointer;
   }
 
   .login-button:hover {
-    background-color: #450b6d;
+    background-color: #000000;
   }
   .signup-button {
-    inline-size: 100%;
-    padding: 12px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #5c0d91;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  width: 100%; /* ✅ Le bouton prend toute la largeur */
+  padding: 14px; /* ✅ Augmenter la hauteur */
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #000000;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top:20px;
   }
 
   .signup-button:hover {
-    background-color: #450b6d;
+    background-color: #000000;
   }
   .login-footer {
     text-align: center;
@@ -105,7 +129,7 @@
   .forgot-password-link {
     display: block;
     margin-block-start: 10px;
-    color: #007bff;
+    color: #222222;
     text-decoration: none;
     font-size: 14px;
 

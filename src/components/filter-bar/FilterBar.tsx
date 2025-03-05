@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./FilterBar.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import searchIcon from "../../assets/icons/search-icon.svg";
+
+
 
 interface FilterBarProps {
   selectedFilter: string;
@@ -56,7 +61,8 @@ const FilterBar: React.FC<FilterBarProps> = ({
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
       >
         <button className="filter-button main-button">
-          {selectedFilter} <span className="arrow-down">▼</span>
+          {selectedFilter}{" "}
+          <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
         </button>
         {isDropdownOpen && (
           <div className="dropdown-content">
@@ -88,7 +94,8 @@ const FilterBar: React.FC<FilterBarProps> = ({
         onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
       >
         <button className="filter-button secondary-button">
-          Filtrer <span className="arrow-down">▼</span>
+          Filtrer{" "}
+          <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
         </button>
         {isSortDropdownOpen && (
           <div className="dropdown-content">
@@ -113,7 +120,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* ✅ Barre de recherche */}
       <div className="search-container">
-        <span className="search-icon">🔍</span>
+        <img src={searchIcon} alt="Rechercher" className="search-icon" />
         <input
           type="text"
           className="search-input"

@@ -12,6 +12,11 @@
   font-family: vars.$font-family;
 }
 
+.fa-user:before {
+    content: "\f007";
+    margin-right: 5px;
+}
+
 .navbar-logo {
   display: flex;
   align-items: center;
@@ -66,7 +71,9 @@
 .notification-button:hover {
   color: vars.$secondary-color;
 }
-
+i.fa.fa-chevron-down {
+    font-size: 8px;
+}
 .user-info {
   display: flex;
   align-items: center;
@@ -74,13 +81,14 @@
 }
 
 .user-icon {
-  font-size: 18px;
-  margin-inline-end: 5px;
+  font-size: 15px;
+  margin-inline-end: 0px;
 }
 
 .user-name {
   font-weight: 500;
   color: #333;
+  margin-inline-end: 8px;
 }
 
 .logout-button {

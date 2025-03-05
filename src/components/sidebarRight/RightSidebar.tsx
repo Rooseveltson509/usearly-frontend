@@ -12,6 +12,7 @@ const RightSidebar: React.FC = () => {
   return (
     <div className="sidebar-right">
       {/* Section Collaboration */}
+      <div className='margin-top'></div>
       <div className="section">
         <div className="section-title">
     <img src={CollaborationIcon} alt="Collaboration icon" className="section-icon" />
