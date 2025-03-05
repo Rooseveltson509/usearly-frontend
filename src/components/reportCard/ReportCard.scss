@@ -89,6 +89,7 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+    padding-bottom: 8px;
   }
 
   .post-icon {
@@ -111,7 +112,7 @@
     font-weight: 400;
     font-size: 14px;
     margin-block-end: 10px;
-    line-height: 1.4;
+    line-height: 1.5;
     color: #4c4c4c;
   }
 
@@ -449,6 +450,7 @@
     cursor: pointer;
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
     display: inline-block;
+    margin:0;
 
     &:hover {
       color: #000000;

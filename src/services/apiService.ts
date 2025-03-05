@@ -1044,6 +1044,19 @@ export const fetchReportCommentCount = async (reportId: string) => {
   }
 };
 
+  export const fetchPostCommentCount = async (postId: string) => {
+    try {
+      const response = await apiService.get(`/posts/${postId}/comments/count`);
+      return response.data.count;
+    } catch (error) {
+      console.error(
+        "❌ Erreur lors de la récupération du nombre de commentaires :",
+        error
+      );
+      return 0;
+    }
+  };
+
 export const fetchSuggestionCommentCount = async (suggestionId: string) => {
   try {
     const response = await apiService.get(

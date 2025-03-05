@@ -232,7 +232,10 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
           >
             {commentCount} commentaires{" "}
           </span>
-          <span className="meta-info">solution</span>
+          {type !== "suggestion" && type !== "coupdecoeur" && (
+            <span className="meta-info">solution</span>
+          )}
+
           <span className="meta-info transmitted">
             <svg
               width="16"
@@ -320,7 +323,10 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
           onClick={() => setShowCommentInput(!showCommentInput)}
         >
           {showCommentInput ? (
-            <><img src={commentIcon} alt="Commenter" width="20" height="20" /><span>Masquer</span></>
+            <>
+              <img src={commentIcon} alt="Commenter" width="20" height="20" />
+              <span>Masquer</span>
+            </>
           ) : (
             <>
               <img src={commentIcon} alt="Commenter" width="20" height="20" />
@@ -329,11 +335,15 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
           )}
         </span>
 
-        <span className="action-button">
-          <img src={solution} alt="solution" width="20" height="20" />
-          Solutionner
-        </span>
-        <span className="check-button">Je check</span>
+        {type !== "suggestion" && type !== "coupdecoeur" && (
+          <>
+            <span className="action-button">
+              <img src={solution} alt="solution" width="20" height="20" />
+              Solutionner
+            </span>
+            <span className="check-button">Je check</span>
+          </>
+        )}
       </div>
 
       {isModalOpen && (

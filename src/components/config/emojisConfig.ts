@@ -1,16 +1,15 @@
 export const EMOJIS = {
   post: [
-    { emoji: "👍", label: "J’aime" },
-    { emoji: "❤️", label: "J’adore" },
-    { emoji: "😂", label: "Haha" },
-    { emoji: "😮", label: "Wouah" },
-    { emoji: "😡", label: "En colère" },
-    { emoji: "🤬", label: "Furieux" },
-    { emoji: "🥵", label: "Trop chaud" },
+    { emoji: "😒", label: "Agacé" },
+    { emoji: "😖", label: "Frustré" },
+    { emoji: "😐", label: "Neutre" },
+    { emoji: "😨", label: "Angoissé" },
+    { emoji: "😞", label: "Déçu" },
+    { emoji: "🤣", label: "Haha" },
+    { emoji: "🥵", label: "Fatiguant" },
   ],
 
   report: [
-    { emoji: "🥵", label: "Epuisé" },
     { emoji: "😒", label: "Agacé" },
     { emoji: "😖", label: "Frustré" },
     { emoji: "😐", label: "Neutre" },
@@ -18,6 +17,7 @@ export const EMOJIS = {
     { emoji: "😞", label: "Déçu" },
     { emoji: "🤣", label: "Haha" },
     { emoji: "😡", label: "En colère" },
+    { emoji: "🥵", label: "Fatiguant" },
   ],
   suggestion: [
     { emoji: "💡", label: "Bonne idée" },

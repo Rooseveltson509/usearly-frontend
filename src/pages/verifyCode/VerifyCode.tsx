@@ -84,7 +84,7 @@ const VerifyCode: React.FC = () => {
         );
         setFlashMessage("Bienvenue sur la plateforme !", "success");
 
-        navigate("/dashboard");
+        navigate("/home");
       } else {
         throw new Error(response.message || "Erreur lors de la validation.");
       }

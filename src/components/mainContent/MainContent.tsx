@@ -61,15 +61,31 @@ const MainContent: React.FC = () => {
     }
   }, [currentPage, postsPage]); // 🔥 Déclenché à chaque changement de page
 
-
-
   useEffect(() => {
-    // Désactiver le scroll global quand cette page est affichée
-    document.body.style.overflow = "hidden";
+    const preventScrollOutsideBlocks = (event: WheelEvent) => {
+      const sidebarLeft = document.getElementById("sidebar-left");
+      const sidebarRight = document.getElementById("sidebar-right");
+      const mainContent = document.getElementById("main-content");
+
+      if (
+        sidebarLeft?.contains(event.target as Node) ||
+        sidebarRight?.contains(event.target as Node) ||
+        mainContent?.contains(event.target as Node)
+      ) {
+        return; // ✅ Si on est dans un des trois blocs, on laisse le scroll normal.
+      }
+
+      event.preventDefault(); // ❌ Sinon, on empêche le scroll global
+    };
+
+    document.body.style.overflow = "hidden"; // ✅ Empêche le scroll global
+    window.addEventListener("wheel", preventScrollOutsideBlocks, {
+      passive: false,
+    });
 
     return () => {
-      // Réactiver le scroll global quand l'utilisateur quitte la page
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = "auto"; // ✅ Réactive le scroll en quittant la page
+      window.removeEventListener("wheel", preventScrollOutsideBlocks);
     };
   }, []);
 
@@ -201,7 +217,7 @@ const MainContent: React.FC = () => {
   };
 
   return (
-    <div ref={mainContentRef} className="main-content">
+    <div ref={mainContentRef} className="main-content" id="main-content">
       <FilterBar
         selectedFilter={selectedFilter}
         setSelectedFilter={setSelectedFilter}

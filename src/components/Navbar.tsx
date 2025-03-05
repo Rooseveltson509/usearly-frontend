@@ -10,7 +10,6 @@ const Navbar: React.FC = () => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  //const location = useLocation(); // Permet de récupérer le chemin actuel
 
   const toggleNavbar = () => setNavbarOpen((prev) => !prev);
   const toggleUserMenu = (e: React.MouseEvent) => {
@@ -24,6 +23,24 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+
+    // ✅ Ferme le menu quand on clique en dehors
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target as Node)
+        ) {
+          setUserMenuOpen(false);
+        }
+      };
+
+      // Ajoute un écouteur d'événement
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
   return (
     <nav className={`navbar ${isSticky ? "sticky" : ""}`}>
       <div className="container">

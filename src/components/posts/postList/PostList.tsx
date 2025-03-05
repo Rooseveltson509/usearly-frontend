@@ -7,7 +7,7 @@ import postIcon from "../../../assets/images/signalIcon.svg";
 import "react-confirm-alert/src/react-confirm-alert.css"; // 📌 Style par défaut
 import ReactionSection from "@src/components/reactions/reaction-section/ReactionSection";
 import CommentSection from "@src/components/comment-section/CommentSection";
-import { deletePost } from "@src/services/apiService";
+import { deletePost, fetchPostCommentCount } from "@src/services/apiService";
 import Swal from "sweetalert2";
 
 interface PostProps {
@@ -38,6 +38,15 @@ const PostList: React.FC<PostProps> = ({
       [postId]: !prev[postId], // ✅ Clé en `string`
     }));
   };
+
+  useEffect(() => {
+    const loadCommentCount = async () => {
+      const count = await fetchPostCommentCount(post.id);
+      setCommentCount(count);
+    };
+
+    loadCommentCount();
+  }, [post.id]);
 
   // ✅ Fonction pour fermer le menu quand on clique ailleurs
   useEffect(() => {

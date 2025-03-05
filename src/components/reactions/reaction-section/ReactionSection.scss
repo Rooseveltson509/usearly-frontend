@@ -103,11 +103,13 @@
   .meta-info {
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-weight: 500;
+    cursor: pointer;
+    gap: 3px;
+    font-weight: 400;
 
     &.transmitted {
       color: #6e6e6e;
+    
 
       svg {
         width: 16px;
@@ -117,13 +119,16 @@
     }
   }
 }
+
 .report-actions {
   display: flex;
-  justify-content: space-between;
-  padding-block-start: 12px;
-  border-block-start: 1px solid #eee;
   align-items: center;
-  font-family: "inter";
+  justify-content: flex-start; // ✅ Alignement à gauche
+  width: 100%;
+  gap: 12px; // Évite que les éléments soient trop collés
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  font-family: "Inter";
 
   .action-button {
     padding: 8px 12px;
@@ -135,28 +140,49 @@
     font-weight: 500;
     cursor: pointer;
     transition: background 0.2s;
+    white-space: nowrap; // ✅ Empêche les retours à la ligne
 
     &:hover {
-      background: #f3f3f3;
+      background: #e0e0e0;
     }
   }
+
+  // ✅ "Je check" doit être toujours tout à droite
   .check-button {
-    background: rgb(255 255 255);
-    color: rgb(0 0 0);
+    background: white;
+    color: black;
     padding: 10px 20px;
     border-radius: 20px;
-    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
     transition: opacity 0.2s;
-    margin-inline-start: 40px;
-    border: 1px solid #000000;
+    border: 1px solid;
+    margin-left: auto; // ✅ Positionne ce bouton à droite UNIQUEMENT si présent
 
     &:hover {
-      opacity: 0.9;
-      color: rgb(255, 255, 255);
-      background: rgb(0, 0, 0);
+      opacity: 0.8;
+      background: black;
+      color: white;
     }
+  }
+}
+
+// ✅ "Je check" doit être toujours tout à droite
+.check-button {
+  background: white;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  border: 1px solid;
+  margin-left: auto; // ✅ Positionne ce bouton à droite UNIQUEMENT si présent
+
+  &:hover {
+    opacity: 0.8;
+    background: black;
+    color: white;
   }
 }
 
