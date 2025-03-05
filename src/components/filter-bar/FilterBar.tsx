@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./FilterBar.scss";
 
 interface FilterBarProps {
@@ -21,10 +21,37 @@ const FilterBar: React.FC<FilterBarProps> = ({
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState("Date");
 
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+    const sortDropdownRef = useRef<HTMLDivElement | null>(null);
+
+    // ✅ Ferme les menus quand on clique en dehors
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target as Node)
+        ) {
+          setIsDropdownOpen(false);
+        }
+        if (
+          sortDropdownRef.current &&
+          !sortDropdownRef.current.contains(event.target as Node)
+        ) {
+          setIsSortDropdownOpen(false);
+        }
+      };
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
   return (
     <div className="filter-bar">
       {/* ✅ Filtre principal */}
       <div
+        ref={dropdownRef}
         className={`filter-dropdown ${isDropdownOpen ? "open" : ""}`}
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
       >
@@ -56,6 +83,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* ✅ Filtre secondaire (tri) */}
       <div
+        ref={sortDropdownRef}
         className={`filter-dropdown ${isSortDropdownOpen ? "open" : ""}`}
         onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
       >
