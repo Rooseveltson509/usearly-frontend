@@ -5,11 +5,13 @@ import { fetchUserProfile, updateUserProfile } from "@src/services/apiService";
 import "./MyAccount.scss";
 import Modal from "../modal/Modal";
 import { updatePassword } from "@src/services/authService";
+import { useNavigate } from "react-router-dom";
 
 const MyAccount: React.FC = () => {
   const { userProfile, setUserProfile, setFlashMessage } = useAuth();
   const [pseudo, setPseudo] = useState(userProfile?.pseudo || "");
   const [email, setEmail] = useState(userProfile?.email || "");
+  const navigate = useNavigate();
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
     userProfile?.avatar
@@ -74,6 +76,7 @@ const MyAccount: React.FC = () => {
 
       if (updatedProfile.success && updatedProfile.user) {
         setFlashMessage("Profil mis à jour avec succès !", "success");
+        navigate("/home");
         setUserProfile(updatedProfile.user); // Mise à jour du profil utilisateur
         setAvatarPreview(
           `${import.meta.env.VITE_API_BASE_URL}/${
@@ -108,6 +111,7 @@ const MyAccount: React.FC = () => {
       });
 
       setFlashMessage("Mot de passe mis à jour avec succès !", "success");
+      navigate("/home");
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");

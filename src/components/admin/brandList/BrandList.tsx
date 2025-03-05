@@ -248,11 +248,11 @@ const BrandList: React.FC = () => {
           <strong>{selectedBrand?.name}</strong> ?
         </p>
         <div className="modal-actions">
-          <button className="cancel-btn" onClick={closeDeleteModal}>
-            Annuler
-          </button>
           <button className="confirm-btn" onClick={confirmDelete}>
             Oui, supprimer
+          </button>
+          <button className="cancel-btn" onClick={closeDeleteModal}>
+            Annuler
           </button>
         </div>
       </Modal>

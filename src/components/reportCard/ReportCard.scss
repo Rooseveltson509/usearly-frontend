@@ -1,44 +1,42 @@
 .report-card {
+  .see-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; // Espacement entre l'icône et le texte
+    margin-inline-start: 8px; // Espace après la description
+    margin-block-start: 10px; // Ajoute un petit espace quand "Voir plus" apparaît
+    cursor: pointer;
+    font-weight: 600;
+    color: #007bff; // Bleu propre
+    transition: color 0.3s ease, transform 0.2s ease, margin-top 0.2s ease;
 
-.see-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px; // Espacement entre l'icône et le texte
-  margin-inline-start: 8px; // Espace après la description
-  margin-block-start: 10px; // Ajoute un petit espace quand "Voir plus" apparaît
-  cursor: pointer;
-  font-weight: 600;
-  color: #007bff; // Bleu propre
-  transition: color 0.3s ease, transform 0.2s ease, margin-top 0.2s ease;
+    &:hover {
+      color: #0056b3; // Bleu plus foncé au survol
+      transform: translateY(-1px); // Effet léger au hover
+    }
 
-  &:hover {
-    color: #0056b3; // Bleu plus foncé au survol
-    transform: translateY(-1px); // Effet léger au hover
-  }
+    &.expanded {
+      margin-block-start: 12px; // Ajoute encore plus d'espace quand c'est ouvert
 
-  &.expanded {
-    margin-block-start: 12px; // Ajoute encore plus d'espace quand c'est ouvert
-
-    &::after {
-      transform: rotate(180deg); // Flèche vers le haut quand c'est ouvert
+      &::after {
+        transform: rotate(180deg); // Flèche vers le haut quand c'est ouvert
+      }
     }
   }
-}
 
-.chevron {
-  display: inline-block;
-  margin-inline-start: 5px;
-  transition: transform 0.3s ease;
-}
+  .chevron {
+    display: inline-block;
+    margin-inline-start: 5px;
+    transition: transform 0.3s ease;
+  }
 
-.chevron.up {
-  transform: rotate(180deg);
-}
+  .chevron.up {
+    transform: rotate(180deg);
+  }
 
-.chevron.down {
-  transform: rotate(0deg);
-}
-
+  .chevron.down {
+    transform: rotate(0deg);
+  }
 
   .report-image {
     margin-block-start: 12px; // Ajoute un espace entre l'image et le texte "Voir moins"
@@ -50,6 +48,10 @@
     font-family: "Raleway";
   }
 
+  strong.report-title {
+    color: rgb(245 39 85);
+  }
+
   .img-round {
     position: relative;
     display: flex;
@@ -59,25 +61,28 @@
     block-size: 64px; // Hauteur fixe pour garder le cercle
     border-radius: 50%;
     overflow: hidden; // Coupe tout ce qui dépasse du cercle
-    background-color: #fff; // Fond blanc pour uniformiser
+    background-color: #e8e8e8; // Fond blanc pour uniformiser
+    margin-left: 25px;
 
     .brand-logo {
-      position: absolute;
-      inline-size: 100%; // ✅ Ajuste la taille du logo pour qu'il soit bien contenu
-      block-size: 100%;
-      object-fit: contain; // ✅ Empêche le logo d'être coupé
-      padding: 5px; // ✅ Ajoute un petit espace autour du logo pour éviter qu'il touche les bords
+      width: 64px;
+      height: 64px;
+      border-radius: 50%; /* ✅ Forme circulaire */
+      overflow: hidden; /* ✅ Coupe les parties dépassantes */
+      display: flex; /* ✅ Permet de centrer */
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo img {
+      object-fit: cover !important; /* ✅ Remplit totalement sans espace blanc */
+      object-position: center; /* ✅ Centre l’image */
     }
   }
 
   .post-details {
     flex: 1; // Prend l'espace disponible sans affecter l’image
     min-inline-size: 0;
-  }
-
-  .img-round {
-    flex-shrink: 0; // Empêche l'image de rétrécir ou de se déplacer
-    border: 1px solid #f0f0f0; // ajout d'une bordure
   }
 
   .flex-element {
@@ -88,29 +93,26 @@
 
   .post-icon {
     font-size: 24px;
-    margin-inline-start: 15px;
+    margin-inline-start: 10px;
   }
   .report-content {
-    background-color: #f7f7f7;
+    background-color: #f6f6f6;
     display: flex;
     justify-content: space-between; /* ✅ Aligne le texte à gauche et le logo à droite */
     align-items: start;
     border-radius: 8px;
-    padding: 25px 15px 0 15px;
+    padding: 25px 15px 20px 15px;
     margin-block-start: 15px;
     margin-block-end: 10px;
     gap: 8px;
-
-    .report-desc {
-      font-family: "Inter";
-      font-weight: 300;
-      font-size: 14px;
-    }
-
-    .report-description {
-      font-size: 14px;
-      color: #555;
-    }
+  }
+  .report-desc {
+    font-family: "Inter";
+    font-weight: 400;
+    font-size: 14px;
+    margin-block-end: 10px;
+    line-height: 1.4;
+    color: #4c4c4c;
   }
 
   .report-meta {
@@ -124,86 +126,42 @@
   }
 
   .comment-section {
-    margin-block-start: 10px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    padding: 10px;
-    border-block-start: 1px solid #ddd;
-
-    .comment-input {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 20px;
-      font-size: 14px;
-      outline: none;
-      transition: 0.2s ease-in-out;
-
-      &:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-      }
-    }
-
-    .comment-submit {
-      padding: 8px 15px;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: background 0.2s ease-in-out;
-
-      &:hover {
-        background-color: #0056b3;
-      }
-    }
-  }
-
-  .report.desc {
-    font-size: 14px;
-    color: #666;
-  }
-
-  .comment-section {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-block-start: 10px;
-    padding: 8px;
-    background: #f5f5f5;
-    border-radius: 8px;
+    margin-block-start: 25px;
+    /* padding: 8px; */
+    /* background: #f2f2f2; */
+    margin-block-end:30px;
 
     .comment-input {
       flex: 1;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
+      padding: 10px 20px;
+      border: 1px solid #ababab;
+      border-radius: 60px;
       font-size: 14px;
       background: white;
       transition: all 0.2s;
 
       &:focus {
-        border-color: #007bff;
+        border-color: #000000;
         outline: none;
         box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
       }
     }
 
     .comment-submit {
-      background: #007bff;
+      background: #000000;
       color: white;
       border: none;
-      padding: 8px 12px;
-      border-radius: 5px;
+      padding: 10px 20px;
+      border-radius: 50px;
       cursor: pointer;
       font-size: 14px;
       transition: background 0.3s;
 
       &:hover {
-        background: #0056b3;
+        background: #000000;
       }
     }
   }
@@ -213,7 +171,7 @@
     padding: 0;
     margin-block-start: 10px;
     max-block-size: 300px; // ✅ Ajout d’un scroll après 3 commentaires
-    overflow-y: auto;
+    overflow-y: scroll;
   }
 
   /* modal reactions */
@@ -277,7 +235,7 @@
 
   /* ✅ Active state */
   .reaction-tabs button.active {
-    background: blue;
+    background: rgb(12, 12, 12);
     color: white;
     padding: 10px 14px;
   }
@@ -316,7 +274,7 @@
 
   /* ✅ Fermer */
   .close-button {
-    background: red;
+    background: rgb(0, 0, 0);
     color: white;
     padding: 12px;
     font-size: 16px;
@@ -329,7 +287,7 @@
   }
 
   .close-button:hover {
-    background: darkred;
+    background: rgb(22, 22, 22);
   }
   // ✅ Animation pour l’émoji sélectionné
   @keyframes bounceEmoji {
@@ -381,34 +339,6 @@
     display: inline-block;
   }
 
-  .emoji-picker {
-    position: absolute;
-    inset-block-end: 10%; /* ✅ Place le menu au-dessus du bouton */
-    inset-inline-start: 80%; /* ✅ Centre horizontalement */
-    transform: translateX(-50%); /* ✅ Ajuste pour un bon centrage */
-    display: flex;
-    gap: 8px;
-    background: white;
-    border: 1px solid #ddd;
-    padding: 8px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    transition: opacity 0.2s ease-in-out;
-    z-index: 10;
-  }
-
-  .emoji-btn {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    transition: transform 0.1s ease-in-out;
-  }
-
-  .emoji-btn:hover {
-    transform: scale(1.2);
-  }
-
   .report-reactions {
     display: flex;
     align-items: center;
@@ -451,80 +381,12 @@
     .reaction-total {
       font-weight: bold;
       font-size: 14px;
-      margin-inline-start: 16px;
+      margin-inline-start: 20px;
+      font-family: "Inter";
+      margin-top: 5px;
     }
   }
 
-  .comment-list {
-    max-inline-size: 100%;
-    padding: 0;
-    list-style: none;
-
-    .comment-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px;
-      background: #fff;
-      border-radius: 10px;
-      border: 1px solid #e0e0e0;
-      margin-block-end: 8px;
-      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.06);
-      transition: all 0.2s ease-in-out;
-
-      &:hover {
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.08);
-      }
-
-      .comment-avatar {
-        inline-size: 36px;
-        block-size: 36px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #ddd;
-      }
-
-      .comment-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 5px;
-
-        .comment-header {
-          font-weight: bold;
-          font-size: 14px;
-          color: #333;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .comment-text {
-          font-size: 14px;
-          color: #444;
-          background: #f5f5f5;
-          padding: 12px;
-          border-radius: 8px;
-          margin-block-start: 5px;
-        }
-      }
-
-      .delete-comment {
-        background: none;
-        border: none;
-        font-size: 18px;
-        color: #e74c3c;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-
-        &:hover {
-          color: #c0392b;
-          transform: scale(1.1);
-        }
-      }
-    }
-  }
 
   /* spinner */
   .loading-container {
@@ -542,7 +404,7 @@
     inline-size: 16px;
     block-size: 16px;
     border: 3px solid rgba(0, 0, 0, 0.1);
-    border-inline-end-color: #007bff;
+    border-inline-end-color: #000000;
     border-radius: 50%;
     animation: spin 0.6s linear infinite;
   }
@@ -557,6 +419,8 @@
   }
 
   .no-comments {
+    font-family: 'Inter';
+    font-size:13px;
     text-align: center;
     color: #777;
     font-style: italic;
@@ -580,9 +444,9 @@
 
   .see-more {
     font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
+    font-weight: 700;
     color: #000000;
+    cursor: pointer;
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
     display: inline-block;
 
@@ -612,13 +476,14 @@
     }
 
     .see-more {
-      color: rgb(0, 0, 0);
+      color: black;
       cursor: pointer;
       text-decoration: underline;
       margin-block-start: 5px;
       margin-block-end: 25px;
       font-family: "Inter";
       font-size: 13px;
+      font-weight: bold;
     }
   }
 

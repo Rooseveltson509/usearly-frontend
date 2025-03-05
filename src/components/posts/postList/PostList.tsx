@@ -40,30 +40,29 @@ const PostList: React.FC<PostProps> = ({
   };
 
   // ✅ Fonction pour fermer le menu quand on clique ailleurs
-useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (!event.target) return;
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!event.target) return;
 
-    const menuElements = document.querySelectorAll(".menu-list");
-    let isClickInside = false;
+      const menuElements = document.querySelectorAll(".menu-list");
+      let isClickInside = false;
 
-    menuElements.forEach((menu) => {
-      if (menu.contains(event.target as Node)) {
-        isClickInside = true;
+      menuElements.forEach((menu) => {
+        if (menu.contains(event.target as Node)) {
+          isClickInside = true;
+        }
+      });
+
+      if (!isClickInside) {
+        setIsMenuOpen(false);
       }
-    });
+    };
 
-    if (!isClickInside) {
-      setIsMenuOpen(false);
-    }
-  };
-
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
-
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleDeleteComment = async () => {
     const result = await Swal.fire({
@@ -135,9 +134,10 @@ useEffect(() => {
             alt="Avatar"
             className="user-avatar"
           />
-          <p>{post.author?.pseudo}</p>
+
           <span className="report-author">
-            C’est moi ou <strong>{post.title}</strong> ?
+            <strong>{post.author?.pseudo} </strong>
+            C’est moi ou {post.title} ?
           </span>
           <span className="report-time">
             • {formatRelativeTime(post.createdAt)}
@@ -170,7 +170,7 @@ useEffect(() => {
                 <span
                   className="see-more"
                   onClick={() => toggleExpand(post.id)} // ✅ Masquer le texte quand cliqué
-                  style={{ cursor: "pointer", color: "blue" }}
+                  style={{ cursor: "pointer" }}
                 >
                   Voir moins
                 </span>
@@ -184,7 +184,7 @@ useEffect(() => {
                   <span
                     className="see-more"
                     onClick={() => toggleExpand(post.id)} // ✅ Afficher plus quand cliqué
-                    style={{ cursor: "pointer", color: "blue" }}
+                    style={{ cursor: "pointer" }}
                   >
                     Voir plus
                   </span>

@@ -320,7 +320,7 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
           onClick={() => setShowCommentInput(!showCommentInput)}
         >
           {showCommentInput ? (
-            "❌ Masquer "
+            <><img src={commentIcon} alt="Commenter" width="20" height="20" /><span>Masquer</span></>
           ) : (
             <>
               <img src={commentIcon} alt="Commenter" width="20" height="20" />

@@ -217,7 +217,7 @@ const MainContent: React.FC = () => {
               ? `${import.meta.env.VITE_API_BASE_URL}/${userProfile.avatar}`
               : defaultAvatar
           }
-          alt="User Avatar"
+          alt=""
         />
         <input
           type="text"

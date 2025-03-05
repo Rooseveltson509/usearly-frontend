@@ -1,31 +1,58 @@
 .create-brand-container {
-  max-inline-size: 400px;
-  margin: auto;
-  padding: 20px;
-  background: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  font-family: 'Raleway';
+  font-family: 'Raleway';
+  max-width: 100%; /* ✅ Empêche le dépassement */
+}
+/* ⚪ Styles pour la boîte modale */
+.modal {
+   max-width: 500px; /* ✅ Ajuste la largeur de la modale */
+  width: 90%; /* ✅ Rend la modale responsive */
+  background: white;
+  padding: 40px 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
 .create-brand-form input,
 .create-brand-form button {
-  inline-size: 100%;
-  padding: 10px;
+ width: 100%; /* ✅ Assure que tout s'aligne bien */
+  max-width: 100%; /* ✅ Empêche le débordement */
+  font-size: 14px;
+  padding: 12px;
   margin: 10px 0;
   border-radius: 5px;
   border: 1px solid #ccc;
+  box-sizing: border-box; /* ✅ Empêche le débordement en prenant en compte les bordures */
 }
 
-.create-brand-form button {
-  background: #6a0dad;
+
+.create-btn {
+  background: #000000;
   color: white;
-  cursor: pointer;
 }
 
-.create-brand-form button:disabled {
-  background: #999;
-  cursor: not-allowed;
+.cancel-btn {
+  background: #dddddd;
+  color: rgb(0, 0, 0);
 }
+
+.create-btn,
+.cancel-btn {
+  width: 100%;
+  font-weight: 500; /* ✅ Rendre le texte plus lisible */
+  padding: 14px 0; /* ✅ Augmente la hauteur du bouton */
+  height: 50px; /* ✅ Définit une hauteur fixe */
+  border-radius: 6px; /* ✅ Adoucit les coins */
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
 
 .error-message {
   color: red;
@@ -51,12 +78,4 @@
   z-index: 1000;
 }
 
-/* ⚪ Styles pour la boîte modale */
-.modal {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
+

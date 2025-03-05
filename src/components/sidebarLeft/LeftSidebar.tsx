@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import defaultAvatar from "../../assets/images/user.png";
 import shakePhone from "../../assets/images/shakephone.png";
+import scoreIcon from "../../assets/images/scoreIcon.svg";
 import "./LeftSidebar.scss";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext"; // Importer le contexte Auth
@@ -48,7 +49,6 @@ const LeftSidebar: React.FC = () => {
                 ? `${import.meta.env.VITE_API_BASE_URL}/${userProfile.avatar}`
                 : defaultAvatar
             }
-            alt="Avatar utilisateur"
           />
         </div>
 
@@ -70,17 +70,14 @@ const LeftSidebar: React.FC = () => {
         <div className="user-power">
           <span className="power-label">Mon Usear Power</span>
           <span className="power-value">
-            <span className="icon">U.</span> {stats.usearPower}
+            <img className='icon' src={scoreIcon} />
+             {stats.usearPower}
           </span>
         </div>
         <button className="view-more">Voir plus</button>
       </div>
 
-      <div className="rewards-section">
-        <h4>Vos récompenses</h4>
-        <img src={shakePhone} alt="Reward" />
-        <p>Shaker Star</p>
-      </div>
+ 
     </aside>
   );
 };

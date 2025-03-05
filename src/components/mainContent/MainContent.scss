@@ -1,6 +1,6 @@
 .main-content {
   //padding: 20px;
-  background-color: #f5f5f5; /* Couleur de fond */
+  background-color: transparent; /* Couleur de fond */
   display: flex;
   flex-direction: column;
   gap: 4px; /* Espacement entre les éléments */
@@ -13,7 +13,6 @@
     block-size: 40px;
     display: flex;
   }
-
 
   .filter-bar {
     display: flex;
@@ -63,13 +62,14 @@
   .filter-button {
     background-color: #fff;
     border: 1px solid #d1d1d1;
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 10px 20px;
-    font-size: 14px;
-    font-weight: bold;
     color: #000;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    font-size: 14px;
+    font-family: "Raleway";
+    font-weight: 300;
 
     &.active {
       background-color: #000;
@@ -156,6 +156,7 @@
     display: flex;
     align-items: center;
     transition: box-shadow 0.3s ease;
+   
 
     img {
       inline-size: 40px;
@@ -163,6 +164,9 @@
       margin-inline-end: 10px;
       border-radius: 50%;
       border: 1px solid rgb(210, 210, 210);
+      object-fit: cover;
+      object-position: center;
+       background-color: #bac0c9;
     }
 
     input {
@@ -171,7 +175,7 @@
       border: 1px solid #e7e7e7;
       border-radius: 25px;
       font-size: 14px;
-      background-color: #f9f9f9;
+      background-color: #f1f1f1;
       font-family: "Inter";
       font-weight: 300;
     }
@@ -571,7 +575,6 @@
       color: #333;
     }
   }
-
 
   .report-footer {
     display: flex;

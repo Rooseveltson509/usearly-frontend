@@ -3,7 +3,7 @@
   grid-template-columns: 300px 1fr 300px;
   /* Trois colonnes */
   gap: 20px;
-  background-color: #f2f2f2;
+  background-color:transparent;
   /* Couleur de fond globale */
   block-size: 100vh;
   overflow: hidden;
@@ -19,7 +19,7 @@
 .sidebar-left,
 .main-content,
 .sidebar-right {
-  overflow-y: auto; /* Permet le scroll uniquement si nécessaire */
+  overflow-y: scroll; /* Permet le scroll uniquement si nécessaire */
   scrollbar-width: none; /* Masque la scrollbar sur Firefox */
   -ms-overflow-style: none; /* Masque la scrollbar sur IE et Edge */
 
