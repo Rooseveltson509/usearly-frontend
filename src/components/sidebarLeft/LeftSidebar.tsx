@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import defaultAvatar from "../../assets/images/user.png";
-import shakePhone from "../../assets/images/shakephone.png";
 import scoreIcon from "../../assets/images/scoreIcon.svg";
 import "./LeftSidebar.scss";
 import { useNavigate } from "react-router-dom";
