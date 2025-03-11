@@ -82,6 +82,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   font-weight: 600;
   transition: color 0.2s ease-in-out, background 0.2s;
@@ -90,6 +91,11 @@
     color: #000;
     background: rgba(0, 0, 0, 0.05);
   }
+}
+
+.mini-brand-logo{
+  border-radius: 50%;
+  border: 1px solid #eee;
 }
 
 .report-meta {
@@ -125,9 +131,9 @@
   align-items: center;
   justify-content: flex-start; // ✅ Alignement à gauche
   width: 100%;
-  gap: 12px; // Évite que les éléments soient trop collés
+  gap: 16px; // Évite que les éléments soient trop collés
   border-top: 1px solid #eee;
-  padding-top: 10px;
+  padding-top: 5px;
   font-family: "Inter";
 
   .action-button {
@@ -149,40 +155,22 @@
 
   // ✅ "Je check" doit être toujours tout à droite
   .check-button {
-    background: white;
-    color: black;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
+    color: white;
+    background: black;
+    padding: 8px 18px;
+    border-radius: 32px;
     cursor: pointer;
     transition: opacity 0.2s;
     border: 1px solid;
     margin-left: auto; // ✅ Positionne ce bouton à droite UNIQUEMENT si présent
+    font-size: 14px;
+    font-weight: 400;
+    width: 40px;
 
     &:hover {
       opacity: 0.8;
-      background: black;
-      color: white;
+      font-weight: bold;
     }
-  }
-}
-
-// ✅ "Je check" doit être toujours tout à droite
-.check-button {
-  background: white;
-  color: black;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  border: 1px solid;
-  margin-left: auto; // ✅ Positionne ce bouton à droite UNIQUEMENT si présent
-
-  &:hover {
-    opacity: 0.8;
-    background: black;
-    color: white;
   }
 }
 

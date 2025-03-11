@@ -92,11 +92,22 @@ const CoupDeCoeurCard: React.FC<CoupDeCoeurCardProps> = ({ coupDeCoeur }) => {
           </span>
         </div>
         <div className="report-options">⋮</div>
+        {/* Ensuite le logo de la marque */}
+        {brandLogo && (
+          <div className="img-round">
+            <img
+              src={brandLogo}
+              alt={extractBrandName(coupDeCoeur.marque)}
+              className="brand-logo"
+            />
+          </div>
+        )}
       </div>
+      <div className="bar"></div>
 
       <div className="report-content">
         <div className="post-icon">
-          <img src={cdcIcon} alt="icon signalement" />
+          <img src={cdcIcon} alt="icon cdc" />
         </div>
         <div className="post-details">
           <h3>
@@ -136,15 +147,6 @@ const CoupDeCoeurCard: React.FC<CoupDeCoeurCardProps> = ({ coupDeCoeur }) => {
             )}
           </p>
         </div>
-        <div className="img-round">
-          {brandLogo && (
-            <img
-              src={brandLogo}
-              alt={extractBrandName(coupDeCoeur.marque)}
-              className="brand-logo"
-            />
-          )}
-        </div>
       </div>
 
       {/* ✅ Passe `showCommentInput` et `setShowCommentInput` à `ReactionSection` */}
@@ -154,6 +156,7 @@ const CoupDeCoeurCard: React.FC<CoupDeCoeurCardProps> = ({ coupDeCoeur }) => {
         showCommentInput={showCommentInput}
         setShowCommentInput={setShowCommentInput}
         commentCount={commentCount} // ✅ Ajout de la prop
+        brandLogo={brandLogo}
       />
 
       {/* ✅ Affichage de `CommentSection` si `showCommentInput` est activé */}

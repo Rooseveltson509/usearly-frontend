@@ -4,14 +4,19 @@
   flex-direction: column;
   gap: 20px;
 
-.margin-top{
-  margin-block: 30px;
+  .margin-top {
+    margin-block: 30px;
   }
+
   .section {
-    padding:0; /* Suppression des padding internes */
-    background-color: transparent; /* Suppression de la couleur de fond */
-    box-shadow: none; /* Suppression de l'ombre */
-    border-radius: 0; /* Suppression des bordures arrondies */
+    padding: 0;
+    /* Suppression des padding internes */
+    background-color: transparent;
+    /* Suppression de la couleur de fond */
+    box-shadow: none;
+    /* Suppression de l'ombre */
+    border-radius: 0;
+    /* Suppression des bordures arrondies */
     border-block-end: 1px solid rgba(0, 0, 0, 0.051);
 
     h3 {
@@ -33,33 +38,46 @@
       display: inline-block;
       padding: 10px 20px;
       text-align: center;
-      border: 1px solid #000;
-      border-radius: 20px;
-      background-color: transparent;
-      color: #000;
       font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
       font-family: 'Inter';
       font-size: 14px;
       margin-block-end: 40px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      // border: 1px solid transparent;
+      // border-radius: 20px;
 
-      &:hover {
-        background-color: #000;
-        color: #fff;
-      }
-      
+
+      background-image: linear-gradient(53deg, #4300DF -79.96%, #FF001E 149.55%);
+      color: transparent;
+      background-clip: text;
+
+    }
+
+    .cta-button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      padding: 0.4px;
+      background: linear-gradient(53deg, #4300DF -79.96%, #FF001E 149.55%);
+      mask:
+        linear-gradient(#ffffff 0 0) content-box,
+        linear-gradient(#ffffff 0 0);
+      mask-composite: exclude;
+      border: 1px solid transparent;
+      border-radius: 20px;
     }
   }
 
   .brand-list {
-   
-    
+
+
     .brand-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding:10px 0;
+      padding: 10px 0;
       margin-inline-end: 20px;
 
       .brand-info {
@@ -102,18 +120,22 @@
       }
     }
   }
-  
+
 }
+
 .section-title {
   display: flex;
   align-items: center;
-  justify-content: left; /* Centrage horizontal */
-  gap: 10px; /* Espacement entre l'icône et le texte */
+  justify-content: left;
+  /* Centrage horizontal */
+  gap: 10px;
+  /* Espacement entre l'icône et le texte */
 }
 
 .section-icon {
-  width: 54px; /* Ajuste la taille des icônes */
+  width: 54px;
+  /* Ajuste la taille des icônes */
   height: 54px;
-  padding:10px 0 0 0;
+  padding: 10px 0 0 0;
   margin-left: -10px;
 }

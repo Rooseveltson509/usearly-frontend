@@ -154,6 +154,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
         showCommentInput={showCommentInput}
         setShowCommentInput={setShowCommentInput}
         commentCount={commentCount}
+        brandLogo={brandLogo}
       />
 
       {/* ✅ Affichage de `CommentSection` si `showCommentInput` est activé */}

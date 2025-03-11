@@ -130,6 +130,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
   return (
     <div className="report-card">
       <div className="report-header">
+        {/* Partie gauche : avatar + pseudo + description */}
         <div className="user-info">
           <img
             src={
@@ -140,18 +141,36 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             alt="Avatar"
             className="user-avatar"
           />
+
           <span className="report-author">
             <strong>{report.User?.pseudo}</strong>
-          </span>
+          </span>{" "}
           <span className="post-author">
-            C’est moi ou {extractBrandName(report.marque)} bug ?
+            Connecter à{" "}
+            <strong>{extractBrandName(report.marque)}</strong>
           </span>
           <span className="report-time">
-            ﹒ {formatRelativeTime(report.createdAt)}
+            ・ {formatRelativeTime(report.createdAt)}
           </span>
         </div>
-        <div className="report-options">⋮</div>
+
+        {/* Les 3 petits points “⋮” tout à droite, avant le logo */}
+        <div className="report-options">...</div>
+
+        {/* Ensuite le logo de la marque */}
+        {brandLogo && (
+          <div className="img-round">
+            <img
+              src={brandLogo}
+              alt={extractBrandName(report.marque)}
+              className="brand-logo"
+            />
+          </div>
+        )}
       </div>
+
+      <div className="bar"></div>
+
       <div className="report-content">
         <div className="post-icon">
           <img src={signalIcon} alt="icon signalement" />
@@ -205,6 +224,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               )}
             </AnimatePresence>
 
+
             {/* 📌 Bouton "Voir plus" ou "Voir moins" avec chevron dynamique */}
             {(report.description.length > 150 || report.capture) && (
               <motion.span
@@ -217,13 +237,12 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                 transition={{ duration: 0.3 }}
               >
                 {expandedPosts[report.id] ? "Voir moins" : "Voir plus"}
-                <span
-                  className={`chevron ${
-                    expandedPosts[report.id] ? "up" : "down"
-                  }`}
+                {/* <span
+                  className={`chevron ${expandedPosts[report.id] ? "up" : "down"
+                    }`}
                 >
                   ▼
-                </span>
+                </span> */}
               </motion.span>
             )}
 
@@ -241,18 +260,31 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               <img src={`${selectedImage}`} alt="Zoomed" />
             </div>
           )}
+
+          <div className="poll-systems">
+            <div className="vote-item">
+              <span className="percent-label">20%</span>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: "20%" }}></div>
+              </div>
+              <span className="system-label">Windows</span>
+            </div>
+
+            <div className="vote-item">
+              <span className="percent-label">80%</span>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: "80%" }}></div>
+              </div>
+              <span className="system-label">Mac</span>
+            </div>
+          </div>
+
         </div>
 
-        <div className="img-round">
-          {brandLogo && (
-            <img
-              src={brandLogo}
-              alt={extractBrandName(report.marque)}
-              className="brand-logo"
-            />
-          )}
-        </div>
+
       </div>
+
+
 
       <ReactionSection
         parentId={report.id}
@@ -260,6 +292,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
         showCommentInput={showCommentInput}
         setShowCommentInput={setShowCommentInput}
         commentCount={commentCount}
+        brandLogo={brandLogo}
       />
       {showCommentInput && (
         <CommentSection

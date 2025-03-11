@@ -52,6 +52,19 @@
     color: rgb(245 39 85);
   }
 
+  // hr {
+  //   border: 0.1px solid #eee;
+  //   border-bottom: 1px solid #eee;
+  //   width: 85%;
+  //   margin-left: 0;
+  // }
+
+  .bar {
+    border-top: 1px solid #eee;
+    width: 85%;
+    margin-top: -25px;
+  }
+
   .img-round {
     position: relative;
     display: flex;
@@ -60,29 +73,33 @@
     inline-size: 64px; // Largeur fixe
     block-size: 64px; // Hauteur fixe pour garder le cercle
     border-radius: 50%;
-    overflow: hidden; // Coupe tout ce qui dépasse du cercle
-    background-color: #e8e8e8; // Fond blanc pour uniformiser
     margin-left: 25px;
 
     .brand-logo {
       width: 64px;
-      height: 64px;
-      border-radius: 50%; /* ✅ Forme circulaire */
-      overflow: hidden; /* ✅ Coupe les parties dépassantes */
-      display: flex; /* ✅ Permet de centrer */
+      height: 62px;
+      border-radius: 50%;
+      /* ✅ Forme circulaire */
+      overflow: hidden;
+      /* ✅ Coupe les parties dépassantes */
+      display: flex;
+      /* ✅ Permet de centrer */
       align-items: center;
       justify-content: center;
     }
 
     .brand-logo img {
-      object-fit: cover !important; /* ✅ Remplit totalement sans espace blanc */
-      object-position: center; /* ✅ Centre l’image */
+      object-fit: cover !important;
+      /* ✅ Remplit totalement sans espace blanc */
+      object-position: center;
+      /* ✅ Centre l’image */
     }
   }
 
   .post-details {
     flex: 1; // Prend l'espace disponible sans affecter l’image
     min-inline-size: 0;
+    margin-left: 10px;
   }
 
   .flex-element {
@@ -93,27 +110,52 @@
   }
 
   .post-icon {
+    position: relative;
     font-size: 24px;
-    margin-inline-start: 10px;
+    border-radius: 20px;
+    padding: 22px 24px 20px 24px;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px; // épaisseur de la bordure
+      background: linear-gradient(53deg, #4300DF -9.96%, #FF001E 109.55%);
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+    }
   }
+
+
   .report-content {
-    background-color: #f6f6f6;
+    // background-color: #f6f6f6;
     display: flex;
-    justify-content: space-between; /* ✅ Aligne le texte à gauche et le logo à droite */
+    justify-content: space-between;
+    /* ✅ Aligne le texte à gauche et le logo à droite */
     align-items: start;
     border-radius: 8px;
     padding: 25px 15px 20px 15px;
     margin-block-start: 15px;
-    margin-block-end: 10px;
     gap: 8px;
   }
+
   .report-desc {
     font-family: "Inter";
     font-weight: 400;
     font-size: 14px;
     margin-block-end: 10px;
-    line-height: 1.5;
+    line-height: 1.3;
     color: #4c4c4c;
+    margin: 8px 0 20px 0;
+    max-width: 400px;
   }
 
   .report-meta {
@@ -126,6 +168,59 @@
     font-family: "inter";
   }
 
+  .poll-systems {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 60%;
+    font-family: "Inter";
+    padding-left: 15px;
+
+    .vote-item {
+      display: grid;
+      grid-template-columns: 40px 1fr 60px;
+      align-items: center;
+      gap: 8px;
+
+      /* Pourcentages */
+      .percent-label {
+        text-align: right;
+        color: #000;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      .progress-bar {
+        position: relative;
+        height: 6px;
+        background: #eee;
+        border-radius: 5px;
+        width: 100%;
+        margin-block-start: 0;
+      }
+
+      .progress-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 0%;
+        background: linear-gradient(53deg, #4300DF -79.96%, #FF001E 149.55%);
+        border-radius: 5px;
+        transition: width 0.3s ease;
+      }
+
+      .system-label {
+        color: #000;
+        font-weight: bold;
+        font-size: 14px;
+        text-align: left;
+      }
+    }
+  }
+
+
+
   .comment-section {
     display: flex;
     align-items: center;
@@ -133,7 +228,7 @@
     margin-block-start: 25px;
     /* padding: 8px; */
     /* background: #f2f2f2; */
-    margin-block-end:30px;
+    margin-block-end: 30px;
 
     .comment-input {
       flex: 1;
@@ -152,7 +247,7 @@
     }
 
     .comment-submit {
-      background: #000000;
+      background: linear-gradient(53deg, #4300DF -79.96%, #FF001E 149.55%);
       color: white;
       border: none;
       padding: 10px 20px;
@@ -160,9 +255,13 @@
       cursor: pointer;
       font-size: 14px;
       transition: background 0.3s;
+      font-weight: 400;
+      width: 100px;
+
 
       &:hover {
-        background: #000000;
+        font-weight: bold;
+        opacity: 0.8;
       }
     }
   }
@@ -190,12 +289,15 @@
     background: white;
     padding: 20px;
     border-radius: 12px;
-    inline-size: 450px; /* Largeur fixe */
-    block-size: 500px; /* Hauteur fixe */
+    inline-size: 450px;
+    /* Largeur fixe */
+    block-size: 500px;
+    /* Hauteur fixe */
     display: flex;
     flex-direction: column;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-    overflow: hidden; /* Empêche le contenu de dépasser */
+    overflow: hidden;
+    /* Empêche le contenu de dépasser */
   }
 
   /* ✅ Section des filtres (émoticônes) */
@@ -225,12 +327,14 @@
 
   /* ✅ Effet de zoom au survol */
   .reaction-tabs button:hover {
-    transform: scale(1.2); /* Zoom léger */
+    transform: scale(1.2);
+    /* Zoom léger */
   }
 
   /* ✅ Emoji plus gros */
   .reaction-tabs button span {
-    font-size: 24px; /* Augmentation de la taille */
+    font-size: 24px;
+    /* Augmentation de la taille */
     margin-inline-end: 6px;
   }
 
@@ -251,12 +355,13 @@
     gap: 12px;
   }
 
+
+
   /* ✅ Élément utilisateur */
   .user-item {
     display: flex;
     align-items: center;
     padding: 10px;
-    border-block-end: 1px solid #eee;
     transition: background 0.3s;
   }
 
@@ -290,11 +395,13 @@
   .close-button:hover {
     background: rgb(22, 22, 22);
   }
+
   // ✅ Animation pour l’émoji sélectionné
   @keyframes bounceEmoji {
     0% {
       transform: scale(1.05) translateY(0px);
     }
+
     100% {
       transform: scale(1.15) translateY(-3px); // ✅ Petit rebond
     }
@@ -335,6 +442,7 @@
       }
     }
   }
+
   .action-button-container {
     position: relative;
     display: inline-block;
@@ -414,6 +522,7 @@
     0% {
       transform: rotate(0deg);
     }
+
     100% {
       transform: rotate(360deg);
     }
@@ -421,7 +530,7 @@
 
   .no-comments {
     font-family: 'Inter';
-    font-size:13px;
+    font-size: 13px;
     text-align: center;
     color: #777;
     font-style: italic;
@@ -431,12 +540,13 @@
   .report-image {
     display: block;
     max-inline-size: 100%;
-    max-block-size: 200px; // ✅ Limite la hauteur pour éviter les cards trop grandes
+    max-block-size: 150px; // ✅ Limite la hauteur pour éviter les cards trop grandes
     object-fit: cover; // ✅ Coupe l’image au lieu de la déformer
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.3s ease-in-out;
+    margin-bottom: 8px;
 
     &:hover {
       transform: scale(1.03);
@@ -446,11 +556,17 @@
   .see-more {
     font-size: 13px;
     font-weight: 700;
-    color: #000000;
     cursor: pointer;
     transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
     display: inline-block;
-    margin:0;
+    margin: 0;
+    background: #4300DF;
+    // background: linear-gradient(54deg, #4300DF -70%, #FF001E 170%);
+    background: #4c4c4c;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
 
     &:hover {
       color: #000000;
@@ -541,6 +657,7 @@
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
