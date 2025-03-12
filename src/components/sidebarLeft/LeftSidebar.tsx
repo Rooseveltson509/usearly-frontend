@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import defaultAvatar from "../../assets/images/user.png";
-import scoreIcon from "../../assets/images/scoreIcon.svg";
+import scoreIcon from "../../assets/images/testLogo.png";
 import "./LeftSidebar.scss";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext"; // Importer le contexte Auth
@@ -69,7 +69,7 @@ const LeftSidebar: React.FC = () => {
         <div className="user-power">
           <span className="power-label">Mon Usear Power</span>
           <span className="power-value">
-            <img className='icon' src={scoreIcon} />
+            <img className='icon' src={scoreIcon} style={{ objectFit: 'contain' }}/>
              {stats.usearPower}
           </span>
         </div>
