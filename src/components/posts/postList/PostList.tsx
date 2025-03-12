@@ -219,6 +219,7 @@ const PostList: React.FC<PostProps> = ({
         setShowCommentInput={setShowCommentInput}
         commentCount={commentCount}
         onReactionUpdate={onReactionUpdate}
+        brandLogo={post.brand?.avatar ? `${import.meta.env.VITE_API_BASE_URL}/${post.brand.avatar}` : null}
       />
       {showCommentInput && (
         <CommentSection

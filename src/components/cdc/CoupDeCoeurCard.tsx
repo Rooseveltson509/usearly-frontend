@@ -5,7 +5,10 @@ import defaultAvatar from "../../assets/images/user.png";
 import "./CoupDeCoeurCard.scss";
 import CommentSection from "../comment-section/CommentSection";
 import ReactionSection from "../reactions/reaction-section/ReactionSection";
-import { fetchBrandByName, fetchCdcCommentCount } from "@src/services/apiService";
+import {
+  fetchBrandByName,
+  fetchCdcCommentCount,
+} from "@src/services/apiService";
 import cdcIcon from "../../assets/images/cdc.svg";
 import defaultBrandAvatar from "../../assets/images/img-setting.jpeg";
 
@@ -87,11 +90,14 @@ const CoupDeCoeurCard: React.FC<CoupDeCoeurCardProps> = ({ coupDeCoeur }) => {
           <span className="report-author">
             <strong>{coupDeCoeur.User?.pseudo}</strong>
           </span>
+          <span className="post-author">
+            a applaudit <strong>{extractBrandName(coupDeCoeur.marque)}</strong>
+          </span>
           <span className="report-time">
-            {formatRelativeTime(coupDeCoeur.createdAt)}
+            ・ {formatRelativeTime(coupDeCoeur.createdAt)}
           </span>
         </div>
-        <div className="report-options">⋮</div>
+        <div className="report-options">...</div>
         {/* Ensuite le logo de la marque */}
         {brandLogo && (
           <div className="img-round">
@@ -106,7 +112,7 @@ const CoupDeCoeurCard: React.FC<CoupDeCoeurCardProps> = ({ coupDeCoeur }) => {
       <div className="bar"></div>
 
       <div className="report-content">
-        <div className="post-icon">
+        <div className="no-border post-icon">
           <img src={cdcIcon} alt="icon cdc" />
         </div>
         <div className="post-details">

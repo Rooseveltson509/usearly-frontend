@@ -27,7 +27,7 @@ interface ReactionSectionProps {
   setShowCommentInput: (value: boolean) => void;
   commentCount: number; // ✅ Ajout du nombre de commentaires
   onReactionUpdate?: (parentId: string, updatedReactions: Reaction[]) => void;
-  brandLogo: string | null;
+  brandLogo?: string | null;
 }
 
 const ReactionSection: React.FC<ReactionSectionProps> = ({
@@ -208,8 +208,8 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
                       <span
                         key={index}
                         className={`reaction-icon ${userReaction?.emoji === emoji
-                            ? "selected-reaction"
-                            : ""
+                          ? "selected-reaction"
+                          : ""
                           }`}
                         onClick={() => handleOpenReactionModal(parentId, type)}
                       >
@@ -334,10 +334,12 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
               <span></span>
             </>
           )}
-          {brandLogo && (
-                <img src={brandLogo} alt="LogoMarque" width="20" height="20" className="mini-brand-logo" />
-              )}
+
         </span>
+
+        {brandLogo && (
+          <img src={brandLogo} alt="LogoMarque" width="20" height="20" className="mini-brand-logo" />
+        )}
 
         {type !== "suggestion" && type !== "coupdecoeur" && (
           <>

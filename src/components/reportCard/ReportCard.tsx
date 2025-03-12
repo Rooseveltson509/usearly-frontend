@@ -146,7 +146,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             <strong>{report.User?.pseudo}</strong>
           </span>{" "}
           <span className="post-author">
-            Connecter à{" "}
+            Connecté à{" "}
             <strong>{extractBrandName(report.marque)}</strong>
           </span>
           <span className="report-time">

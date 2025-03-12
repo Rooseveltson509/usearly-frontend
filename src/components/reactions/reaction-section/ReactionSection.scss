@@ -170,8 +170,16 @@
     &:hover {
       opacity: 0.8;
       font-weight: bold;
+      animation: shakeAnimation 0.3s ease-in-out;
     }
   }
+}
+
+@keyframes shakeAnimation {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
 }
 
 .emoji-picker {
