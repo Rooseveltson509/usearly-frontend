@@ -1,0 +1,52 @@
+.signal-trends {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 0 10px;
+
+  .card-btn {
+    position: absolute;
+    right: -5px;
+    top: -5px;
+  }
+
+  .chart-container {
+    padding: 10px 0;
+  }
+
+  .chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 14px;
+    margin-top: 10px;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-family: "Inter";
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .red {
+      background-color: #eb5757;
+    }
+
+    .yellow {
+      background-color: #f2c94c;
+    }
+
+    .purple {
+      background-color: #9b51e0;
+    }
+  }
+}

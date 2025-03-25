@@ -9,7 +9,8 @@ import {
   fetchBrandByName,
   fetchCdcCommentCount,
 } from "@src/services/apiService";
-import cdcIcon from "../../assets/images/cdc.svg";
+// import cdcIcon from "../../assets/images/cdc.svg";
+import cdcIcon from "../../assets/images/cdc.png";
 import defaultBrandAvatar from "../../assets/images/img-setting.jpeg";
 
 interface CoupDeCoeurCardProps {
@@ -72,6 +73,11 @@ const CoupDeCoeurCard: React.FC<CoupDeCoeurCardProps> = ({ coupDeCoeur }) => {
     }));
   };
 
+  const capitalizeFirstLetter = (str: string): string => {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   return (
     <div className="report-card">
       <div className="report-header">
@@ -90,11 +96,15 @@ const CoupDeCoeurCard: React.FC<CoupDeCoeurCardProps> = ({ coupDeCoeur }) => {
           <span className="report-author">
             <strong>{coupDeCoeur.User?.pseudo}</strong>
           </span>
-          <span className="post-author">
-            a applaudit <strong>{extractBrandName(coupDeCoeur.marque)}</strong>
+          <span className="post-author mg-top">
+            complimente{" "}
+            <strong>
+              {capitalizeFirstLetter(extractBrandName(coupDeCoeur.marque))}
+            </strong>{" "}
+            ❤️・
           </span>
           <span className="report-time">
-            ・ {formatRelativeTime(coupDeCoeur.createdAt)}
+            {formatRelativeTime(coupDeCoeur.createdAt)}
           </span>
         </div>
         <div className="report-options">...</div>
@@ -112,14 +122,14 @@ const CoupDeCoeurCard: React.FC<CoupDeCoeurCardProps> = ({ coupDeCoeur }) => {
       <div className="bar"></div>
 
       <div className="report-content">
-        <div className="no-border post-icon">
+        <div className="post-icon">
           <img src={cdcIcon} alt="icon cdc" />
         </div>
         <div className="post-details">
           <h3>
             Vous avez un coup de coeur pour{" "}
             <strong className="report-title">
-              {extractBrandName(coupDeCoeur.marque)}
+              {capitalizeFirstLetter(extractBrandName(coupDeCoeur.marque))}
             </strong>
             ?
           </h3>
@@ -152,6 +162,32 @@ const CoupDeCoeurCard: React.FC<CoupDeCoeurCardProps> = ({ coupDeCoeur }) => {
               </>
             )}
           </p>
+
+          <div className="poll-systems">
+            <div className="vote-item">
+              <span className="percent-label">20%</span>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: "20%" }}></div>
+              </div>
+              <span className="system-label">😍</span>
+            </div>
+
+            <div className="vote-item">
+              <span className="percent-label">50%</span>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: "50%" }}></div>
+              </div>
+              <span className="system-label">👏</span>
+            </div>
+
+            <div className="vote-item">
+              <span className="percent-label">30%</span>
+              <div className="progress-bar">
+                <div className="progress-fill" style={{ width: "30%" }}></div>
+              </div>
+              <span className="system-label">❤️</span>
+            </div>
+          </div>
         </div>
       </div>
 

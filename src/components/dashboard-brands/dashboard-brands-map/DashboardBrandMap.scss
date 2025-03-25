@@ -1,0 +1,20 @@
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.dashboard-map {
+  display: flex;
+  background: #fff;
+  margin: 30px 30px 30px 80px;
+  border-radius: 15px;
+  font-family: Inter;
+  .dashboard-main {
+    margin-left: 0;
+    margin-inline-start: 0;
+  }
+}

@@ -1,0 +1,352 @@
+.body-color {
+  background-color: #f7f7f7;
+  margin: auto;
+}
+
+.user-profile-container {
+  // La page entière
+  font-family: Raleway;
+  max-inline-size: 1200px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 20px 10px;
+
+  .user-info {
+    // Partie de gauche(avatar, nom, score)
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0;
+
+    .avatar {
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user-details {
+      text-align: center;
+      margin-top: -30px;
+
+      h2 {
+        font-size: 32px;
+        font-weight: 600;
+      }
+
+      span {
+        color: #666;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .contributions-overview {
+    // Nombre de contributions
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+
+    .contributions-label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .contributions-count {
+      font-size: 80px;
+      margin-bottom: 6px;
+    }
+
+    .contributions-total {
+      font-size: 13px;
+      font-weight: 400;
+      color: #777;
+    }
+  }
+
+  .calendar-container {
+    // Calendrier
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-top: 40px;
+
+    .calendar-week {
+      display: flex;
+      gap: 8px;
+      color: #aaa;
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      align-items: center;
+      justify-content: center;
+
+      div {
+        width: 8px;
+        height: 8px;
+        background-color: #e3e4e6;
+        border-radius: 50%;
+      }
+    }
+  }
+
+  .activity-summary {
+    // Nombre de contributions avec catégorie(tout a droite)
+    display: flex;
+    justify-content: space-between;
+    width: 250px;
+    margin-top: 40px;
+
+    .activity-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+
+      .icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(53deg, #4300df -79.96%, #ff001e 149.55%);
+      }
+
+      span {
+        font-size: 12px;
+        color: #555;
+      }
+
+      strong {
+        font-size: 18px;
+        font-weight: 700;
+      }
+    }
+
+    .activity-item {
+      text-align: center;
+    }
+
+    .activity-item .icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+.profile-container-view {
+  display: flex;
+}
+
+.user-contributions {
+  background-color: white;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #eee;
+  margin-top: 20px;
+  margin-left: auto;
+  height: 450px;
+
+  h3 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 20px;
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+      color: #333;
+
+      span {
+        flex: 1;
+        margin-left: 10px;
+      }
+
+      strong {
+        font-weight: 700;
+      }
+
+      img {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .hr-profile {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 12px 0;
+    width: 100%;
+  }
+
+  .user-ranking {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 12px;
+    color: #555;
+
+    span {
+      color: black;
+    }
+  }
+}
+
+.feedback-tabs-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 30px;
+
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+
+    .tab {
+      padding: 15px 40px;
+      font-size: 14px;
+      color: #aaa;
+      cursor: pointer;
+      position: relative;
+
+      &.active {
+        color: black;
+        font-weight: 700;
+        background-color: white;
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: -1px;
+          left: 0;
+          height: 4px;
+          width: 100%;
+          background: linear-gradient(53deg, #4300df -79.96%, #ff001e 149.55%);
+        }
+      }
+
+      &:hover:not(.active) {
+        color: #555;
+      }
+    }
+  }
+
+  .filters {
+    display: flex;
+    gap: 16px;
+    margin: 20px 0;
+
+    .filter-select {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: rgba(255, 255, 255, 0);
+      color: black;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px 26px;
+      font-weight: 500;
+      cursor: pointer;
+      min-width: 120px;
+
+      &:focus {
+        outline: none;
+        border-color: #aaa;
+      }
+    }
+  }
+
+  .report-card-profile {
+    width: 80%;
+
+    .report-header {
+      cursor: pointer;
+    }
+
+    &.closed {
+      overflow: hidden;
+      background-color: white;
+      border-radius: 2px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f7f7f7;
+      }
+
+      // Cache tous les enfants sauf closed-report si fermé
+      > :not(.closed-report) {
+        display: none;
+      }
+
+      .closed-report {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+
+        &-info {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          h4 {
+            font-size: 16px;
+          }
+
+          img {
+            width: 24px;
+          }
+        }
+
+        .closed-report-date {
+          font-size: 14px;
+          color: #979797;
+          font-family: Urbanist;
+        }
+        .closed-report-status {
+          .transmitted {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+          }
+          svg {
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        .brand-logo-small {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}

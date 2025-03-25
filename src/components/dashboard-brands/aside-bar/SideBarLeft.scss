@@ -1,0 +1,42 @@
+.sidebar-left-dash {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  block-size: 100vh; // Prend toute la hauteur de la fenêtre
+  inline-size: 65px; // Largeur du menu
+  background-color: #000; // Ajuste selon ton design
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000; // S'assure qu'il est au-dessus des autres éléments
+  border-radius: 0;
+  overflow: hidden; /* Empêche tout scroll */
+  white-space: nowrap; /* Évite que le contenu force un débordement */
+
+  .logo {
+    margin: 12px 0;
+    width: 44px;
+  }
+
+  nav {
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        padding: 12px 18px;
+        text-align: center;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity 0.3s;
+
+        &:hover,
+        &.active {
+          opacity: 1;
+          background-color: #d7d7d720;
+        }
+      }
+    }
+  }
+}

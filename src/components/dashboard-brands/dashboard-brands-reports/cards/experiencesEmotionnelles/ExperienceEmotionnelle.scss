@@ -1,0 +1,180 @@
+.experience-emotionnelle {
+  position: relative; // Permet à .card-btn de se positionner à l'intérieur
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  // Colonne de gauche contenant le nuage d'emojis
+  .left-column {
+    flex: 0.3; // Occupe environ 35% de l’espace
+    display: flex;
+    justify-content: center;
+    margin-right: 40px;
+  }
+
+  .emotions-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .emoji-cloud {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      span {
+        position: absolute;
+        font-size: 34px;
+
+        &:nth-child(1) {
+          font-size: 24px;
+          top: 15%;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        &:nth-child(2) {
+          font-size: 44px;
+          top: 20%;
+          left: 5%;
+        }
+        &:nth-child(3) {
+          font-size: 32px;
+          top: 60%;
+          left: 10%;
+        }
+        &:nth-child(4) {
+          font-size: 40px;
+          bottom: 0%;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+        &:nth-child(5) {
+          font-size: 44px;
+          top: 50%;
+          right: 0%;
+        }
+        &:nth-child(6) {
+          font-size: 60px;
+          top: 10%;
+          right: -5%;
+        }
+        &:nth-child(7) {
+          font-size: 72px;
+          z-index: 1;
+        }
+      }
+    }
+
+    /* Colonne droite contenant les stats + selecteurs */
+    .right-column {
+      flex: 0.8; // Prend environ 80% de l'espace
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      width: 100%;
+      gap: 10px; // Assure un écart constant entre les blocs
+      margin-block-start: 10px;
+      margin-block-end: 24px;
+
+      .dp-none {
+        @media (max-width: 1200px) {
+          display: none; // Par défaut, caché
+        }
+      }
+
+      .stat-card {
+        position: relative; // Permet de positionner .negative-trend par rapport à ce bloc
+        flex: 1; // Rend les stats adaptables
+        min-width: 120px;
+        background: #f5f5f5;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 20px 20px;
+        border-radius: 12px;
+        text-align: left;
+
+        .stat-value {
+          font-family: "Raleway";
+          font-size: 44px; // Taille du chiffre
+          font-weight: 800; // Gras
+          display: block; // Assure un bon centrage
+        }
+        p {
+          font-size: 16px;
+          font-weight: 500;
+          color: #6c6c6c; // Couleur plus douce
+          margin-top: 4px;
+        }
+        .negative-trend {
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          color: red;
+          font-size: 14px;
+          font-weight: bold;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+      }
+    }
+  }
+
+  .emotion-controls {
+    display: flex;
+    flex-direction: column;
+    width: 100%; // Fait en sorte que les sélecteurs prennent toute la largeur de la div droite
+    gap: 8px;
+    margin-block-end: 20px;
+
+    .custom-select {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+
+      select {
+        width: 100%;
+        padding: 10px 40px 10px 15px; // Plus de padding à droite pour le chevron
+        border-radius: 6px;
+        border: 1px solid #e3e3e3;
+        font-size: 16px;
+        cursor: pointer;
+        background: #fff;
+        appearance: none; // Supprime l'apparence par défaut du select
+      }
+
+      .chevron-icon {
+        position: absolute;
+        right: 15px; // Ajuste le padding à droite
+        font-size: 12px;
+        pointer-events: none; // Empêche l’icône d’être cliquée
+        color: #000000;
+      }
+    }
+  }
+
+  .card-btn {
+    position: absolute;
+    top: 20px; // Garde une marge en haut
+    right: 15px; // Aligne à gauche
+  }
+}

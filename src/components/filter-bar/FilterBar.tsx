@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./FilterBar.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import searchIcon from "../../assets/icons/search-icon.svg";
+import searchIcon from "../../assets/icons/search-icon2.svg";
 
 
 
@@ -124,7 +124,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
         <input
           type="text"
           className="search-input"
-          placeholder="Rechercher..."
+          placeholder="Rechercher une marque"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);

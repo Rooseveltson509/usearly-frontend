@@ -1,0 +1,26 @@
+.experience-line-container {
+  /* On veut mettre le texte "Expérience" et le svg sur une même ligne */
+  display: flex;
+  align-items: center;
+  /* Occupe toute la largeur */
+  width: 100%;
+  margin-bottom: 20px;
+
+  .title-experience {
+    /* On applique writing-mode + rotation comme vous le vouliez */
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 16px;
+    margin: 20px 35px 30px 0;
+    color: #47585f;
+    font-weight: 400;
+  }
+
+  .experience-chart {
+    /* SVG responsive */
+    width: 100%;
+    height: auto;
+    font-family: sans-serif;
+    user-select: none;
+  }
+}

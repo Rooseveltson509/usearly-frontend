@@ -1,0 +1,132 @@
+.emotions-section {
+  display: flex;
+  position: relative;
+  font-family: Inter;
+
+  .titles-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+    color: #47585f;
+    font-weight: 400;
+
+    .title-emotions {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 16px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+    .title-ressentis {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 16px;
+    }
+  }
+
+  .cards-row {
+    /* On veut 7 “cartes” (emotion-card) se répartissant la largeur */
+    display: flex;
+    width: 100%;
+    /* overflow-x: auto; <-- on le retire pour éviter la barre de scroll
+       si vous voulez scroller, remettez-le. */
+
+    .emotion-card {
+      /* Chaque carte occupe 1/7 de la largeur disponible */
+      flex: 1;
+      min-width: 0; /* autorise la réduction si l’écran est étroit */
+      padding: 12px;
+      text-align: center;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      .emoji-container {
+        position: relative;
+
+        .emoji-position {
+          .emoji {
+            font-size: 38px;
+            padding: 2px;
+            box-shadow: 0px 2px 8px 1px rgba(0, 0, 0, 0.25);
+            border-radius: 50% 50% 0 50%;
+          }
+        }
+
+        .count {
+          position: absolute;
+          background: #fff;
+          top: -2px;
+          margin-left: 6px;
+          border-radius: 12px;
+          padding: 2px 6px;
+          font-size: 14px;
+          box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        }
+      }
+
+      .label {
+        margin-top: 8px;
+        font-size: 14px;
+
+        .arrow {
+          font-size: 12px;
+          margin-left: 4px;
+        }
+      }
+
+      .text {
+        /* On retire la largeur fixe (150px) pour éviter le chevauchement */
+        width: 100%;
+        font-size: 14px;
+        font-weight: 400;
+        margin: 10px 0;
+        padding: 12px 8px 8px 12px;
+        color: #000;
+        height: 84px;
+        /* Si vous voulez limiter la largeur, utilisez par ex:
+           max-width: 90%; ou un min-width: 120px; etc. */
+        background: rgba(130, 130, 130, 0.1);
+        border-radius: 8px;
+        text-align: left;
+        font-style: italic;
+        overflow-y: auto;
+
+        /* Personnalisation du scroll (Firefox >= 64) */
+        scrollbar-width: thin;
+        scrollbar-color: #cecece transparent;
+      }
+
+      .nav-arrows {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+
+        button {
+          width: 28px;
+          height: 28px;
+          background: #fff;
+          border: 1px solid #eaecee;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          &:hover {
+            background: #eee;
+          }
+
+          img {
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -15,9 +15,15 @@ import ForgotPassword from "./components/forgotPassword/ForgotPassword";
 import PasswordChecker from "./components/passwordChecker/PasswordChecker";
 import LoadingScreen from "./components/LoadingScreen";
 import ResetPassword from "./components/resetpwd/ResetPassword";
-import DashboardBrand from "./components/dashboard-brands/DashbordBrand";
+import DashboardBrand from "./components/dashboard-brands/dashboard-brands-reports/DashbordBrand";
 import BrandLogin from "./pages/brand/BrandLogin";
 import BrandList from "./components/admin/brandList/BrandList";
+import Profile from "./pages/profile/Profile";
+import DashboardBrandCdc from "./components/dashboard-brands/dashboard-brands-cdc/DashboardBrandCdc";
+import DashboardBrandWarning from "./components/dashboard-brands/dashboard-brands-warning/DashboardBrandWarning";
+import DashboardBrandCollab from "./components/dashboard-brands/dashboard-brands-collab/DashboardBrandCollab";
+import DashboardBrandMap from "./components/dashboard-brands/dashboard-brands-map/DashboardBrandMap";
+import DashboardBrandSuggest from "./components/dashboard-brands/dashboard-brands-suggest/DashboardBrandSuggest";
 
 const App: React.FC = () => {
   const {
@@ -77,6 +83,14 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute condition={isAuthenticated} redirectTo="/login">
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Routes accessibles uniquement pour les non-connectés */}
         <Route
@@ -105,7 +119,18 @@ const App: React.FC = () => {
           }
         /> */}
 
-        <Route path="/dashboard-brand" element={<DashboardBrand />} />
+        <Route path="/dashboard/warning" element={<DashboardBrandWarning />} />
+        <Route path="/dashboard/parcours" element={<DashboardBrandMap />} />
+        <Route path="/dashboard/signalements" element={<DashboardBrand />} />
+        <Route path="/dashboard/cdc" element={<DashboardBrandCdc />} />
+        <Route
+          path="/dashboard/suggestions"
+          element={<DashboardBrandSuggest />}
+        />
+        <Route
+          path="/dashboard/collaboration"
+          element={<DashboardBrandCollab />}
+        />
         {/* <Route path="/dashboard-brand" element={<DashboardBrand />} /> */}
         <Route
           path="/admin/brands"

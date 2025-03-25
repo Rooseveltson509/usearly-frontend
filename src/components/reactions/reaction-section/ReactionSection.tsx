@@ -37,7 +37,7 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
   setShowCommentInput,
   onReactionUpdate,
   commentCount,
-  brandLogo
+  brandLogo,
 }) => {
   const { userProfile } = useAuth();
   const userId = userProfile?.id;
@@ -59,19 +59,19 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
     type === "report"
       ? fetchReportReactions
       : type === "post"
-        ? fetchPostReactions
-        : type === "coupdecoeur"
-          ? fetchCdcReactions
-          : fetchSuggestionReactions;
+      ? fetchPostReactions
+      : type === "coupdecoeur"
+      ? fetchCdcReactions
+      : fetchSuggestionReactions;
 
   const addReaction =
     type === "report"
       ? addReactionToReport
       : type === "post"
-        ? addReactionToPost
-        : type === "coupdecoeur"
-          ? addReactionToCdc
-          : addReactionToSuggestion;
+      ? addReactionToPost
+      : type === "coupdecoeur"
+      ? addReactionToCdc
+      : addReactionToSuggestion;
 
   useEffect(() => {
     const loadReactions = async () => {
@@ -207,10 +207,11 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
                     .map(([emoji], index) => (
                       <span
                         key={index}
-                        className={`reaction-icon ${userReaction?.emoji === emoji
-                          ? "selected-reaction"
-                          : ""
-                          }`}
+                        className={`reaction-icon ${
+                          userReaction?.emoji === emoji
+                            ? "selected-reaction"
+                            : ""
+                        }`}
                         onClick={() => handleOpenReactionModal(parentId, type)}
                       >
                         {emoji}
@@ -225,44 +226,45 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
           )}
         </div>
 
-        {/* Section des réactions, commentaires et transmission */}
-        <div className="report-meta">
-          <span className="meta-info transmitted">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <defs>
-                <linearGradient id="myGradient" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#4300DF" />
-                  <stop offset="100%" stop-color="#FF001E" />
-                </linearGradient>
-              </defs>
-
-              <circle
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="url(#myGradient)"
-                stroke-width="2"
+        {/* Section des réactions, commentaires et transmission, pour recupere la version d'avant, juste enlever la 1er ligne */}
+        {type === "report" && (
+          <div className="report-meta">
+            <span className="meta-info transmitted">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
                 fill="none"
-              />
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <linearGradient id="myGradient" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#4300DF" />
+                    <stop offset="100%" stop-color="#FF001E" />
+                  </linearGradient>
+                </defs>
 
-              <path
-                d="M8 12 l3 3 l5 -5"
-                stroke="url(#myGradient)"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="url(#myGradient)"
+                  stroke-width="2"
+                  fill="none"
+                />
 
-            Transmis à la marque
-          </span>
-        </div>
+                <path
+                  d="M8 12 l3 3 l5 -5"
+                  stroke="url(#myGradient)"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Transmis à la marque
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="report-actions">
@@ -301,8 +303,9 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
               {getEmojisForType(type).map(({ emoji, label }) => (
                 <button
                   key={emoji}
-                  className={`emoji-btn ${userReaction?.emoji === emoji ? "selected-emoji" : ""
-                    }`}
+                  className={`emoji-btn ${
+                    userReaction?.emoji === emoji ? "selected-emoji" : ""
+                  }`}
                   onClick={() => handleReaction(parentId, emoji)}
                   onMouseEnter={() => setHoveredLabel(label)}
                   onMouseLeave={() => setHoveredLabel(null)}
@@ -334,11 +337,16 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
               <span></span>
             </>
           )}
-
         </span>
 
         {brandLogo && (
-          <img src={brandLogo} alt="LogoMarque" width="20" height="20" className="mini-brand-logo" />
+          <img
+            src={brandLogo}
+            alt="LogoMarque"
+            width="20"
+            height="20"
+            className="mini-brand-logo"
+          />
         )}
 
         {type !== "suggestion" && type !== "coupdecoeur" && (

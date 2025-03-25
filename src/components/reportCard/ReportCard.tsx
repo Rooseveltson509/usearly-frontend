@@ -9,10 +9,8 @@ import {
 } from "@src/services/apiService";
 import defaultAvatar from "../../assets/images/user.png";
 import { CommentType } from "@src/types/types";
-import {
-  fetchReportReactions,
-} from "@src/services/apiReactions";
-import signalIcon from "../../assets/images/signals.svg";
+import { fetchReportReactions } from "@src/services/apiReactions";
+import signalIcon from "../../assets/images/signalNew.png";
 import defaultBrandAvatar from "../../assets/images/img-setting.jpeg";
 import { AnimatePresence, motion } from "framer-motion";
 import ReactionSection from "../reactions/reaction-section/ReactionSection";
@@ -118,7 +116,6 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
     loadCommentCount();
   }, [report.id]);
 
-
   const toggleExpand = (postId: string) => {
     setExpandedPosts((prev) => ({
       ...prev,
@@ -126,6 +123,10 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
     }));
   };
 
+  const capitalizeFirstLetter = (str: string): string => {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
   return (
     <div className="report-card">
@@ -141,13 +142,14 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
             alt="Avatar"
             className="user-avatar"
           />
-
           <span className="report-author">
             <strong>{report.User?.pseudo}</strong>
           </span>{" "}
           <span className="post-author">
-            Connecté à{" "}
-            <strong>{extractBrandName(report.marque)}</strong>
+            connecté à{" "}
+            <strong>
+              {capitalizeFirstLetter(extractBrandName(report.marque))}
+            </strong>
           </span>
           <span className="report-time">
             ・ {formatRelativeTime(report.createdAt)}
@@ -224,7 +226,6 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               )}
             </AnimatePresence>
 
-
             {/* 📌 Bouton "Voir plus" ou "Voir moins" avec chevron dynamique */}
             {(report.description.length > 150 || report.capture) && (
               <motion.span
@@ -236,7 +237,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                 exit={{ opacity: 0, y: -5 }}
                 transition={{ duration: 0.3 }}
               >
-                {expandedPosts[report.id] ? "Voir moins" : "Voir plus"}
+                {expandedPosts[report.id] ? "Voir moins" : "\u00A0Voir plus"}
                 {/* <span
                   className={`chevron ${expandedPosts[report.id] ? "up" : "down"
                     }`}
@@ -278,13 +279,8 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               <span className="system-label">Mac</span>
             </div>
           </div>
-
         </div>
-
-
       </div>
-
-
 
       <ReactionSection
         parentId={report.id}

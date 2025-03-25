@@ -1,0 +1,221 @@
+.journey-steps-container {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+
+  /* ==========================
+     COLONNE DE GAUCHE (Actions + bouton +) 
+     ========================== */
+  .actions-left-col {
+    width: 60px; /* Ajustez la largeur voulue */
+    display: flex;
+    flex-direction: column; /* empile le texte “Actions” et le bouton */
+    align-items: center;
+    justify-content: space-between;
+
+    .actions-title-vertical {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 16px;
+      color: #47585f;
+      font-weight: 400;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    /* Bouton “+” */
+    .add-step-button {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      top: 50px;
+      left: 30px;
+      z-index: 10;
+    }
+  }
+
+  /* ==========================
+     COLONNE PRINCIPALE
+     ========================== */
+  .steps-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    /* --- PHASES --- */
+    .phases-container {
+      display: flex;
+      width: 100%;
+      height: 40px;
+      position: relative;
+    }
+    .phase-segment {
+      position: relative;
+      text-align: center;
+      border-left: 1px dashed #ccc;
+      &:nth-child(1) {
+        width: 42%;
+      }
+      &:nth-child(2) {
+        width: 16%;
+      }
+      &:nth-child(3) {
+        width: 42%;
+      }
+
+      .phase-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 12px;
+        color: #666;
+        font-style: italic;
+      }
+    }
+
+    /* --- STEPS (7 flèches) --- */
+    .steps-row {
+      display: flex;
+      width: 100%;
+      min-height: 50px;
+
+      .step-item {
+        flex: 1;
+        background: #4a4a4a;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        margin-left: -30px;
+        &.arrow {
+          clip-path: polygon(
+            85% 0%,
+            100% 50%,
+            85% 100%,
+            0% 100%,
+            15% 50%,
+            0% 0%
+          );
+          &:first-child {
+            clip-path: polygon(0% 0%, 85% 0%, 100% 50%, 85% 100%, 0% 100%);
+            margin-left: 0;
+          }
+        }
+        .step-label {
+          white-space: pre-line;
+          padding: 0 10px;
+          z-index: 1;
+        }
+      }
+    }
+
+    /* --- BOUTON "Afficher/Masquer les actions" (barre) --- */
+    .actions-bar {
+      width: 100%;
+      margin-top: 12px;
+      font-size: 14px;
+      height: 50px;
+      color: #47585f;
+      display: flex;
+      border-radius: 4px;
+      border: 1px solid #e2e2e2;
+      background: #fff;
+      box-shadow: 0px 4px 9.9px 0px rgba(0, 0, 0, 0.11);
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      span {
+        font-size: 12px;
+      }
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    /* --- PANNEAU des ACTIONS (checklist) --- */
+    .actions-panel {
+      margin-top: 8px;
+      display: flex;
+
+      .actions-columns {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+
+        .actions-column {
+          flex: 1;
+          padding: 0 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          .action-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 4px 0;
+            input[type="checkbox"] {
+              margin-right: 4px;
+              appearance: none;
+              -webkit-appearance: none; /* compatibilité Safari iOS */
+              -moz-appearance: none;
+
+              max-width: 16px;
+              min-width: 16px;
+              height: 16px;
+              border: 2px solid #ccc; /* bordure par défaut */
+              border-radius: 4px; /* coins arrondis, si vous voulez un carré parfait, laissez 0 */
+              background: #fff; /* fond par défaut (non coché) */
+              cursor: pointer;
+              position: relative;
+
+              &:checked {
+                border-color: #c41e82; /* bordure verte, par exemple */
+              }
+
+              &::after {
+                content: "";
+                /* On commence "invisible" (ou transparent) */
+                position: absolute;
+                top: -3px;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                /* Si vous voulez un dessin particulier, vous pouvez masquer ou 
+                   utiliser un background-image, par exemple. */
+                background: transparent;
+                /* ou content: "✔"; pour un check stylisé, etc. */
+                text-align: center;
+                line-height: 20px;
+                color: #c41e82; /* Couleur de la coche si c'est du texte */
+                font-weight: bold;
+                opacity: 0;
+              }
+
+              /* Lorsqu'on est coché, on fait apparaître la coche */
+              &:checked::after {
+                content: "✔"; /* ou "✓" ou tout autre symbole */
+                opacity: 1;
+              }
+            }
+            span {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+}

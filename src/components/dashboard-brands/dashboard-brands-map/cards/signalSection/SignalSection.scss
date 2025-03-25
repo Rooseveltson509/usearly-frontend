@@ -1,0 +1,185 @@
+$red: #ff6e6e;
+$yellow: #ffd66b;
+$purple: #a99cff;
+
+.friction-section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  font-family: "Inter";
+  position: relative;
+
+  .titles-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+    color: #47585f;
+    font-weight: 400;
+    .title-emotions {
+      writing-mode: vertical-rl;
+      font-size: 16px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+    .title-ressentis {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 16px;
+    }
+  }
+
+  .friction-main {
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
+
+    .friction-header {
+      display: flex;
+      .top-bar {
+        display: flex;
+        gap: 12px;
+        justify-content: space-around;
+        border-radius: 4px 0 0 4px;
+        height: 30px;
+        width: 86vw;
+        padding: 10px;
+        border: 1px solid #e2e2e2;
+        background: #fff;
+        box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.13);
+
+        .value-block {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          .value {
+            font-weight: 600;
+          }
+          .delta {
+            font-size: 14px;
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 16px;
+            &.yellow {
+              background: $yellow;
+            }
+            &.red {
+              background: $red;
+            }
+            &.purple {
+              background: $purple;
+            }
+          }
+        }
+      }
+      .toggle-btn {
+        box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.13);
+        background: #fff;
+        border: 1px solid #e2e2e2;
+        border-radius: 0 15px 15px 0;
+        cursor: pointer;
+        width: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:hover {
+          background: #eee;
+        }
+      }
+    }
+
+    .details-row {
+      display: flex;
+      gap: 12px;
+      margin: 10px 0 0 0;
+      overflow-x: auto;
+
+      .friction-box {
+        border: 1px solid #ededed;
+        border-radius: 6px;
+        width: 100%;
+
+        .tabs {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 6px;
+          button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            font-size: 12px;
+            padding: 12px 6px 8px 6px;
+            background: #fff;
+            cursor: pointer;
+            border-bottom: 1px solid #ededed;
+            position: relative;
+            font-family: "Inter";
+            border: none;
+            width: 100%;
+
+            span {
+              color: #8d98a4;
+            }
+
+            &:hover {
+              background: #eee;
+            }
+            &.active {
+              border-bottom: 4px solid $red; /* couleu de base, changée dynamiquement via style prop */
+            }
+            &::after {
+              content: "";
+              position: absolute;
+              right: 0;
+              width: 1px;
+              background: #e3e3e3;
+              top: 20%;
+              bottom: 20%;
+            }
+            &:last-child::after {
+              display: none;
+            }
+          }
+        }
+
+        .items-list {
+          display: flex;
+          gap: 4px;
+          flex-direction: column;
+          padding: 4px;
+          height: 92px;
+          overflow-y: auto;
+          scrollbar-width: thin;
+          scrollbar-color: #aaa transparent;
+          .item-dot {
+            font-size: 13px;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            .dot {
+              min-width: 6px;
+              height: 6px;
+              margin-top: 5px;
+              border-radius: 50%;
+              &.critique {
+                background: $red;
+              }
+              &.majeur {
+                background: $yellow;
+              }
+              &.mineur {
+                background: $purple;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

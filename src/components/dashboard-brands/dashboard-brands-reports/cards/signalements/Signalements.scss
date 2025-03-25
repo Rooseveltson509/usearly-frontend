@@ -1,0 +1,155 @@
+.signalements-card {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.1);
+  inline-size: 50%;
+
+  .signalements-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Garde l'alignement du bouton */
+
+    .title-container {
+      display: flex;
+      align-items: center; /* Aligne l’icône et le texte */
+      gap: 0px; /* Espacement entre l'icône et le titre */
+    }
+
+    .signal-icon {
+      width: 24px; /* Ajuste selon ton besoin */
+      height: 24px;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      margin-inline-end: 8px;
+      padding-top: 12px;
+    }
+  }
+
+  .signalements-filters {
+    display: flex;
+    justify-content: center; /* ✅ Écarte les sélecteurs aux bords */
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    max-width: 600px; /* ✅ Même largeur que la boîte grise */
+    margin: 0 auto 16px auto; /* ✅ Centre horizontalement */
+    margin-block-start: 40px;
+    margin-block-end: 20px;
+  }
+
+  .custom-select {
+    position: relative;
+    width: 48%; /* ✅ Ajuste la largeur pour éviter les écarts */
+    min-width: 180px; /* ✅ Garde une bonne taille même sur petits écrans */
+  }
+
+  /* Cache la flèche native du select */
+  .custom-select select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: white;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .custom-select-icon {
+    position: absolute;
+    right: 12px;
+    font-size: 10px; /* ✅ Diminue la taille de l'icône */
+    color: #333; /* ✅ Garde une couleur sobre */
+    pointer-events: none;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .custom-select:hover {
+    background: #f8f8f8;
+  }
+
+  /* carousel */
+  .signalements-carousel p {
+    color: rgb(0, 0, 0);
+    font-family: "Raleway";
+    font-weight: 400;
+    font-style: italic;
+    font-size: 16px;
+  }
+
+  .signalements-carousel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre tout verticalement */
+    gap: 12px; /* Espacement entre les éléments */
+    width: 100%; /* S'adapte à la largeur du parent */
+    max-width: 800px; /* Largeur max pour éviter qu'elle devienne trop large */
+    margin: 0 auto; /* Centre horizontalement */
+  }
+
+  .signalements-carousel {
+    background: #ebebeb;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 100%; /* Prend toute la largeur disponible */
+    max-width: 600px; /* ✅ S'assure que la boîte grise a la même largeur */
+    margin: 0 auto; /* ✅ Centre la boîte */
+    min-height: 80px; /* Assure une hauteur minimale */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box; /* Évite que le padding modifie la largeur */
+    box-shadow: 0 2px 0px 0px rgba(0, 0, 0, 0.223);
+  }
+
+  .carousel-controls {
+    display: flex;
+    justify-content: center; /* Centre les boutons horizontalement */
+    gap: 12px;
+    width: 100%; /* Prend toute la largeur disponible */
+    max-width: 600px; /* Aligné avec la boîte de signalement */
+    margin-top: 10px; /* Assure un espace sous la boîte grise */
+  }
+
+  .carousel-btn {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 50px; /* Augmente légèrement la taille */
+    height: 50px;
+    font-size: 18px; /* Ajuste la taille des icônes */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .carousel-btn i {
+    color: #333; /* Ajuste la couleur des icônes */
+  }
+
+  .carousel-btn:hover {
+    background: rgb(237, 237, 237);
+  }
+  .carousel-icon {
+    font-size: 14px; /* Ajuste la taille des icônes */
+    color: #000000; /* Ajuste la couleur */
+  }
+}
+
+@media (max-width: 1285px) {
+  .signalements-card {
+    .signalements-header {
+      flex-direction: column;
+    }
+  }
+}

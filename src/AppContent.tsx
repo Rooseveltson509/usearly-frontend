@@ -15,7 +15,7 @@ import ForgotPassword from "./components/forgotPassword/ForgotPassword";
 import PasswordChecker from "./components/passwordChecker/PasswordChecker";
 import LoadingScreen from "./components/LoadingScreen";
 import ResetPassword from "./components/resetpwd/ResetPassword";
-import DashboardBrand from "./components/dashboard-brands/DashbordBrand";
+import DashboardBrand from "./components/dashboard-brands/dashboard-brands-reports/DashbordBrand";
 import BrandLogin from "./pages/brand/BrandLogin";
 
 const AppContent: React.FC = () => {

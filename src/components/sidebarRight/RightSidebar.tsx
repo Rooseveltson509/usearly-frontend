@@ -5,6 +5,7 @@ import nike from "../../assets/images/nike.svg";
 import laredoute from "../../assets/images/laredoute.svg";
 import strava from "../../assets/images/stravia.svg";
 import doclib from "../../assets/images/doctolib.svg";
+import HeartWomen from "../../assets/images/heart-women.png";
 import CollaborationIcon from "../../assets/icons/collaboration.svg";
 import ChallengeIcon from "../../assets/icons/challenge.svg";
 
@@ -12,12 +13,16 @@ const RightSidebar: React.FC = () => {
   return (
     <div className="sidebar-right">
       {/* Section Collaboration */}
-      <div className='margin-top'></div>
+      <div className="margin-top"></div>
       <div className="section">
         <div className="section-title">
-    <img src={CollaborationIcon} alt="Collaboration icon" className="section-icon" />
-    <h3>Collaboration</h3>
-  </div>
+          <img
+            src={CollaborationIcon}
+            alt="Collaboration icon"
+            className="section-icon"
+          />
+          <h3>Collaboration</h3>
+        </div>
         <p>
           Rejoignez vos marques pour co-créer et innover sur les produits et
           services de demain !
@@ -27,15 +32,40 @@ const RightSidebar: React.FC = () => {
 
       {/* Section Challenge */}
       <div className="section">
-         <div className="section-title">
-    <img src={ChallengeIcon} alt="Challenge icon" className="section-icon" />
-    <h3>Challenge</h3>
-  </div>
+        <div className="section-title">
+          <img
+            src={ChallengeIcon}
+            alt="Challenge icon"
+            className="section-icon"
+          />
+          <h3>Challenge</h3>
+        </div>
         <p>
           Participez à des challenges, aidez la communauté et vos marques pour
           de meilleures expériences et booster votre Usear Power.
         </p>
         <button className="cta-button">Afficher tous les challenges</button>
+      </div>
+
+      {/* Section Top Love */}
+      <div className="section">
+        <div className="section-title">
+          <img
+            src={ChallengeIcon}
+            alt="Challenge icon"
+            className="section-icon"
+          />
+          <h3>Top Brand Love</h3>
+        </div>
+        <div className="icon-love">
+          <img src={HeartWomen} alt="heartWomen" />
+        </div>
+        <p>
+          Découvrez chaque semaine les marques les plus aimées par la communauté
+          ! Soutenez vos marques favorites et boostez votre Usear Power. Prêts à
+          montrer votre amour ?
+        </p>
+        <button className="cta-button">Découvrer le top de la semaine</button>
       </div>
 
       {/* Section Marques à suivre */}

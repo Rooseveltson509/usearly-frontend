@@ -40,7 +40,7 @@ const VerifyCode: React.FC = () => {
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
-    index: number,
+    index: number
   ) => {
     if (e.key === "Backspace" && code[index] === "") {
       if (index > 0) {
@@ -80,7 +80,7 @@ const VerifyCode: React.FC = () => {
         setIsAuthenticated(true);
 
         setSuccess(
-          response.message || "Votre compte a été validé avec succès.",
+          response.message || "Votre compte a été validé avec succès."
         );
         setFlashMessage("Bienvenue sur la plateforme !", "success");
 

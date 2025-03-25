@@ -37,7 +37,7 @@ const ProblemesCritiques: React.FC = () => {
               <td>
                 <span className="dot red"></span> Validation bancaire bloquée
               </td>
-              <td>128</td>
+              <td>129</td>
               <td> </td>
               <td>
                 <span className="emoji">😡</span> 60%

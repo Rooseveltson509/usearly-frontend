@@ -1,0 +1,50 @@
+.dashboard-header {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 60px; // Alignement après la sidebar
+  inline-size: calc(
+    100% - 80px
+  ); // Ajustement de la largeur pour exclure la sidebar
+  block-size: 60px;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  z-index: 1000;
+  border-block-end: 1px solid #ddd;
+
+  .header-left {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-right: 40px;
+
+    .btn-new-user {
+      background: #000;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .icon-bell,
+    .icon-search {
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      inline-size: 40px;
+      block-size: 40px;
+      border-radius: 50%;
+    }
+  }
+}
