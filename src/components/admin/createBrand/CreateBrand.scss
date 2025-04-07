@@ -1,11 +1,11 @@
 .create-brand-container {
-  font-family: 'Raleway';
-  font-family: 'Raleway';
+  font-family: "Raleway";
+  font-family: "Raleway";
   max-width: 100%; /* ✅ Empêche le dépassement */
 }
 /* ⚪ Styles pour la boîte modale */
 .modal {
-   max-width: 500px; /* ✅ Ajuste la largeur de la modale */
+  max-width: 500px; /* ✅ Ajuste la largeur de la modale */
   width: 90%; /* ✅ Rend la modale responsive */
   background: white;
   padding: 40px 40px;
@@ -16,7 +16,7 @@
 
 .create-brand-form input,
 .create-brand-form button {
- width: 100%; /* ✅ Assure que tout s'aligne bien */
+  width: 100%; /* ✅ Assure que tout s'aligne bien */
   max-width: 100%; /* ✅ Empêche le débordement */
   font-size: 14px;
   padding: 12px;
@@ -25,7 +25,6 @@
   border: 1px solid #ccc;
   box-sizing: border-box; /* ✅ Empêche le débordement en prenant en compte les bordures */
 }
-
 
 .create-btn {
   background: #000000;
@@ -51,9 +50,6 @@
   justify-content: center;
 }
 
-
-
-
 .error-message {
   color: red;
   font-weight: bold;
@@ -77,5 +73,3 @@
   justify-content: center;
   z-index: 1000;
 }
-
-

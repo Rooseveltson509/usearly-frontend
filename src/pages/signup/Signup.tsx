@@ -47,9 +47,7 @@ const Signup: React.FC = () => {
     },
   ];
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -87,10 +85,7 @@ const Signup: React.FC = () => {
     }
 
     if (!isTermsAccepted) {
-      setFlashMessage(
-        "Vous devez accepter les conditions d'utilisation.",
-        "error",
-      );
+      setFlashMessage("Vous devez accepter les conditions d'utilisation.", "error");
       setError("Vous devez accepter les conditions d'utilisation.");
       setIsLoading(false); // Désactiver le spinner
       return;
@@ -100,7 +95,7 @@ const Signup: React.FC = () => {
       const { userId, email } = await registerUser(formData);
       setFlashMessage(
         "Inscription réussie! Veuillez vérifier votre email pour confirmer.",
-        "success",
+        "success"
       );
       navigate("/verify-code", { state: { userId, email } });
     } catch (err: unknown) {
@@ -158,9 +153,7 @@ const Signup: React.FC = () => {
             {passwordCriteria.map((criterion, index) => (
               <li
                 key={index}
-                className={
-                  criterion.isValid(formData.password) ? "valid" : "invalid"
-                }
+                className={criterion.isValid(formData.password) ? "valid" : "invalid"}
               >
                 {criterion.label}
               </li>
@@ -207,19 +200,15 @@ const Signup: React.FC = () => {
               checked={isTermsAccepted}
               onChange={() => setIsTermsAccepted(!isTermsAccepted)}
             />
-            J'accepte les conditions d'utilisation et je confirme avoir lu la{" "}
-            politique de confidentialité de Usearly.
+            J'accepte les conditions d'utilisation et je confirme avoir lu la politique de
+            confidentialité de Usearly.
           </label>
           <button type="submit" className="signup-button" disabled={isLoading}>
             {isLoading ? "chargement en cours..." : "Créer un compte"}
           </button>
         </form>
         <div className="background-text">
-          <img
-            src={backgroundImage}
-            alt="Usearly Background"
-            className="background-image"
-          />
+          <img src={backgroundImage} alt="Usearly Background" className="background-image" />
         </div>
       </div>
       <footer className="landing-footer">

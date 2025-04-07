@@ -4,8 +4,7 @@ import axios, { AxiosError } from "axios";
 import { ErrorResponse, ResetPasswordResponse } from "@src/types/types";
 import { getCsrfToken } from "./csrfService";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const API_VERSION = import.meta.env.VITE_API_VERSION || "api/v1";
 
 export const apiService = axios.create({
@@ -22,11 +21,7 @@ export const apiService = axios.create({
  * @param rememberMe
  * @returns
  */
-export const login = async (
-  email: string,
-  password: string,
-  rememberMe: boolean
-) => {
+export const login = async (email: string, password: string, rememberMe: boolean) => {
   const { data } = await apiService.post(
     `/user/login`,
     { email, password, rememberMe },
@@ -48,11 +43,7 @@ export const login = async (
 };
 
 /* Login en tant que marque */
-export const loginBrand = async (
-  email: string,
-  mdp: string,
-  rememberMe: boolean
-) => {
+export const loginBrand = async (email: string, mdp: string, rememberMe: boolean) => {
   console.log("🔵 Tentative de connexion marque :", { email, mdp, rememberMe });
 
   try {
@@ -114,9 +105,6 @@ export const refreshToken = async () => {
   }
 };
 
-
-
-
 export const clearToken = () => {
   localStorage.removeItem("accessToken");
   sessionStorage.removeItem("accessToken");
@@ -145,9 +133,7 @@ export const resetPassword = async (
 ): Promise<ResetPasswordResponse> => {
   try {
     const response = await apiService.post<ResetPasswordResponse>(
-      `/user/resetpwd/${encodeURIComponent(userId)}/${encodeURIComponent(
-        token
-      )}`,
+      `/user/resetpwd/${encodeURIComponent(userId)}/${encodeURIComponent(token)}`,
       {
         password,
         password_confirm,
@@ -168,8 +154,7 @@ export const resetPassword = async (
       };
     } else {
       throw new Error(
-        response.data?.message ||
-          "Erreur lors de la réinitialisation du mot de passe."
+        response.data?.message || "Erreur lors de la réinitialisation du mot de passe."
       );
     }
   } catch (error) {
@@ -200,9 +185,7 @@ export const updatePassword = async (passwordData: {
     });
 
     if (!response.data.success) {
-      throw new Error(
-        response.data.error || "Erreur inconnue lors de la mise à jour."
-      );
+      throw new Error(response.data.error || "Erreur inconnue lors de la mise à jour.");
     }
 
     return response.data;
@@ -224,18 +207,13 @@ export const updatePassword = async (passwordData: {
  */
 export const forgetPassword = async (email: string): Promise<void> => {
   try {
-    const response = await apiService.post<{ message: string }>(
-      `/user/forgot-password`,
-      {
-        email,
-      }
-    );
+    const response = await apiService.post<{ message: string }>(`/user/forgot-password`, {
+      email,
+    });
     console.log("Réponse de l'API :", response.data);
   } catch (error: unknown) {
     if (axios.isAxiosError(error) && error.response) {
-      throw new Error(
-        error.response.data?.message || "Une erreur est survenue."
-      );
+      throw new Error(error.response.data?.message || "Une erreur est survenue.");
     } else {
       throw new Error("Erreur interne. Veuillez réessayer plus tard.");
     }
@@ -249,8 +227,7 @@ export const logout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("accessToken");
   // Supprimer le cookie si utilisé pour stocker le refresh token
-  document.cookie =
-    "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
   // Rediriger l'utilisateur vers la page de connexion
   window.location.href = "/login";

@@ -17,5 +17,3 @@ export const getCsrfToken = async () => {
     return null;
   }
 };
-
-

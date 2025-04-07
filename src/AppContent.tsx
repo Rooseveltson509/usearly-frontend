@@ -103,10 +103,7 @@ const AppContent: React.FC = () => {
           }
         />
 
-        <Route
-          path="/reset-password/:userId/:token"
-          element={<ResetPassword />}
-        />
+        <Route path="/reset-password/:userId/:token" element={<ResetPassword />} />
         {/* Routes diverses */}
         <Route path="/verify-code" element={<VerifyCode />} />
       </Routes>

@@ -40,35 +40,34 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   const [comments, setComments] = useState<CommentType[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(true); // ✅ Ajout du state de chargement
-  
-  
+
   // Définition des méthodes API dynamiquement en fonction du `type`
   const fetchComments =
     type === "report"
       ? fetchReportComments
       : type === "post"
-      ? fetchPostComments
-      : type === "coupdecoeur"
-      ? fetchCdcComments
-      : fetchSuggestionComments;
+        ? fetchPostComments
+        : type === "coupdecoeur"
+          ? fetchCdcComments
+          : fetchSuggestionComments;
 
   const addComment =
     type === "report"
       ? addCommentToReport
       : type === "post"
-      ? addCommentToPost
-      : type === "coupdecoeur"
-      ? addCommentToCdc
-      : addCommentToSuggestion;
+        ? addCommentToPost
+        : type === "coupdecoeur"
+          ? addCommentToCdc
+          : addCommentToSuggestion;
 
   const deleteCommunComment =
     type === "report"
       ? deleteReportComment
       : type === "post"
-      ? deleteComment
-      : type === "coupdecoeur"
-      ? deleteCdcComment
-      : deleteSuggestionComment;
+        ? deleteComment
+        : type === "coupdecoeur"
+          ? deleteCdcComment
+          : deleteSuggestionComment;
 
   useEffect(() => {
     if (showCommentInput) {
@@ -113,7 +112,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         },
       };
 
-      setComments((prev) => [updatedComment, ...prev]);
+      setComments(prev => [updatedComment, ...prev]);
       setCommentCount(commentCount + 1); // ✅ Mise à jour en temps réel // ✅ Met à jour en temps réel
       setNewComment(""); // Reset input
     } catch (error) {
@@ -138,17 +137,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     try {
       const response = await deleteCommunComment(commentId);
       if (response.success) {
-        setComments((prev) =>
-          prev.filter((comment) => comment.id !== commentId)
-        );
+        setComments(prev => prev.filter(comment => comment.id !== commentId));
         setCommentCount(Math.max(0, commentCount - 1)); // ✅ Mise à jour en temps réel
         Swal.fire("Supprimé !", "Le commentaire a été supprimé.", "success");
       } else {
-        Swal.fire(
-          "Erreur",
-          response.error || "Une erreur s'est produite.",
-          "error"
-        );
+        Swal.fire("Erreur", response.error || "Une erreur s'est produite.", "error");
       }
     } catch (error) {
       console.error("❌ Erreur lors de la suppression du commentaire :", error);
@@ -166,7 +159,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
               placeholder="Écrire un commentaire..."
               className="comment-input"
               value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
+              onChange={e => setNewComment(e.target.value)}
             />
             <button className="comment-submit" onClick={handleAddComment}>
               Envoyer
@@ -176,18 +169,15 @@ const CommentSection: React.FC<CommentSectionProps> = ({
             {loading ? (
               <div className="loading-container">
                 <span className="spinner"></span> {/* ✅ Ajout du spinner */}
-                {/* <p>Chargement en cours...</p> */}{" "}
-                {/* ✅ Message de chargement */}
+                {/* <p>Chargement en cours...</p> */} {/* ✅ Message de chargement */}
               </div>
             ) : comments.length > 0 ? (
-              comments.map((comment) => (
+              comments.map(comment => (
                 <li key={comment.id} className="comment-item">
                   <img
                     src={
                       comment.author?.avatar
-                        ? `${import.meta.env.VITE_API_BASE_URL}/${
-                            comment.author.avatar
-                          }`
+                        ? `${import.meta.env.VITE_API_BASE_URL}/${comment.author.avatar}`
                         : defaultAvatar
                     }
                     alt="avatar"
@@ -195,16 +185,13 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                   />
                   <div className="comment-content">
                     <div className="comment-header">
-                      <span>
-                        {comment.author?.pseudo || "Utilisateur inconnu"}
-                      </span>
+                      <span>{comment.author?.pseudo || "Utilisateur inconnu"}</span>
                     </div>
                     <div className="comment-text">
                       <p>{comment.content}</p>
                     </div>
                   </div>
-                  {(comment.author.id === userId ||
-                    userProfile?.role === "admin") && (
+                  {(comment.author.id === userId || userProfile?.role === "admin") && (
                     <button
                       onClick={() => handleDeleteComment(comment.id)}
                       className="delete-comment"

@@ -18,7 +18,7 @@ const FlashMessage: React.FC<FlashMessageProps> = ({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress((prev) => Math.max(prev - 100 / (duration / 100), 0));
+      setProgress(prev => Math.max(prev - 100 / (duration / 100), 0));
     }, 100);
 
     const timeout = setTimeout(() => {

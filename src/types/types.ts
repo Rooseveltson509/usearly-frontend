@@ -11,7 +11,6 @@ export interface UserProfile {
   type: "user" | "brand"; // Ajoute cette ligne pour bien identifier si c'est un user ou une marque
   name?: string; // Pour les marques
   offres?: string; // Pour les marques
-
 }
 
 export interface Brand {
@@ -25,7 +24,6 @@ export interface Brand {
   createdAt: string;
   updatedAt?: string; // ✅ Ajout du champ updatedAt
 }
-
 
 export type Reaction = {
   userId: string;
@@ -66,7 +64,6 @@ export interface PostsResponse {
   currentPage: number;
   posts: Post[];
 }
-
 
 export interface ResetPasswordResponse {
   success: boolean;

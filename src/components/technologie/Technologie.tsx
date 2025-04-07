@@ -54,8 +54,7 @@ const Technologie: React.FC = () => {
                 <span className="badge">35%</span> 😟
               </td>
               <td>
-                - Lenteur des pages (20%) <br />- Incompatibilité avec filtres
-                (15%)
+                - Lenteur des pages (20%) <br />- Incompatibilité avec filtres (15%)
               </td>
               <td>
                 <span className="trend neutral">—</span>

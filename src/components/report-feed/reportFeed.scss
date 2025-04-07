@@ -1,0 +1,77 @@
+.report-group {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 1rem;
+
+  .report-category {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  .sub-category-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 1rem;
+    margin-bottom: 1.2rem;
+
+    .sub-category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #222;
+      }
+
+      span {
+        font-size: 0.9rem;
+        color: #888;
+      }
+    }
+
+    .description-slider {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding-bottom: 0.5rem;
+
+      .description-item {
+        min-width: 240px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 0.8rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.8rem;
+        flex-shrink: 0;
+
+        .avatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .desc-content {
+          .user-pseudo {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+          }
+
+          .text {
+            font-size: 0.9rem;
+            color: #444;
+          }
+        }
+      }
+    }
+  }
+}

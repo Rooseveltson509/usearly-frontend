@@ -43,12 +43,7 @@ const ResetPassword: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await resetPassword(
-        userId!,
-        token!,
-        password,
-        passwordConfirm,
-      );
+      const response = await resetPassword(userId!, token!, password, passwordConfirm);
 
       if (response.success) {
         setSuccess("Mot de passe réinitialisé avec succès !");
@@ -80,7 +75,7 @@ const ResetPassword: React.FC = () => {
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             placeholder="Entrer le nouveau mot de passe"
             required
           />
@@ -90,7 +85,7 @@ const ResetPassword: React.FC = () => {
           <input
             type="password"
             value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
+            onChange={e => setPasswordConfirm(e.target.value)}
             placeholder="Confirmer le mot de passe"
             required
           />

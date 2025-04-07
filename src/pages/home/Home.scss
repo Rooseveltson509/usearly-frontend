@@ -131,12 +131,7 @@
         font-size: 1.1em;
         text-align: left;
         padding: 0 20px;
-        background: rgba(
-          0,
-          0,
-          0,
-          0.267
-        ); // Fond semi-transparent pour améliorer la lisibilité
+        background: rgba(0, 0, 0, 0.267); // Fond semi-transparent pour améliorer la lisibilité
         border-radius: 4px; // Coins arrondis pour le fond du texte
         max-width: 80%; // Empêche le texte de déborder
 
@@ -614,10 +609,8 @@
         height: 100%;
         background: linear-gradient(
           to left,
-          /* Direction du dégradé (de la droite vers la gauche) */
-            rgba(53, 35, 35, 0.479),
-          /* Couleur sombre à droite */ rgba(250, 250, 250, 0)
-            /* Couleur transparente à gauche */
+          /* Direction du dégradé (de la droite vers la gauche) */ rgba(53, 35, 35, 0.479),
+          /* Couleur sombre à droite */ rgba(250, 250, 250, 0) /* Couleur transparente à gauche */
         );
         pointer-events: none; /* Laisse les clics passer à travers */
       }

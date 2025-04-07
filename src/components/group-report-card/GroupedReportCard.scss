@@ -1,0 +1,135 @@
+@use "../../styles/variables" as *;
+
+.grouped-report-card {
+  background-color: $white;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    .left {
+      display: flex;
+      align-items: center;
+
+      .icon {
+        font-size: 1.4rem;
+        margin-right: 0.5rem;
+      }
+
+      .title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $gray-900;
+      }
+    }
+
+    .total-count {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .emoji-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: 0.5rem;
+
+    .emoji-icon {
+      font-size: 1.1rem;
+      margin-left: -4px;
+    }
+
+    .emoji-total {
+      font-size: 0.85rem;
+      margin-left: 0.25rem;
+      color: #555;
+    }
+  }
+
+  .subcategories {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* .grouped-report-card {
+
+  background-color: $white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .icon {
+        background-color: $gray-100;
+        border-radius: 50%;
+        padding: 0.5rem;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        color: $primary;
+      }
+
+      .title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $gray-800;
+      }
+    }
+
+    .total-count {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: $gray-500;
+    }
+  }
+
+  .subcategories {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .summary-right {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.emoji-summary {
+  display: flex;
+  gap: 2px;
+  font-size: 1rem;
+  margin-left: 0.25rem;
+}
+
+.emoji {
+  line-height: 1;
+}
+
+}
+ */

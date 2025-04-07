@@ -1,5 +1,5 @@
 .login-container {
- max-width: 500px; /* ✅ Ajustement de la largeur */
+  max-width: 500px; /* ✅ Ajustement de la largeur */
   margin: 0 auto;
   padding: 40px;
   font-family: Arial, sans-serif;
@@ -8,17 +8,17 @@
   text-align: left; /* ✅ Centrer le texte */
 
   .remember {
-     display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%; /* ✅ Alignement correct */
-  font-size: 14px;
-  margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* ✅ Alignement correct */
+    font-size: 14px;
+    margin-bottom: 15px;
   }
 
   h1 {
-    font-family:'Urbanist';
-    color:black;
+    font-family: "Urbanist";
+    color: black;
     font-size: 36px;
     margin-block-end: 10px;
   }
@@ -26,7 +26,7 @@
   p {
     margin: 10px 0;
     line-height: 1.5;
-    margin-bottom:30px;
+    margin-bottom: 30px;
   }
 
   .edit-email-link {
@@ -40,20 +40,20 @@
 
   .login-form {
     display: flex;
-  flex-direction: column;
-  align-items: left; /* ✅ Centrage */
-  width: 100%;
+    flex-direction: column;
+    align-items: left; /* ✅ Centrage */
+    width: 100%;
   }
 
   .login-form input[type="email"],
   .login-form input[type="password"] {
-     width: 100%; /* ✅ Les inputs prennent toute la largeur */
-  padding: 12px;
-  margin: 10px 0; /* ✅ Espacement entre les champs */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  box-sizing: border-box; /* ✅ Évite que la largeur dépasse */
+    width: 100%; /* ✅ Les inputs prennent toute la largeur */
+    padding: 12px;
+    margin: 10px 0; /* ✅ Espacement entre les champs */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* ✅ Évite que la largeur dépasse */
   }
   /* ✅ Effet hover & focus : contour noir */
   input[type="text"]:hover,
@@ -95,16 +95,16 @@
     background-color: #000000;
   }
   .signup-button {
-  width: 100%; /* ✅ Le bouton prend toute la largeur */
-  padding: 14px; /* ✅ Augmenter la hauteur */
-  font-size: 16px;
-  font-weight: bold;
-  color: #fff;
-  background-color: #000000;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top:20px;
+    width: 100%; /* ✅ Le bouton prend toute la largeur */
+    padding: 14px; /* ✅ Augmenter la hauteur */
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #000000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
   }
 
   .signup-button:hover {

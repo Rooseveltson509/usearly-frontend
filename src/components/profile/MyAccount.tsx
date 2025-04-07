@@ -14,9 +14,7 @@ const MyAccount: React.FC = () => {
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    userProfile?.avatar
-      ? `${import.meta.env.VITE_API_BASE_URL}/${userProfile.avatar}`
-      : null
+    userProfile?.avatar ? `${import.meta.env.VITE_API_BASE_URL}/${userProfile.avatar}` : null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -38,11 +36,7 @@ const MyAccount: React.FC = () => {
           setPseudo(profile.pseudo || "");
           setEmail(profile.email || "");
           setAvatarPreview(
-            profile.avatar
-              ? `${import.meta.env.VITE_API_BASE_URL}/uploads/${
-                  profile.avatar
-                }`
-              : null
+            profile.avatar ? `${import.meta.env.VITE_API_BASE_URL}/uploads/${profile.avatar}` : null
           );
         } catch (error) {
           console.error("Erreur lors du chargement du profil :", error);
@@ -78,16 +72,9 @@ const MyAccount: React.FC = () => {
         setFlashMessage("Profil mis à jour avec succès !", "success");
         navigate("/home");
         setUserProfile(updatedProfile.user); // Mise à jour du profil utilisateur
-        setAvatarPreview(
-          `${import.meta.env.VITE_API_BASE_URL}/${
-            updatedProfile.user.avatar
-          }`
-        );
+        setAvatarPreview(`${import.meta.env.VITE_API_BASE_URL}/${updatedProfile.user.avatar}`);
       } else {
-        setFlashMessage(
-          `Erreur: ${updatedProfile.message || "Profil non mis à jour"}`,
-          "error",
-        );
+        setFlashMessage(`Erreur: ${updatedProfile.message || "Profil non mis à jour"}`, "error");
       }
     } catch (error) {
       setFlashMessage("Erreur lors de la mise à jour du profil.", "error");
@@ -119,10 +106,7 @@ const MyAccount: React.FC = () => {
       if (error instanceof Error) {
         setFlashMessage(error.message, "error"); // Afficher le message exact du backend
       } else {
-        setFlashMessage(
-          "Erreur lors de la mise à jour du mot de passe.",
-          "error",
-        );
+        setFlashMessage("Erreur lors de la mise à jour du mot de passe.", "error");
       }
       console.error("Erreur lors de la mise à jour du mot de passe :", error);
     }
@@ -158,12 +142,7 @@ const MyAccount: React.FC = () => {
                     alt="Avatar actuel"
                     className="avatar-preview"
                   />
-                  <input
-                    type="file"
-                    id="avatar"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                  />
+                  <input type="file" id="avatar" accept="image/*" onChange={handleFileChange} />
                 </div>
 
                 {/* Pseudo */}
@@ -173,19 +152,14 @@ const MyAccount: React.FC = () => {
                     type="text"
                     id="pseudo"
                     value={pseudo}
-                    onChange={(e) => setPseudo(e.target.value)}
+                    onChange={e => setPseudo(e.target.value)}
                   />
                 </div>
 
                 {/* Email */}
                 <div className="form-group">
                   <label htmlFor="email">Email :</label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={userProfile.email}
-                    disabled
-                  />
+                  <input type="email" id="email" value={userProfile.email} disabled />
                 </div>
 
                 {/* Date de naissance */}
@@ -197,12 +171,7 @@ const MyAccount: React.FC = () => {
                 {/* Genre */}
                 <div className="form-group">
                   <label htmlFor="gender">Genre :</label>
-                  <input
-                    type="text"
-                    id="gender"
-                    value={userProfile.gender}
-                    disabled
-                  />
+                  <input type="text" id="gender" value={userProfile.gender} disabled />
                 </div>
 
                 <button type="submit" className="update-button">
@@ -223,7 +192,7 @@ const MyAccount: React.FC = () => {
                   type="password"
                   id="old_password"
                   value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
+                  onChange={e => setOldPassword(e.target.value)}
                 />
               </div>
               <div className="form-group">
@@ -232,18 +201,16 @@ const MyAccount: React.FC = () => {
                   type="password"
                   id="new_password"
                   value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  onChange={e => setNewPassword(e.target.value)}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="confirm_password">
-                  Confirmer le mot de passe :
-                </label>
+                <label htmlFor="confirm_password">Confirmer le mot de passe :</label>
                 <input
                   type="password"
                   id="confirm_password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={e => setConfirmPassword(e.target.value)}
                 />
               </div>
               <button type="submit">Mettre à jour le mot de passe</button>
@@ -255,7 +222,7 @@ const MyAccount: React.FC = () => {
       )}
       <a
         href="#"
-        onClick={(e) => {
+        onClick={e => {
           e.preventDefault();
           setIsModalOpen(true); // Ouvrir la modal
         }}

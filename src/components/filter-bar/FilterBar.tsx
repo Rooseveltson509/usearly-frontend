@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import searchIcon from "../../assets/icons/search-icon.svg";
 
-
-
 interface FilterBarProps {
   selectedFilter: string;
   setSelectedFilter: (filter: string) => void;
@@ -26,31 +24,25 @@ const FilterBar: React.FC<FilterBarProps> = ({
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState("Date");
 
-    const dropdownRef = useRef<HTMLDivElement | null>(null);
-    const sortDropdownRef = useRef<HTMLDivElement | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const sortDropdownRef = useRef<HTMLDivElement | null>(null);
 
-    // ✅ Ferme les menus quand on clique en dehors
-    useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          dropdownRef.current &&
-          !dropdownRef.current.contains(event.target as Node)
-        ) {
-          setIsDropdownOpen(false);
-        }
-        if (
-          sortDropdownRef.current &&
-          !sortDropdownRef.current.contains(event.target as Node)
-        ) {
-          setIsSortDropdownOpen(false);
-        }
-      };
+  // ✅ Ferme les menus quand on clique en dehors
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target as Node)) {
+        setIsSortDropdownOpen(false);
+      }
+    };
 
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="filter-bar">
@@ -61,28 +53,23 @@ const FilterBar: React.FC<FilterBarProps> = ({
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
       >
         <button className="filter-button main-button">
-          {selectedFilter}{" "}
-          <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
+          {selectedFilter} <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
         </button>
         {isDropdownOpen && (
           <div className="dropdown-content">
-            {["Actualité", "Signalements", "Coup de Cœur", "Suggestions"].map(
-              (filter) => (
-                <button
-                  key={filter}
-                  className={`dropdown-item ${
-                    selectedFilter === filter ? "selected" : ""
-                  }`}
-                  onClick={() => {
-                    setSelectedFilter(filter);
-                    setPostsPage(1);
-                    setIsDropdownOpen(false);
-                  }}
-                >
-                  {filter}
-                </button>
-              )
-            )}
+            {["Actualité", "Signalements", "Coup de Cœur", "Suggestions"].map(filter => (
+              <button
+                key={filter}
+                className={`dropdown-item ${selectedFilter === filter ? "selected" : ""}`}
+                onClick={() => {
+                  setSelectedFilter(filter);
+                  setPostsPage(1);
+                  setIsDropdownOpen(false);
+                }}
+              >
+                {filter}
+              </button>
+            ))}
           </div>
         )}
       </div>
@@ -94,17 +81,14 @@ const FilterBar: React.FC<FilterBarProps> = ({
         onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
       >
         <button className="filter-button secondary-button">
-          Filtrer{" "}
-          <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
+          Filtrer <FontAwesomeIcon icon={faChevronDown} className="chevron-icon" />
         </button>
         {isSortDropdownOpen && (
           <div className="dropdown-content">
-            {["Date", "Popularité", "Commentaires"].map((option) => (
+            {["Date", "Popularité", "Commentaires"].map(option => (
               <button
                 key={option}
-                className={`dropdown-item ${
-                  selectedSort === option ? "selected" : ""
-                }`}
+                className={`dropdown-item ${selectedSort === option ? "selected" : ""}`}
                 onClick={() => {
                   setSelectedSort(option);
                   setIsSortDropdownOpen(false);
@@ -126,7 +110,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
           className="search-input"
           placeholder="Rechercher..."
           value={searchTerm}
-          onChange={(e) => {
+          onChange={e => {
             setSearchTerm(e.target.value);
             onSearchChange(e.target.value);
           }}

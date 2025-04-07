@@ -38,10 +38,7 @@ const VerifyCode: React.FC = () => {
     setError(null); // Réinitialisation des erreurs
   };
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number,
-  ) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === "Backspace" && code[index] === "") {
       if (index > 0) {
         inputsRef.current[index - 1]?.focus();
@@ -79,9 +76,7 @@ const VerifyCode: React.FC = () => {
         setUserProfile(profile);
         setIsAuthenticated(true);
 
-        setSuccess(
-          response.message || "Votre compte a été validé avec succès.",
-        );
+        setSuccess(response.message || "Votre compte a été validé avec succès.");
         setFlashMessage("Bienvenue sur la plateforme !", "success");
 
         navigate("/home");
@@ -106,19 +101,19 @@ const VerifyCode: React.FC = () => {
     <div className="verify-code-container">
       <h2>Vérifiez votre email</h2>
       <p>
-        Un code de vérification a été envoyé à <strong>{email}</strong>.
-        Veuillez entrer le code ci-dessous pour valider votre compte.
+        Un code de vérification a été envoyé à <strong>{email}</strong>. Veuillez entrer le code
+        ci-dessous pour valider votre compte.
       </p>
       <div className="code-inputs">
         {code.map((digit, index) => (
           <input
             key={index}
-            ref={(el) => (inputsRef.current[index] = el)}
+            ref={el => (inputsRef.current[index] = el)}
             type="text"
             maxLength={1}
             value={digit}
-            onChange={(e) => handleChange(e.target.value, index)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
+            onChange={e => handleChange(e.target.value, index)}
+            onKeyDown={e => handleKeyDown(e, index)}
             className="code-input"
             disabled={isLoading}
           />
@@ -126,11 +121,7 @@ const VerifyCode: React.FC = () => {
       </div>
       {error && <p className="error-message">{error}</p>}
       {success && <p className="success-message">{success}</p>}
-      <button
-        className="signup-button"
-        disabled={isLoading}
-        onClick={handleSubmit}
-      >
+      <button className="signup-button" disabled={isLoading} onClick={handleSubmit}>
         {isLoading ? "En cours..." : "Valider"}
       </button>
     </div>

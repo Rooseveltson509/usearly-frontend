@@ -57,7 +57,7 @@ const ProblemesSignales: React.FC = () => {
         <button className="btn-next">→</button>
       </div>
       <div className="problemes-list">
-        {problemes.map((item) => (
+        {problemes.map(item => (
           <div key={item.id} className="probleme-item">
             <span className="icon">{item.icon}</span>
             <div className="details">

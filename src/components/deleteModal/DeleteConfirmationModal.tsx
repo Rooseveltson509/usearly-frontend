@@ -27,8 +27,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
         <FaExclamationTriangle className="warning-icon" />
         <h2>Confirmer la suppression</h2>
         <p>
-          Voulez-vous vraiment supprimer la marque <strong>{brandName}</strong>{" "}
-          ?
+          Voulez-vous vraiment supprimer la marque <strong>{brandName}</strong> ?
         </p>
         <div className="modal-actions">
           <button className="cancel-btn" onClick={onClose}>

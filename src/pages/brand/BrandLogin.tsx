@@ -11,35 +11,34 @@ const BrandLogin = () => {
   const [email, setEmail] = useState("");
   const [mdp, setMdp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setUserProfile, setUserType, setIsAuthenticated, setFlashMessage } =
-      useAuth();
+  const { setUserProfile, setUserType, setIsAuthenticated, setFlashMessage } = useAuth();
   const navigate = useNavigate();
-    const [rememberMe, setRememberMe] = useState(false);
-
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
-      const response: { accessToken: string; user?: { type: string } } =
-        await loginBrand(email, mdp, rememberMe);
+      const response: { accessToken: string; user?: { type: string } } = await loginBrand(
+        email,
+        mdp,
+        rememberMe
+      );
 
       console.log("Réponse de l'API login :", response);
 
-        const { accessToken, user } = response;
-        
-        if (user?.type) {
-          console.log("Utilisateur connecté en tant que :", user.type);
-        }
+      const { accessToken, user } = response;
 
+      if (user?.type) {
+        console.log("Utilisateur connecté en tant que :", user.type);
+      }
 
       // Stocker le token
       storeToken(accessToken, rememberMe, "brand");
 
       // Vérification immédiate du token stocké
-      const storedUserType =
-        localStorage.getItem("userType") || sessionStorage.getItem("userType");
+      const storedUserType = localStorage.getItem("userType") || sessionStorage.getItem("userType");
       console.log("Vérification après stockage - UserType:", storedUserType);
 
       if (!storedUserType || storedUserType !== "brand") {
@@ -56,8 +55,8 @@ const BrandLogin = () => {
       setFlashMessage("Connexion réussie !", "success");
 
       // 🔥 Correction potentielle : Mettre un petit timeout avant la redirection
-        setTimeout(() => {
-          navigate("/roose", { replace: true });
+      setTimeout(() => {
+        navigate("/roose", { replace: true });
         //navigate("/dashboard-brand", { replace: true });
       }, 100);
     } catch (error: unknown) {
@@ -77,14 +76,14 @@ const BrandLogin = () => {
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             required
           />
           <input
             type="password"
             placeholder="Mot de passe"
             value={mdp}
-            onChange={(e) => setMdp(e.target.value)}
+            onChange={e => setMdp(e.target.value)}
             required
           />
           <div className="remember">
@@ -106,11 +105,7 @@ const BrandLogin = () => {
         </div>
       </form>
       <div className="background-text">
-        <img
-          src={backgroundImage}
-          alt="Usearly Background"
-          className="background-image"
-        />
+        <img src={backgroundImage} alt="Usearly Background" className="background-image" />
       </div>
       <footer className="signup-footer">
         <a href="#">Conditions générales d'utilisation</a>

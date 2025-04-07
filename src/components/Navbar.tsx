@@ -11,10 +11,10 @@ const Navbar: React.FC = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const toggleNavbar = () => setNavbarOpen((prev) => !prev);
+  const toggleNavbar = () => setNavbarOpen(prev => !prev);
   const toggleUserMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setUserMenuOpen((prev) => !prev);
+    setUserMenuOpen(prev => !prev);
   };
 
   useEffect(() => {
@@ -23,24 +23,20 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // ✅ Ferme le menu quand on clique en dehors
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
 
-    // ✅ Ferme le menu quand on clique en dehors
-    useEffect(() => {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (
-          dropdownRef.current &&
-          !dropdownRef.current.contains(event.target as Node)
-        ) {
-          setUserMenuOpen(false);
-        }
-      };
-
-      // Ajoute un écouteur d'événement
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
+    // Ajoute un écouteur d'événement
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <nav className={`navbar ${isSticky ? "sticky" : ""}`}>
       <div className="container">
@@ -54,9 +50,7 @@ const Navbar: React.FC = () => {
           <li>
             <NavLink
               to="/"
-              className={({ isActive }) =>
-                `navbar-link ${isActive ? "active" : ""}`
-              }
+              className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}
               onClick={() => setNavbarOpen(false)}
             >
               Accueil
@@ -66,9 +60,7 @@ const Navbar: React.FC = () => {
             <li>
               <NavLink
                 to="/admin/brands"
-                className={({ isActive }) =>
-                  `navbar-link ${isActive ? "active" : ""}`
-                }
+                className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}
                 onClick={() => setNavbarOpen(false)}
               >
                 Marques partenaires
@@ -78,9 +70,7 @@ const Navbar: React.FC = () => {
           <li>
             <NavLink
               to="/collaboration"
-              className={({ isActive }) =>
-                `navbar-link ${isActive ? "active" : ""}`
-              }
+              className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}
               onClick={() => setNavbarOpen(false)}
             >
               Qui sommes-nous ?
@@ -89,9 +79,7 @@ const Navbar: React.FC = () => {
           <li>
             <NavLink
               to="/home"
-              className={({ isActive }) =>
-                `navbar-link ${isActive ? "active" : ""}`
-              }
+              className={({ isActive }) => `navbar-link ${isActive ? "active" : ""}`}
               onClick={() => setNavbarOpen(false)}
             >
               Impact

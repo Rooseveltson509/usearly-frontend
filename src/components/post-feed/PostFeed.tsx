@@ -22,7 +22,7 @@ const PostFeed: React.FC<PostFeedProps> = ({
       {loading && <p className="loading-message">Chargement des posts...</p>}
       {error && <p className="error-message">{error}</p>}
       {posts.length > 0 ? (
-        posts.map((post) => (
+        posts.map(post => (
           <PostList
             key={post.id}
             post={post}

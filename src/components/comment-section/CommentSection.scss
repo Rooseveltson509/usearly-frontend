@@ -3,7 +3,7 @@
   padding: 0;
   list-style: none;
 
-    /* 🎨 Barre de scroll minimaliste */
+  /* 🎨 Barre de scroll minimaliste */
   &::-webkit-scrollbar {
     width: 5px; /* ✅ Barre fine */
   }
@@ -21,7 +21,6 @@
   &::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.5); /* ✅ Plus visible au survol */
   }
-
 
   .comment-item {
     display: flex;

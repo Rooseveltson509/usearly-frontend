@@ -7,7 +7,11 @@ import CommentSection from "../comment-section/CommentSection";
 import ReactionSection from "../reactions/reaction-section/ReactionSection";
 import magicIcon from "../../assets/images/baguette.svg";
 import defaultBrandAvatar from "../../assets/images/img-setting.jpeg";
-import { fetchBrandByName, fetchSuggestionCommentCount } from "@src/services/apiService";
+import {
+  fetchBrandByName,
+  fetchReactionsCount,
+  fetchSuggestionCommentCount,
+} from "@src/services/apiService";
 
 interface SuggestionCardProps {
   suggestion: Suggestion;
@@ -17,6 +21,7 @@ interface SuggestionCardProps {
 
 const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
   const [showCommentInput, setShowCommentInput] = useState(false);
+  const [reactionCount, setReactionCount] = useState<number>(0); // 🔥 AJOUT
   const [commentCount, setCommentCount] = useState(0);
   const [expandedSuggestion, setExpandedSuggestion] = useState<{
     [key: string]: boolean;
@@ -37,6 +42,14 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
 
     loadCommentCount();
   }, [suggestion.id]);
+  useEffect(() => {
+    const loadReactionCount = async () => {
+      const { reactionsCount } = await fetchReactionsCount(suggestion.id);
+      setReactionCount(reactionsCount);
+    };
+
+    loadReactionCount();
+  }, [suggestion.id]); // 🔥 AJOUT
 
   // 🚀 Récupération du logo de la marque si elle existe en BDD
   useEffect(() => {
@@ -52,10 +65,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
           setBrandLogo(defaultBrandAvatar); // Avatar par défaut si marque inconnue
         }
       } catch (error) {
-        console.error(
-          `❌ Erreur lors de la récupération de la marque ${brandName}:`,
-          error
-        );
+        console.error(`❌ Erreur lors de la récupération de la marque ${brandName}:`, error);
         setBrandLogo(defaultBrandAvatar);
       }
     };
@@ -64,7 +74,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
   }, [suggestion.marque]);
 
   const toggleExpand = (postId: string) => {
-    setExpandedSuggestion((prev) => ({
+    setExpandedSuggestion(prev => ({
       ...prev,
       [postId]: !prev[postId], // ✅ Clé en `string`
     }));
@@ -76,9 +86,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
           <img
             src={
               suggestion.User?.avatar
-                ? `${import.meta.env.VITE_API_BASE_URL}/${
-                    suggestion.User.avatar
-                  }`
+                ? `${import.meta.env.VITE_API_BASE_URL}/${suggestion.User.avatar}`
                 : defaultAvatar
             }
             alt="Avatar"
@@ -87,13 +95,10 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
           <span className="report-author">
             <strong>{suggestion.User?.pseudo}</strong>
           </span>
-          <span className="report-time">
-            {formatRelativeTime(suggestion.createdAt)}
-          </span>
+          <span className="report-time">{formatRelativeTime(suggestion.createdAt)}</span>
         </div>
         <div className="report-options">⋮</div>
       </div>
-
       <div className="report-content">
         <div className="post-icon">
           <img src={magicIcon} alt="icon signalement" />
@@ -101,10 +106,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
         <div className="post-details">
           <h3>
             Vous avez une suggestion pour la marque{" "}
-            <strong className="report-title">
-              {extractBrandName(suggestion.marque)}
-            </strong>
-            ?
+            <strong className="report-title">{extractBrandName(suggestion.marque)}</strong>?
           </h3>
           <p className="report-desc">
             {expandedSuggestion[suggestion.id] ? (
@@ -138,15 +140,11 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
         </div>
         <div className="img-round">
           {brandLogo && (
-            <img
-              src={brandLogo}
-              alt={extractBrandName(suggestion.marque)}
-              className="brand-logo"
-            />
+            <img src={brandLogo} alt={extractBrandName(suggestion.marque)} className="brand-logo" />
           )}
         </div>
       </div>
-
+      <p className="reaction-counter">{reactionCount} réaction(s)</p>{" "}
       {/* ✅ Passe `showCommentInput` et `setShowCommentInput` à `ReactionSection` */}
       <ReactionSection
         parentId={suggestion.id}
@@ -155,8 +153,8 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
         setShowCommentInput={setShowCommentInput}
         commentCount={commentCount}
         brandLogo={brandLogo}
+        onReactionUpdate={(parentId, updatedReactions) => setReactionCount(updatedReactions.length)} // 🔥 AJOUT
       />
-
       {/* ✅ Affichage de `CommentSection` si `showCommentInput` est activé */}
       {showCommentInput && (
         <CommentSection

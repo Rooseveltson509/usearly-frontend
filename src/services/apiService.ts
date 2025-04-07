@@ -2,23 +2,11 @@ import axios, { AxiosError } from "axios";
 import { RegisterData } from "../types/RegisterData";
 import { CdcsResponse, ReportsResponse, User } from "../types/Reports";
 import { refreshToken } from "./authService";
-import {
-  getAccessToken,
-  storeToken,
-  storeTokenInCurrentStorage,
-} from "@src/utils/tokenUtils";
-import {
-  Brand,
-  CommentType,
-  Post,
-  PostData,
-  PostsResponse,
-  UserProfile,
-} from "@src/types/types";
+import { getAccessToken, storeToken, storeTokenInCurrentStorage } from "@src/utils/tokenUtils";
+import { Brand, CommentType, Post, PostData, PostsResponse, UserProfile } from "@src/types/types";
 import { CreateBrandData } from "@src/types/brand";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const API_VERSION = import.meta.env.VITE_API_VERSION || "api/v1";
 
 // Crée une instance d'axios avec la configuration de base
@@ -54,7 +42,7 @@ export const isTokenExpired = (token: string): boolean => {
 
 // Intercepteur de requêtes
 apiService.interceptors.request.use(
-  async (config) => {
+  async config => {
     let token = getAccessToken();
     console.log("🔍 Vérification du token avant requête :", token);
 
@@ -81,13 +69,13 @@ apiService.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error)
 );
 
 // Intercepteur de réponses
 apiService.interceptors.response.use(
-  (response) => response, // ✅ Retourne la réponse si elle est réussie
-  async (error) => {
+  response => response, // ✅ Retourne la réponse si elle est réussie
+  async error => {
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -104,10 +92,7 @@ apiService.interceptors.response.use(
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return apiService(originalRequest); // ✅ Réessayer la requête originale
       } catch (refreshError) {
-        console.error(
-          "❌ Erreur lors du rafraîchissement du token :",
-          refreshError
-        );
+        console.error("❌ Erreur lors du rafraîchissement du token :", refreshError);
         localStorage.removeItem("accessToken");
         sessionStorage.removeItem("accessToken");
         return Promise.reject(refreshError);
@@ -166,30 +151,22 @@ export const confirmEmail = async (
     };
   } catch (error) {
     const axiosError = error as AxiosError<{ message?: string }>;
-    throw new Error(
-      axiosError.response?.data?.message || "Erreur de validation du code."
-    );
+    throw new Error(axiosError.response?.data?.message || "Erreur de validation du code.");
   }
 };
 
 // ✅ Récupérer tous les posts
-export const fetchPosts = async (
-  page = 1,
-  limit = 5
-): Promise<PostsResponse> => {
+export const fetchPosts = async (page = 1, limit = 5): Promise<PostsResponse> => {
   try {
     const token = getAccessToken();
     if (!token) throw new Error("Utilisateur non authentifié.");
 
-    const response = await apiService.get(
-      `/user/posts?page=${page}&limit=${limit}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await apiService.get(`/user/posts?page=${page}&limit=${limit}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     return response.data; // ✅ Retourne bien l'objet PostsResponse
   } catch (error) {
@@ -207,16 +184,12 @@ export const createPost = async (postData: PostData): Promise<Post> => {
     if (!token) {
       throw new Error("Utilisateur non authentifié.");
     }
-    const response = await axios.post<Post>(
-      `${API_BASE_URL}/${API_VERSION}/user/post`,
-      postData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post<Post>(`${API_BASE_URL}/${API_VERSION}/user/post`, postData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     return response.data;
   } catch (error) {
@@ -243,16 +216,12 @@ export const createBrand = async (
       throw new Error("Utilisateur non authentifié.");
     }
 
-    const response = await axios.post(
-      `${API_BASE_URL}/${API_VERSION}/admin/brand/new`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const response = await axios.post(`${API_BASE_URL}/${API_VERSION}/admin/brand/new`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
     // 🔥 Assure-toi que ton backend retourne bien la marque créée
     return { success: true, brand: response.data.brand };
@@ -316,10 +285,7 @@ export const fetchPostLikes = async (postId: string) => {
     const response = await apiService.get(`/posts/${postId}/likes`);
     return response.data.likes; // Retourne le nombre total de likes
   } catch (error) {
-    console.error(
-      `❌ Erreur lors de la récupération des likes du post ${postId} :`,
-      error
-    );
+    console.error(`❌ Erreur lors de la récupération des likes du post ${postId} :`, error);
     return 0; // Retourne 0 en cas d'erreur
   }
 };
@@ -424,10 +390,7 @@ export const deleteComment = async (commentId: string) => {
 
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Une erreur inconnue s'est produite",
+      error: error instanceof Error ? error.message : "Une erreur inconnue s'est produite",
     };
   }
 };
@@ -443,10 +406,7 @@ export const deletePost = async (postId: string) => {
 
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Une erreur inconnue s'est produite",
+      error: error instanceof Error ? error.message : "Une erreur inconnue s'est produite",
     };
   }
 };
@@ -467,11 +427,7 @@ export const addCommentToReport = async (reportId: string, content: string) => {
 };
 
 // 📌 Récupérer les commentaires d'un Report avec pagination
-export const fetchReportComments = async (
-  reportId: string,
-  page = 1,
-  limit = 5
-) => {
+export const fetchReportComments = async (reportId: string, page = 1, limit = 5) => {
   try {
     const response = await apiService.get(`/reports/${reportId}/comments`, {
       params: { page, limit },
@@ -493,25 +449,16 @@ export const deleteReportComment = async (commentId: string) => {
     });
     return { success: true, message: "Commentaire supprimé avec succès" };
   } catch (error) {
-    console.error(
-      "Erreur lors de la suppression du commentaire du Report :",
-      error
-    );
+    console.error("Erreur lors de la suppression du commentaire du Report :", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Une erreur inconnue s'est produite",
+      error: error instanceof Error ? error.message : "Une erreur inconnue s'est produite",
     };
   }
 };
 
 // ✅ Ajouter un commentaire à une Suggestion
-export const addCommentToSuggestion = async (
-  suggestionId: string,
-  content: string
-) => {
+export const addCommentToSuggestion = async (suggestionId: string, content: string) => {
   try {
     const response = await apiService.post(
       `/suggestions/${suggestionId}/comments`,
@@ -520,34 +467,21 @@ export const addCommentToSuggestion = async (
     );
     return response.data.comment;
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de l'ajout du commentaire à la Suggestion :",
-      error
-    );
+    console.error("❌ Erreur lors de l'ajout du commentaire à la Suggestion :", error);
     return null;
   }
 };
 
 // ✅ Récupérer les commentaires d'une Suggestion
-export const fetchSuggestionComments = async (
-  suggestionId: string,
-  page = 1,
-  limit = 5
-) => {
+export const fetchSuggestionComments = async (suggestionId: string, page = 1, limit = 5) => {
   try {
-    const response = await apiService.get(
-      `/suggestions/${suggestionId}/comments`,
-      {
-        params: { page, limit },
-        headers: authHeaders(),
-      }
-    );
+    const response = await apiService.get(`/suggestions/${suggestionId}/comments`, {
+      params: { page, limit },
+      headers: authHeaders(),
+    });
     return response.data;
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la récupération des commentaires :",
-      error
-    );
+    console.error("❌ Erreur lors de la récupération des commentaires :", error);
     return { comments: [] };
   }
 };
@@ -566,10 +500,7 @@ export const deleteSuggestionComment = async (commentId: string) => {
 };
 
 // ✅ Ajouter un commentaire à un CoupDeCoeur
-export const addCommentToCdc = async (
-  coupDeCoeurId: string,
-  content: string
-) => {
+export const addCommentToCdc = async (coupDeCoeurId: string, content: string) => {
   try {
     const response = await apiService.post(
       `/coupdecoeur/${coupDeCoeurId}/comments`,
@@ -578,34 +509,21 @@ export const addCommentToCdc = async (
     );
     return response.data.comment;
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de l'ajout du commentaire au CoupDeCoeur :",
-      error
-    );
+    console.error("❌ Erreur lors de l'ajout du commentaire au CoupDeCoeur :", error);
     return null;
   }
 };
 
 // ✅ Récupérer les commentaires d'un CoupDeCoeur
-export const fetchCdcComments = async (
-  coupDeCoeurId: string,
-  page = 1,
-  limit = 5
-) => {
+export const fetchCdcComments = async (coupDeCoeurId: string, page = 1, limit = 5) => {
   try {
-    const response = await apiService.get(
-      `/coupdecoeur/${coupDeCoeurId}/comments`,
-      {
-        params: { page, limit },
-        headers: authHeaders(),
-      }
-    );
+    const response = await apiService.get(`/coupdecoeur/${coupDeCoeurId}/comments`, {
+      params: { page, limit },
+      headers: authHeaders(),
+    });
     return response.data;
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la récupération des commentaires :",
-      error
-    );
+    console.error("❌ Erreur lors de la récupération des commentaires :", error);
     return { comments: [] };
   }
 };
@@ -713,9 +631,6 @@ export const updateBrand = async (
   }
 };
 
-
-
-
 export const deleteBrand = async (
   brandId: string
 ): Promise<{ success: boolean; error?: string }> => {
@@ -725,12 +640,9 @@ export const deleteBrand = async (
       throw new Error("Utilisateur non authentifié.");
     }
 
-    await axios.delete(
-      `${API_BASE_URL}/${API_VERSION}/admin/brand/${brandId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    await axios.delete(`${API_BASE_URL}/${API_VERSION}/admin/brand/${brandId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     return { success: true };
   } catch (error: unknown) {
@@ -782,10 +694,7 @@ export const deleteBrand = async (
   }
 }; */
 
-export const fetchReports = async (
-  page: number,
-  limit: number
-): Promise<ReportsResponse> => {
+export const fetchReports = async (page: number, limit: number): Promise<ReportsResponse> => {
   try {
     console.log("🚀 API fetchReports() appelée !");
 
@@ -811,7 +720,7 @@ export const fetchReports = async (
     console.log("✅ Réponse API brute reports :", response.data);
 
     // 🔥 S'assure que `reactions` est toujours un tableau
-    const formattedReports = response.data.reports.map((report) => ({
+    const formattedReports = response.data.reports.map(report => ({
       ...report,
       reactions: report.reactions ? report.reactions : [],
     }));
@@ -845,10 +754,7 @@ export const fetchUserStats = async () => {
 };
 
 // Fonction pour récupérer les coups de cœur
-export const fetchCoupsdeCoeur = async (
-  page: number,
-  limit: number
-): Promise<CdcsResponse> => {
+export const fetchCoupsdeCoeur = async (page: number, limit: number): Promise<CdcsResponse> => {
   try {
     console.log("🚀 API fetchReports() appelée !");
 
@@ -874,7 +780,7 @@ export const fetchCoupsdeCoeur = async (
     console.log("✅ Réponse API brute reports :", response.data);
 
     // 🔥 S'assure que `reactions` est toujours un tableau
-    const formattedCdc = response.data.coupdeCoeurs.map((cdc) => ({
+    const formattedCdc = response.data.coupdeCoeurs.map(cdc => ({
       ...cdc,
       reactions: cdc.reactions ? cdc.reactions : [],
     }));
@@ -893,15 +799,12 @@ export const fetchSuggestions = async (page: number, limit: number) => {
     if (!token) {
       throw new Error("Utilisateur non authentifié.");
     }
-    const response = await apiService.get(
-      `/user/suggestion?page=${page}&limit=${limit}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await apiService.get(`/user/suggestion?page=${page}&limit=${limit}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     return {
       suggestions: response.data.suggestions,
@@ -946,21 +849,17 @@ export const fetchUserProfile = async (): Promise<UserProfile> => {
 
     if (error instanceof (await import("axios")).AxiosError) {
       throw new Error(
-        error.response?.data?.error ||
-          "Erreur lors du chargement du profil utilisateur."
+        error.response?.data?.error || "Erreur lors du chargement du profil utilisateur."
       );
     }
 
-    throw new Error(
-      "Erreur inattendue lors du chargement du profil utilisateur."
-    );
+    throw new Error("Erreur inattendue lors du chargement du profil utilisateur.");
   }
 };
 
 export const fetchBrandProfile = async () => {
   const token =
-    localStorage.getItem("brandAccessToken") ||
-    sessionStorage.getItem("brandAccessToken");
+    localStorage.getItem("brandAccessToken") || sessionStorage.getItem("brandAccessToken");
 
   if (!token) {
     throw new Error("Aucun token trouvé pour la marque.");
@@ -990,9 +889,7 @@ export const updateUserProfile = async (
     });
 
     if (!response.data.success) {
-      throw new Error(
-        response.data.message || "Échec de la mise à jour du profil."
-      );
+      throw new Error(response.data.message || "Échec de la mise à jour du profil.");
     }
 
     return response.data; // Retourne les données de la réponse
@@ -1002,15 +899,9 @@ export const updateUserProfile = async (
         "Erreur lors de la mise à jour du profil :",
         error.response?.data || error.message
       );
-      throw new Error(
-        error.response?.data?.message ||
-          "Erreur lors de la mise à jour du profil."
-      );
+      throw new Error(error.response?.data?.message || "Erreur lors de la mise à jour du profil.");
     } else if (error instanceof Error) {
-      console.error(
-        "Erreur inconnue lors de la mise à jour du profil :",
-        error.message
-      );
+      console.error("Erreur inconnue lors de la mise à jour du profil :", error.message);
       throw new Error(error.message);
     } else {
       throw new Error("Une erreur inconnue est survenue.");
@@ -1031,43 +922,30 @@ export const deleteAccount = async () => {
 
 export const fetchReportCommentCount = async (reportId: string) => {
   try {
-    const response = await apiService.get(
-      `/reports/${reportId}/comments/count`
-    );
+    const response = await apiService.get(`/reports/${reportId}/comments/count`);
     return response.data.count;
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la récupération du nombre de commentaires :",
-      error
-    );
+    console.error("❌ Erreur lors de la récupération du nombre de commentaires :", error);
     return 0;
   }
 };
 
-  export const fetchPostCommentCount = async (postId: string) => {
-    try {
-      const response = await apiService.get(`/posts/${postId}/comments/count`);
-      return response.data.count;
-    } catch (error) {
-      console.error(
-        "❌ Erreur lors de la récupération du nombre de commentaires :",
-        error
-      );
-      return 0;
-    }
-  };
+export const fetchPostCommentCount = async (postId: string) => {
+  try {
+    const response = await apiService.get(`/posts/${postId}/comments/count`);
+    return response.data.count;
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération du nombre de commentaires :", error);
+    return 0;
+  }
+};
 
 export const fetchSuggestionCommentCount = async (suggestionId: string) => {
   try {
-    const response = await apiService.get(
-      `/suggestions/${suggestionId}/comments/count`
-    );
+    const response = await apiService.get(`/suggestions/${suggestionId}/comments/count`);
     return response.data.count;
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la récupération du nombre de commentaires :",
-      error
-    );
+    console.error("❌ Erreur lors de la récupération du nombre de commentaires :", error);
     return 0;
   }
 };
@@ -1077,10 +955,38 @@ export const fetchCdcCommentCount = async (cdcId: string) => {
     const response = await apiService.get(`/cdc/${cdcId}/comments/count`);
     return response.data.count;
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la récupération du nombre de commentaires :",
-      error
-    );
+    console.error("❌ Erreur lors de la récupération du nombre de commentaires :", error);
     return 0;
+  }
+};
+
+export const getSubCategories = async (reportingId: string) => {
+  const response = await apiService.get(`/reportings/${reportingId}/subcategories`);
+  return response.data;
+};
+export const getAllGroupedReports = async (page = 1, limit = 5) => {
+  const res = await apiService.get(`/reportings/grouped-by-category?page=${page}&limit=${limit}`);
+  return res.data;
+};
+
+export const fetchReactionsCount = async (suggestionId: string) => {
+  try {
+    // Appel de l'API pour récupérer le nombre de réactions et les détails
+    const response = await apiService.get(`/suggestion/${suggestionId}/reactions/count`);
+    // Extraction du nombre total de réactions et des détails des réactions
+    const reactionsCount = response.data.reactionsCount;
+    const reactions = response.data.reactions;
+
+    // Retourner les données récupérées sous forme structurée
+    return {
+      reactionsCount,
+      reactions,
+    };
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération du nombre de réactions :", error);
+    return {
+      reactionsCount: 0,
+      reactions: [],
+    };
   }
 };
