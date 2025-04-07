@@ -29,12 +29,10 @@
   }
 
   .user-icon {
-   
     color: #333; /* Couleur de l'icône */
   }
 
   .user-name {
- 
     font-weight: 500;
     color: #333; /* Couleur du texte */
   }
@@ -225,14 +223,14 @@
   border: 1px solid #eaeaea; /* Bordure principale */
   border-radius: 25px; /* Bordure arrondie */
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
 
   &:focus,
   &:active {
     outline: none; /* Supprime les bordures au focus */
   }
-
-
 
   .user-name {
     font-size: 16px;

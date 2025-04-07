@@ -10,11 +10,7 @@ interface CreatePostPopupProps {
   onPostCreated: (newPost: Post) => void; // 🔥 Callback pour mettre à jour le mur des posts
 }
 
-const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
-  brands,
-  onClose,
-  onPostCreated,
-}) => {
+const CreatePostPopup: React.FC<CreatePostPopupProps> = ({ brands, onClose, onPostCreated }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [brandQuery, setBrandQuery] = useState("");
@@ -31,16 +27,14 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
       setFilteredBrands([]);
       setIsValidBrand(false);
     } else {
-      const filtered = brands.filter((brand) =>
+      const filtered = brands.filter(brand =>
         brand.name.toLowerCase().includes(brandQuery.toLowerCase())
       );
 
       setFilteredBrands(filtered);
 
       // ✅ Vérifie si la marque saisie correspond à une marque existante
-      const match = brands.find(
-        (brand) => brand.name.toLowerCase() === brandQuery.toLowerCase()
-      );
+      const match = brands.find(brand => brand.name.toLowerCase() === brandQuery.toLowerCase());
       setIsValidBrand(!!match);
       setSelectedBrand(match || null);
     }
@@ -101,20 +95,20 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
 
   return (
     <div className="overlay" onClick={onClose}>
-      <div className="popup" onClick={(e) => e.stopPropagation()}>
+      <div className="popup" onClick={e => e.stopPropagation()}>
         <h2>Créer un post</h2>
 
         <input
           type="text"
           placeholder="Saisir un titre"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={e => setTitle(e.target.value)}
         />
 
         <textarea
           placeholder="Décrivez votre problème"
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={e => setContent(e.target.value)}
         />
 
         <div className="brand-search-container">
@@ -122,12 +116,12 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
             type="text"
             placeholder="Sélectionnez une marque"
             value={brandQuery}
-            onChange={(e) => setBrandQuery(e.target.value)}
+            onChange={e => setBrandQuery(e.target.value)}
           />
 
           {filteredBrands.length > 0 && (
             <ul className="suggestions">
-              {filteredBrands.map((brand) => (
+              {filteredBrands.map(brand => (
                 <li key={brand.id} onClick={() => handleBrandSelect(brand)}>
                   {brand.name}
                 </li>
@@ -140,11 +134,7 @@ const CreatePostPopup: React.FC<CreatePostPopupProps> = ({
           <button onClick={onClose} className="cancel">
             Annuler
           </button>
-          <button
-            onClick={handleSubmit}
-            className="submit"
-            disabled={!isValidBrand || loading}
-          >
+          <button onClick={handleSubmit} className="submit" disabled={!isValidBrand || loading}>
             {loading ? "Publication..." : "Publier"}
           </button>
         </div>

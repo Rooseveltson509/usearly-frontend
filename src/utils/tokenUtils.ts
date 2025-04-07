@@ -6,9 +6,7 @@ export const setAccessToken = (token: string | null) => {
 
 export const getAccessToken = (): string | null => {
   return (
-    accessToken ||
-    localStorage.getItem("accessToken") ||
-    sessionStorage.getItem("accessToken")
+    accessToken || localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken")
   );
 };
 
@@ -37,11 +35,7 @@ export const getAccessToken = (): string | null => {
   }
 }; */
 
-export const storeToken = (
-  token: string,
-  rememberMe?: boolean,
-  userType?: "user" | "brand"
-) => {
+export const storeToken = (token: string, rememberMe?: boolean, userType?: "user" | "brand") => {
   console.log("storeToken appelé avec :", { token, rememberMe, userType });
 
   const storageKey = userType === "brand" ? "brandAccessToken" : "accessToken";
@@ -72,7 +66,6 @@ export const storeToken = (
     localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey)
   );
 };
-
 
 /* export const storeToken = (
   token: string,

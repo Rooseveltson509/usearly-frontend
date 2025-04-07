@@ -149,16 +149,16 @@
   text-align: center;
   animation: fadeIn 0.3s ease-in-out;
   position: relative; /* Évite les problèmes de position */
-  h2{
-    font-family:'Raleway';
-    margin-block-end:30px;
-}
- p {
-    font-family:'Raleway';
-    color:#000000;
-    padding:0 40px;
-    margin-block-end:30px;
-}
+  h2 {
+    font-family: "Raleway";
+    margin-block-end: 30px;
+  }
+  p {
+    font-family: "Raleway";
+    color: #000000;
+    padding: 0 40px;
+    margin-block-end: 30px;
+  }
 }
 
 /* Icône d'avertissement */
@@ -279,7 +279,9 @@
 }
 
 .brand-table {
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
 }
 
 .fade-in {

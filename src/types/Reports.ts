@@ -23,38 +23,71 @@ export interface Reports {
   createdAt: string;
   updatedAt?: string;
   nbrLikes?: number;
-  User: {
+
+  // ✅ MAJ ici : User est maintenant un tableau
+  User?: {
+    id: string;
     pseudo: string;
-    email: string;
     avatar?: string;
-  };
-  reactions: Reaction[]; // ✅ Vérifie que cette ligne est bien présente !
+    ReportingUsers?: {
+      reportingId: string;
+      userId: string;
+      createdAt: string;
+      updatedAt: string;
+    };
+  }[];
+
+  reactions: Reaction[];
   siteType: string | null;
-  categories: { name: string }[];
+  categories: string[]; // ou { name: string }[] selon le backend
   type?: string;
+}
+
+export interface GroupedReport {
+  reportingId: string;
+  category: string;
+  marque: string;
+  totalCount: number;
+  subCategories: {
+    subCategory: string;
+    count: number;
+    descriptions: {
+      description: string;
+      emoji?: string;
+      user: {
+        id: string;
+        pseudo: string;
+        avatar: string | null;
+      };
+      createdAt: string;
+    }[];
+  }[];
 }
 
 export interface Cdc {
   id: string;
   siteUrl: string;
   marque: string;
-  bugLocation?: string;
   emplacement?: string;
-  emojis: string;
+  emoji: string;
   description: string;
   blocking?: string;
+  capture?: string | null;
   tips?: string;
   createdAt: string;
   updatedAt?: string;
   nbrLikes?: number;
+
+  // ✅ correspond à ce que ton back renvoie
   User: {
     pseudo: string;
     email: string;
     avatar?: string;
   };
-  reactions: Reaction[]; // ✅ Vérifie que cette ligne est bien présente !
-  siteType: string | null;
-  categories: { name: string }[];
+
+  reactions: Reaction[];
+  siteType?: string | null; // ❓ non présent dans ta réponse → optionnel
+  categories?: { name: string }[]; // ❓ non présent non plus → optionnel
   type?: string;
 }
 
@@ -80,9 +113,8 @@ export interface Suggestion {
   siteType: string | null;
   categories: { name: string }[];
   type?: string;
+  reactionsCount: number;
 }
-
-
 
 export interface ReportsResponse {
   totalReports: number;
@@ -91,10 +123,9 @@ export interface ReportsResponse {
   reports: Reports[];
 }
 
-
 export interface CdcsResponse {
-  totalReports: number;
+  totalCoupsdeCoeur: number;
   currentPage: number;
   totalPages: number;
-  coupdeCoeurs: Reports[];
+  coupdeCoeurs: Cdc[]; // ✅ et plus Reports[]
 }

@@ -12,28 +12,27 @@ const RightSidebar: React.FC = () => {
   return (
     <div className="sidebar-right">
       {/* Section Collaboration */}
-      <div className='margin-top'></div>
+      <div className="margin-top"></div>
       <div className="section">
         <div className="section-title">
-    <img src={CollaborationIcon} alt="Collaboration icon" className="section-icon" />
-    <h3>Collaboration</h3>
-  </div>
+          <img src={CollaborationIcon} alt="Collaboration icon" className="section-icon" />
+          <h3>Collaboration</h3>
+        </div>
         <p>
-          Rejoignez vos marques pour co-créer et innover sur les produits et
-          services de demain !
+          Rejoignez vos marques pour co-créer et innover sur les produits et services de demain !
         </p>
         <button className="cta-button">Afficher toutes les collabs</button>
       </div>
 
       {/* Section Challenge */}
       <div className="section">
-         <div className="section-title">
-    <img src={ChallengeIcon} alt="Challenge icon" className="section-icon" />
-    <h3>Challenge</h3>
-  </div>
+        <div className="section-title">
+          <img src={ChallengeIcon} alt="Challenge icon" className="section-icon" />
+          <h3>Challenge</h3>
+        </div>
         <p>
-          Participez à des challenges, aidez la communauté et vos marques pour
-          de meilleures expériences et booster votre Usear Power.
+          Participez à des challenges, aidez la communauté et vos marques pour de meilleures
+          expériences et booster votre Usear Power.
         </p>
         <button className="cta-button">Afficher tous les challenges</button>
       </div>

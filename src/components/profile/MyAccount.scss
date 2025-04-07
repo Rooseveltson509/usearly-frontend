@@ -1,138 +1,138 @@
 .profile-container {
-    max-inline-size: 800px;
-    margin: auto;
-    padding: 20px 80px;
-    background-color: #f9f9f9;
+  max-inline-size: 800px;
+  margin: auto;
+  padding: 20px 80px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  margin-block-end: 60px;
+
+  a {
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    color: #000000;
+    display: inline-block; // Permet d'appliquer des marges plus facilement
+    margin-block-end: 40px; // Ajoute de l'espace sous le lien
+  }
+
+  h1 {
+    text-align: center;
+    margin-block-end: 20px;
+    font-family: "Inter", sans-serif;
+    color: #000000;
+  }
+  h2.section-title {
+    font-family: "Inter", sans-serif;
+    color: #000000;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  form {
+    font-family: "Inter", sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  label {
+    font-size: 14px;
+    font-weight: 400;
+    color: #555;
+    font-weight: 300;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="file"],
+  button {
+    padding: 10px;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
-    margin-block-end: 60px;
+    font-size: 14px;
+  }
 
-    a {
-        font-family:  "Inter", sans-serif;
-        font-size:14px;
-        color: #000000;
-        display: inline-block; // Permet d'appliquer des marges plus facilement
-        margin-block-end: 40px; // Ajoute de l'espace sous le lien
+  input:disabled {
+    background-color: #e9e9e9;
+    cursor: not-allowed;
+  }
+
+  img {
+    inline-size: 120px;
+    block-size: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto;
+    margin-block-end: 40px;
+    display: block;
+    background-color: rgb(192, 192, 192);
+  }
+
+  button {
+    background-color: #000000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px 0 40px 0;
+
+    &:hover {
+      background-color: #2d2d2d;
     }
 
-    h1 {
-        text-align: center;
-        margin-block-end: 20px;
-        font-family:  "Inter", sans-serif;
-        color: #000000;
+    &:disabled {
+      background-color: #ddd;
+      cursor: not-allowed;
     }
-    h2.section-title  {
-        font-family: "Inter", sans-serif;
-        color: #000000;
-        font-size: 20px;
-        text-align: center;
-    }
+  }
 
-    form {
-        font-family: "Inter", sans-serif;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
+  .section {
+    margin-block-end: 10px;
+    padding: 0;
+  }
 
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-block-end: 30px;
+    margin-block-start: 20px;
+    border-block-end: 1px solid #ddd;
+    padding-block-end: 10px;
+    text-align: center;
+  }
 
-    label {
-        font-size: 14px;
-        font-weight: 400;
-        color: #555;
-        font-weight: 300;
-    }
+  .error-message {
+    color: red;
+    font-size: 14px;
+  }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="file"],
-    button {
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 14px;
-    }
+  .success-message {
+    color: green;
+    font-size: 14px;
+  }
 
-    input:disabled {
-        background-color: #e9e9e9;
-        cursor: not-allowed;
+  .flash-message {
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    margin-block-end: 20px;
+    font-weight: bold;
+
+    &.success {
+      background-color: #d4edda;
+      color: #155724;
     }
 
-    img {
-        inline-size: 120px;
-        block-size: 120px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin: 0 auto;
-        margin-block-end: 40px;
-        display: block;
-        background-color: rgb(192, 192, 192);
+    &.error {
+      background-color: #f8d7da;
+      color: #721c24;
     }
-
-    button {
-        background-color: #000000;
-        color: white;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin: 10px 0 40px 0;
-
-        &:hover {
-            background-color: #2d2d2d;
-        }
-
-        &:disabled {
-            background-color: #ddd;
-            cursor: not-allowed;
-        }
-    }
-
-    .section {
-        margin-block-end: 10px;
-        padding: 0;
-    }
-
-    .section-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-block-end: 30px;
-        margin-block-start: 20px;
-        border-block-end: 1px solid #ddd;
-        padding-block-end: 10px;
-        text-align: center;
-    }
-
-    .error-message {
-        color: red;
-        font-size: 14px;
-    }
-
-    .success-message {
-        color: green;
-        font-size: 14px;
-    }
-
-    .flash-message {
-        text-align: center;
-        padding: 10px;
-        border-radius: 5px;
-        margin-block-end: 20px;
-        font-weight: bold;
-
-        &.success {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        &.error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-    }
+  }
 }

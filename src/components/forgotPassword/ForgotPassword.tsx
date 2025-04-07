@@ -40,21 +40,17 @@ const ForgotPassword: React.FC = () => {
     <div className="login-container">
       <h1>Mot de passe oublié ?</h1>
       <p>
-        Entrez votre adresse e-mail, et nous vous enverrons un lien pour
-        réinitialiser votre mot de passe.
+        Entrez votre adresse e-mail, et nous vous enverrons un lien pour réinitialiser votre mot de
+        passe.
       </p>
-      <form
-        onSubmit={handleSubmit}
-        onClick={(e) => e.stopPropagation()}
-        className="login-form"
-      >
+      <form onSubmit={handleSubmit} onClick={e => e.stopPropagation()} className="login-form">
         <div>
           <input
             type="email"
             id="email"
             placeholder="Entrez votre e-mail"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             required
           />
           <button type="submit" className="signup-button" disabled={isLoading}>
@@ -63,11 +59,7 @@ const ForgotPassword: React.FC = () => {
         </div>
       </form>
       <div className="background-text">
-        <img
-          src={backgroundImage}
-          alt="Usearly Background"
-          className="background-image"
-        />
+        <img src={backgroundImage} alt="Usearly Background" className="background-image" />
       </div>
       <footer className="signup-footer">
         <a href="#">Conditions générales d'utilisation</a>

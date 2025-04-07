@@ -9,10 +9,7 @@ interface CreateBrandProps {
   onClose: () => void;
 }
 
-const CreateBrand: React.FC<CreateBrandProps> = ({
-  onCreateSuccess,
-  onClose,
-}) => {
+const CreateBrand: React.FC<CreateBrandProps> = ({ onCreateSuccess, onClose }) => {
   const { userProfile } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
@@ -26,21 +23,17 @@ const CreateBrand: React.FC<CreateBrandProps> = ({
   const [success, setSuccess] = useState<string | null>(null);
 
   if (userProfile?.role !== "admin") {
-    return (
-      <p>
-        ⚠️ Accès refusé. Seuls les administrateurs peuvent créer des marques.
-      </p>
-    );
+    return <p>⚠️ Accès refusé. Seuls les administrateurs peuvent créer des marques.</p>;
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFormData((prev) => ({ ...prev, avatar: e.target.files![0] }));
+      setFormData(prev => ({ ...prev, avatar: e.target.files![0] }));
     }
   };
 
@@ -126,12 +119,7 @@ const CreateBrand: React.FC<CreateBrandProps> = ({
           onChange={handleChange}
           required
         />
-        <input
-          type="file"
-          name="avatar"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
+        <input type="file" name="avatar" accept="image/*" onChange={handleFileChange} />
 
         <div className="form-actions">
           <button type="submit" className="create-btn" disabled={isLoading}>

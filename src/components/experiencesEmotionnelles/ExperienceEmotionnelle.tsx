@@ -51,8 +51,7 @@ const ExperienceEmotionnelle: React.FC = () => {
       </div>
 
       <div className="emotion-journey">
-        <span>🔥 Paiement</span> → <span>⚠ Recherche</span> →{" "}
-        <span>⚠ Livraison</span>
+        <span>🔥 Paiement</span> → <span>⚠ Recherche</span> → <span>⚠ Livraison</span>
         <select className="dropdown">
           <option>▼</option>
         </select>

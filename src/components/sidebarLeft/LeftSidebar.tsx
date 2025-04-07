@@ -14,34 +14,29 @@ const LeftSidebar: React.FC = () => {
     navigate("/my-account"); // Redirige vers la page de profil
   };
 
-    const [stats, setStats] = useState({
-      reports: 0,
-      coupsDeCoeur: 0,
-      suggestions: 0,
-      usearPower: 0,
-    });
+  const [stats, setStats] = useState({
+    reports: 0,
+    coupsDeCoeur: 0,
+    suggestions: 0,
+    usearPower: 0,
+  });
 
-    useEffect(() => {
-      const loadStats = async () => {
-        const data = await fetchUserStats();
-        if (data) {
-          setStats(data);
-          console.log("stats: " + stats.reports);
-        }
-      };
+  useEffect(() => {
+    const loadStats = async () => {
+      const data = await fetchUserStats();
+      if (data) {
+        setStats(data);
+        console.log("stats: " + stats.reports);
+      }
+    };
 
-      loadStats();
-    }, [stats.reports]);
-
+    loadStats();
+  }, [stats.reports]);
 
   return (
     <aside className="sidebar-left">
       <div className="user-card">
-        <div
-          className="avatar"
-          onClick={handleAvatarClick}
-          style={{ cursor: "pointer" }}
-        >
+        <div className="avatar" onClick={handleAvatarClick} style={{ cursor: "pointer" }}>
           <img
             src={
               userProfile?.avatar
@@ -69,14 +64,12 @@ const LeftSidebar: React.FC = () => {
         <div className="user-power">
           <span className="power-label">Mon Usear Power</span>
           <span className="power-value">
-            <img className='icon' src={scoreIcon} style={{ objectFit: 'contain' }}/>
-             {stats.usearPower}
+            <img className="icon" src={scoreIcon} style={{ objectFit: "contain" }} />
+            {stats.usearPower}
           </span>
         </div>
         <button className="view-more">Voir plus</button>
       </div>
-
- 
     </aside>
   );
 };

@@ -1,9 +1,84 @@
 $primary-color: #000000;
 $secondary-color: #d4524f;
-$gradient-color: linear-gradient(89deg, #5A13A5 30.61%, #FC17AF 104.58%);
+$gradient-color: linear-gradient(89deg, #5a13a5 30.61%, #fc17af 104.58%);
 $error-color: #f44336;
 $font-family: Arial, sans-serif;
 $border-radius: 5px;
 $flash-color-success: #4caf50;
 $flash-color-info: #2196f3;
 $flash-color-error: #f44336;
+$border-radius-md: 2px solid #4caf50;
+$gray-50: #4a4949;
+$gray-200: #736969;
+$gray-100: #888787;
+$gray-900: #afaaaa;
+$white: #ffffff;
+$gray-700: #bbbbbb;
+$gray-500: #9a8b8b;
+$dark-input-bg: #282828;
+$dark-border: #4a4949;
+$dark-text: #4a4949;
+$dark-disabled: #afaaaa;
+
+// 🎨 Couleurs de base
+$white: #ffffff;
+$black: #000000;
+
+$primary: #2563eb; // Bleu principal
+$secondary: #64748b;
+$danger: #ef4444;
+$success: #22c55e;
+
+// ⚪️ Gris pour UI
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-800: #1f2937;
+$gray-900: #111827;
+
+// 🎨 Thème sombre (si utilisé)
+$dark-text: #f1f5f9;
+$dark-border: #334155;
+$dark-input-bg: #1e293b;
+$dark-disabled: #475569;
+
+// 🧱 Radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+// 🖋️ Typo (optionnel)
+$font-family: "Raleway", sans-serif;
+$font-weight-regular: 400;
+$font-weight-bold: 600;
+
+// ⚡ Ombres
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+// ✨ Mixins utiles (optionnels si tu veux les inclure)
+@mixin heading {
+  font-family: $font-family;
+  font-weight: $font-weight-bold;
+  color: $gray-900;
+}
+
+@mixin text {
+  font-family: $font-family;
+  font-weight: $font-weight-regular;
+  color: $gray-700;
+}
+
+@mixin button {
+  border-radius: $border-radius-md;
+  padding: 0.5rem 1rem;
+  font-weight: $font-weight-bold;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}

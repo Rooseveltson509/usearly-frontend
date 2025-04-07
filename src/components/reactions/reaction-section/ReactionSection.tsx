@@ -12,10 +12,7 @@ import { Reaction } from "@src/types/types";
 import CommonReactionsModal from "@src/components/commons/CommonReactionsModal";
 import { getEmojisForType } from "@src/components/config/emojisConfig";
 import "./ReactionSection.scss";
-import {
-  addReactionToPost,
-  fetchPostReactions,
-} from "@src/services/apiService";
+import { addReactionToPost, fetchPostReactions } from "@src/services/apiService";
 import commentIcon from "../../../assets/card/comment.svg";
 import solution from "../../../assets/card/solution.svg";
 import { getActionContent } from "@src/utils/getActionContent";
@@ -37,7 +34,7 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
   setShowCommentInput,
   onReactionUpdate,
   commentCount,
-  brandLogo
+  brandLogo,
 }) => {
   const { userProfile } = useAuth();
   const userId = userProfile?.id;
@@ -89,7 +86,7 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
   }, [fetchReactions, parentId]);
 
   // ✅ Vérifie si l'utilisateur a déjà réagi
-  const userReaction = reactions.find((reaction) => reaction.userId === userId);
+  const userReaction = reactions.find(reaction => reaction.userId === userId);
   const userHasReacted = !!userReaction;
 
   // ✅ Gère l'affichage du menu au survol
@@ -122,14 +119,12 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
       console.error("❌ Emoji non défini !");
       return;
     }
-    const userReactionIndex = newReactions.findIndex(
-      (r) => r.userId === userId
-    );
+    const userReactionIndex = newReactions.findIndex(r => r.userId === userId);
 
     if (userReactionIndex !== -1) {
       if (newReactions[userReactionIndex].emoji === normalizedEmoji) {
         // ✅ Supprime la réaction immédiatement
-        newReactions = newReactions.filter((r) => r.userId !== userId);
+        newReactions = newReactions.filter(r => r.userId !== userId);
       } else {
         // ✅ Change la réaction immédiatement
         newReactions[userReactionIndex].emoji = normalizedEmoji;
@@ -165,9 +160,7 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
       console.error("❌ Erreur lors de l'ajout de la réaction :", error);
 
       // 🔄 Annule la mise à jour en cas d'échec
-      setReactions((prevReactions) =>
-        prevReactions.filter((r) => r.userId !== userId)
-      );
+      setReactions(prevReactions => prevReactions.filter(r => r.userId !== userId));
     }
   };
 
@@ -191,26 +184,21 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
                 {/* ✅ Regroupement des réactions affichées */}
                 <div className="reaction-icons">
                   {Object.entries(
-                    reactions.reduce<{ [emoji: string]: number }>(
-                      (acc, reaction) => {
-                        if (!reaction || !reaction.emoji) return acc;
-                        const normalizedEmoji = normalizeEmoji(reaction.emoji);
-                        acc[normalizedEmoji] =
-                          (acc[normalizedEmoji] || 0) + reaction.count;
-                        return acc;
-                      },
-                      {}
-                    )
+                    reactions.reduce<{ [emoji: string]: number }>((acc, reaction) => {
+                      if (!reaction || !reaction.emoji) return acc;
+                      const normalizedEmoji = normalizeEmoji(reaction.emoji);
+                      acc[normalizedEmoji] = (acc[normalizedEmoji] || 0) + reaction.count;
+                      return acc;
+                    }, {})
                   )
                     .sort((a, b) => b[1] - a[1]) // Trie les plus populaires en premier
                     .slice(0, 3) // Affiche seulement 3 emojis maximum
                     .map(([emoji], index) => (
                       <span
                         key={index}
-                        className={`reaction-icon ${userReaction?.emoji === emoji
-                          ? "selected-reaction"
-                          : ""
-                          }`}
+                        className={`reaction-icon ${
+                          userReaction?.emoji === emoji ? "selected-reaction" : ""
+                        }`}
                         onClick={() => handleOpenReactionModal(parentId, type)}
                       >
                         {emoji}
@@ -259,7 +247,6 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
                 stroke-linejoin="round"
               />
             </svg>
-
             Transmis à la marque
           </span>
         </div>
@@ -280,11 +267,7 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
               <>
                 {userReaction.emoji} {/* ✅ Affichage de l’émoji */}
                 <span className="emoji-label">
-                  {
-                    getEmojisForType(type).find(
-                      (e) => e.emoji === userReaction.emoji
-                    )?.label
-                  }
+                  {getEmojisForType(type).find(e => e.emoji === userReaction.emoji)?.label}
                 </span>
               </>
             ) : (
@@ -301,16 +284,13 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
               {getEmojisForType(type).map(({ emoji, label }) => (
                 <button
                   key={emoji}
-                  className={`emoji-btn ${userReaction?.emoji === emoji ? "selected-emoji" : ""
-                    }`}
+                  className={`emoji-btn ${userReaction?.emoji === emoji ? "selected-emoji" : ""}`}
                   onClick={() => handleReaction(parentId, emoji)}
                   onMouseEnter={() => setHoveredLabel(label)}
                   onMouseLeave={() => setHoveredLabel(null)}
                 >
                   {emoji}
-                  {hoveredLabel === label && (
-                    <span className="emoji-tooltip">{label}</span>
-                  )}
+                  {hoveredLabel === label && <span className="emoji-tooltip">{label}</span>}
                 </button>
               ))}
             </div>
@@ -318,10 +298,7 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
         </div>
 
         {/* ✅ Gestion de l'affichage du champ de commentaire */}
-        <span
-          className="action-button"
-          onClick={() => setShowCommentInput(!showCommentInput)}
-        >
+        <span className="action-button" onClick={() => setShowCommentInput(!showCommentInput)}>
           {showCommentInput ? (
             <>
               <img src={commentIcon} alt="Commenter" width="20" height="20" />
@@ -334,11 +311,16 @@ const ReactionSection: React.FC<ReactionSectionProps> = ({
               <span></span>
             </>
           )}
-
         </span>
 
         {brandLogo && (
-          <img src={brandLogo} alt="LogoMarque" width="20" height="20" className="mini-brand-logo" />
+          <img
+            src={brandLogo}
+            alt="LogoMarque"
+            width="20"
+            height="20"
+            className="mini-brand-logo"
+          />
         )}
 
         {type !== "suggestion" && type !== "coupdecoeur" && (

@@ -16,11 +16,7 @@ interface PostProps {
   setPosts: React.Dispatch<React.SetStateAction<Post[]>>; // ✅ Ajout de setPosts
 }
 
-const PostList: React.FC<PostProps> = ({
-  post,
-  onReactionUpdate,
-  setPosts,
-}) => {
+const PostList: React.FC<PostProps> = ({ post, onReactionUpdate, setPosts }) => {
   const [showCommentInput, setShowCommentInput] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
   const [expandedPost, setExpandedPost] = useState<{
@@ -33,7 +29,7 @@ const PostList: React.FC<PostProps> = ({
   };
 
   const toggleExpand = (postId: string) => {
-    setExpandedPost((prev) => ({
+    setExpandedPost(prev => ({
       ...prev,
       [postId]: !prev[postId], // ✅ Clé en `string`
     }));
@@ -56,7 +52,7 @@ const PostList: React.FC<PostProps> = ({
       const menuElements = document.querySelectorAll(".menu-list");
       let isClickInside = false;
 
-      menuElements.forEach((menu) => {
+      menuElements.forEach(menu => {
         if (menu.contains(event.target as Node)) {
           isClickInside = true;
         }
@@ -89,14 +85,10 @@ const PostList: React.FC<PostProps> = ({
     try {
       const response = await deletePost(post.id);
       if (response.success) {
-        setPosts((prevPosts) => prevPosts.filter((p) => p.id !== post.id)); // ✅ Supprime localement
+        setPosts(prevPosts => prevPosts.filter(p => p.id !== post.id)); // ✅ Supprime localement
         Swal.fire("Supprimé !", "Le post a été supprimé.", "success");
       } else {
-        Swal.fire(
-          "Erreur",
-          response.error || "Une erreur s'est produite.",
-          "error"
-        );
+        Swal.fire("Erreur", response.error || "Une erreur s'est produite.", "error");
       }
     } catch (error) {
       console.error("❌ Erreur lors de la suppression du post :", error);
@@ -148,9 +140,7 @@ const PostList: React.FC<PostProps> = ({
             <strong>{post.author?.pseudo} </strong>
             C’est moi ou {post.title} ?
           </span>
-          <span className="report-time">
-            • {formatRelativeTime(post.createdAt)}
-          </span>
+          <span className="report-time">• {formatRelativeTime(post.createdAt)}</span>
         </div>
 
         <div className="report-options" onClick={toggleMenu}>
@@ -186,9 +176,7 @@ const PostList: React.FC<PostProps> = ({
               </>
             ) : (
               <>
-                {post.content.length > 150
-                  ? `${post.content.substring(0, 150)}... `
-                  : post.content}
+                {post.content.length > 150 ? `${post.content.substring(0, 150)}... ` : post.content}
                 {post.content.length > 150 && (
                   <span
                     className="see-more"
@@ -219,7 +207,9 @@ const PostList: React.FC<PostProps> = ({
         setShowCommentInput={setShowCommentInput}
         commentCount={commentCount}
         onReactionUpdate={onReactionUpdate}
-        brandLogo={post.brand?.avatar ? `${import.meta.env.VITE_API_BASE_URL}/${post.brand.avatar}` : null}
+        brandLogo={
+          post.brand?.avatar ? `${import.meta.env.VITE_API_BASE_URL}/${post.brand.avatar}` : null
+        }
       />
       {showCommentInput && (
         <CommentSection

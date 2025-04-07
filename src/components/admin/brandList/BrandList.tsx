@@ -52,7 +52,7 @@ const BrandList: React.FC = () => {
 
   // 🚀 Filtrage des marques en fonction de la recherche
   useEffect(() => {
-    const filtered = brands.filter((brand) =>
+    const filtered = brands.filter(brand =>
       brand.name.toLowerCase().includes(search.toLowerCase())
     );
     setFilteredBrands(filtered);
@@ -66,7 +66,7 @@ const BrandList: React.FC = () => {
 
   // ✅ Gestion des boutons de pagination
   const totalPages = Math.ceil(filteredBrands.length / itemsPerPage);
-/*   const nextPage = () =>
+  /*   const nextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1)); */
 
@@ -99,7 +99,7 @@ const BrandList: React.FC = () => {
 
     const response = await deleteBrand(selectedBrand.id);
     if (response.success) {
-      setBrands(brands.filter((brand) => brand.id !== selectedBrand.id));
+      setBrands(brands.filter(brand => brand.id !== selectedBrand.id));
     } else {
       alert(response.error || "Une erreur est survenue.");
     }
@@ -108,15 +108,13 @@ const BrandList: React.FC = () => {
   };
 
   const handleUpdateSuccess = (updatedBrand: Brand) => {
-    setBrands((prevBrands) =>
-      prevBrands.map((brand) =>
-        brand.id === updatedBrand.id ? updatedBrand : brand
-      )
+    setBrands(prevBrands =>
+      prevBrands.map(brand => (brand.id === updatedBrand.id ? updatedBrand : brand))
     );
   };
 
   const handleCreateSuccess = (newBrand: Brand) => {
-    setBrands((prevBrands) => [...prevBrands, newBrand]);
+    setBrands(prevBrands => [...prevBrands, newBrand]);
     closeCreateModal();
   };
 
@@ -135,21 +133,16 @@ const BrandList: React.FC = () => {
             type="text"
             placeholder="Rechercher une marque..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
           />
         </div>
 
-        <button
-          className="add-brand-button"
-          onClick={() => setIsCreateModalOpen(true)}
-        >
+        <button className="add-brand-button" onClick={() => setIsCreateModalOpen(true)}>
           <FaPlus className="plus-icon" /> Ajouter une marque
         </button>
       </div>
 
-      <table
-        className={`brand-table ${pageTransition ? "fade-out" : "fade-in"}`}
-      >
+      <table className={`brand-table ${pageTransition ? "fade-out" : "fade-in"}`}>
         <thead>
           <tr>
             <th>Logo</th>
@@ -168,7 +161,7 @@ const BrandList: React.FC = () => {
               </td>
             </tr>
           ) : (
-            currentBrands.map((brand) => (
+            currentBrands.map(brand => (
               <tr key={`${brand.id}-${currentPage}`} className="brand-row">
                 <td>
                   <img
@@ -186,16 +179,10 @@ const BrandList: React.FC = () => {
                 <td>{brand.offres}</td>
                 <td>{new Date(brand.createdAt).toLocaleDateString()}</td>
                 <td className="actions">
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEdit(brand)}
-                  >
+                  <button className="edit-btn" onClick={() => handleEdit(brand)}>
                     <FaEdit /> Modifier
                   </button>
-                  <button
-                    className="delete-btn"
-                    onClick={() => openDeleteModal(brand)}
-                  >
+                  <button className="delete-btn" onClick={() => openDeleteModal(brand)}>
                     <FaTrash /> Supprimer
                   </button>
                 </td>
@@ -207,19 +194,13 @@ const BrandList: React.FC = () => {
       {/* ✅ Pagination */}
       {totalPages > 1 && (
         <div className="pagination">
-          <button
-            onClick={() => changePage(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
+          <button onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>
             ← Précédent
           </button>
           <span>
             Page {currentPage} sur {totalPages}
           </span>
-          <button
-            onClick={() => changePage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
+          <button onClick={() => changePage(currentPage + 1)} disabled={currentPage === totalPages}>
             Suivant →
           </button>
         </div>
@@ -244,8 +225,7 @@ const BrandList: React.FC = () => {
         <FaExclamationTriangle className="warning-icon" />
         <h2>Confirmer la suppression</h2>
         <p>
-          Voulez-vous vraiment supprimer la marque{" "}
-          <strong>{selectedBrand?.name}</strong> ?
+          Voulez-vous vraiment supprimer la marque <strong>{selectedBrand?.name}</strong> ?
         </p>
         <div className="modal-actions">
           <button className="confirm-btn" onClick={confirmDelete}>
@@ -264,10 +244,7 @@ const BrandList: React.FC = () => {
         className="modal"
         overlayClassName="overlay"
       >
-        <CreateBrand
-          onCreateSuccess={handleCreateSuccess}
-          onClose={closeCreateModal}
-        />
+        <CreateBrand onCreateSuccess={handleCreateSuccess} onClose={closeCreateModal} />
       </Modal>
     </div>
   );

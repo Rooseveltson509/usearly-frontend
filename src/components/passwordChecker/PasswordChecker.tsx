@@ -35,14 +35,11 @@ const PasswordChecker: React.FC = () => {
         type="password"
         placeholder="Tapez votre mot de passe"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={e => setPassword(e.target.value)}
       />
       <ul>
         {criteria.map((criterion, index) => (
-          <li
-            key={index}
-            className={criterion.isValid(password) ? "valid" : "invalid"}
-          >
+          <li key={index} className={criterion.isValid(password) ? "valid" : "invalid"}>
             {criterion.label}
           </li>
         ))}

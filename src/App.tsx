@@ -110,19 +110,13 @@ const App: React.FC = () => {
         <Route
           path="/admin/brands"
           element={
-            <ProtectedRoute
-              condition={userProfile?.role === "admin"}
-              redirectTo="/home"
-            >
+            <ProtectedRoute condition={userProfile?.role === "admin"} redirectTo="/home">
               <BrandList />
             </ProtectedRoute>
           }
         />
 
-        <Route
-          path="/reset-password/:userId/:token"
-          element={<ResetPassword />}
-        />
+        <Route path="/reset-password/:userId/:token" element={<ResetPassword />} />
         {/* Routes diverses */}
         <Route path="/verify-code" element={<VerifyCode />} />
         {/* Page 404 */}

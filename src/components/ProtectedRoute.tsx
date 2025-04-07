@@ -23,18 +23,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return condition ? <>{children}</> : <Navigate to={redirectTo} />;
   }
 
-  if (
-    !isAuthenticated ||
-    !userType ||
-    (allowedRoles && !allowedRoles.includes(userType))
-  ) {
+  if (!isAuthenticated || !userType || (allowedRoles && !allowedRoles.includes(userType))) {
     console.warn("🚫 Accès refusé, redirection vers :", redirectTo);
     return <Navigate to={redirectTo} />;
   }
 
   return <>{children}</>;
 };
-
 
 export default ProtectedRoute;
 

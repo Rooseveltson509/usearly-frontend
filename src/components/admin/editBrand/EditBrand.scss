@@ -1,5 +1,4 @@
 .edit-brand-modal {
-
   position: fixed;
   inset-block-start: 0;
   inset-inline-start: 0;
@@ -41,7 +40,7 @@
     }
 
     h2 {
-       font-family: "Raleway";
+      font-family: "Raleway";
       text-align: center;
       font-size: 24px;
       color: #000000;
@@ -64,11 +63,11 @@
     form {
       display: flex;
       flex-direction: column;
-      gap:8px;
+      gap: 8px;
 
       label {
-        font-family:'Raleway';
-        font-size:14px;
+        font-family: "Raleway";
+        font-size: 14px;
         font-weight: 600;
         margin-block-start: 16px;
         color: #979797;
@@ -77,15 +76,15 @@
 
       input,
       select {
-        font-family:'Inter';
-        color:#000000;
+        font-family: "Inter";
+        color: #000000;
         padding: 12px;
         font-size: 15px;
         border: 1px solid #e6e6e6;
         border-radius: 6px;
         outline: none;
         transition: all 0.3s ease;
-            background-color: #f8f8f8;
+        background-color: #f8f8f8;
 
         &:focus {
           border-color: #000000;

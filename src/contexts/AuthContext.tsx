@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { logout as performLogout, refreshToken } from "../services/authService";
 import { fetchBrandProfile, fetchUserProfile, isTokenExpired } from "../services/apiService";
 import { UserProfile } from "../types/types";
@@ -25,25 +19,18 @@ interface AuthContextType {
   setUserType: (type: "user" | "brand" | null) => void;
   logout: () => void;
   setUserProfile: (profile: UserProfile | null) => void;
-  setFlashMessage: (
-    message: string,
-    type: "success" | "error" | "info"
-  ) => void;
+  setFlashMessage: (message: string, type: "success" | "error" | "info") => void;
   clearFlashMessage: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   //const navigate = useNavigate()
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [flashMessage, setFlashMessageState] = useState<string | null>(null);
-  const [flashType, setFlashType] = useState<
-    "success" | "error" | "info" | null
-  >(null);
+  const [flashType, setFlashType] = useState<"success" | "error" | "info" | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [userType, setUserType] = useState<"user" | "brand" | null>(null);
@@ -75,8 +62,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
       try {
         const storedUserType =
-          localStorage.getItem("userType") ||
-          sessionStorage.getItem("userType");
+          localStorage.getItem("userType") || sessionStorage.getItem("userType");
 
         if (storedUserType === "user" || storedUserType === "brand") {
           setUserType(storedUserType);
@@ -89,9 +75,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         }
 
         const profile =
-          storedUserType === "brand"
-            ? await fetchBrandProfile()
-            : await fetchUserProfile();
+          storedUserType === "brand" ? await fetchBrandProfile() : await fetchUserProfile();
 
         setUserProfile(profile);
         setIsAuthenticated(true);
@@ -104,7 +88,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Effacement automatique des messages flash
@@ -139,8 +123,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setUserProfile(null);
 
       // Optionnel : Supprimer le cookie manuellement côté frontend (si applicable)
-      document.cookie =
-        "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
       setFlashMessage("Vous avez été déconnecté avec succès.", "success");
 
@@ -156,10 +139,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     handleLogout();
   };
 
-  const setFlashMessage = (
-    message: string,
-    type: "success" | "error" | "info"
-  ) => {
+  const setFlashMessage = (message: string, type: "success" | "error" | "info") => {
     setFlashMessageState(message);
     setFlashType(type);
   };

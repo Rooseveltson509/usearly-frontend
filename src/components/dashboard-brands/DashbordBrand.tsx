@@ -8,7 +8,7 @@ import Technologie from "../technologie/Technologie";
 import { useAuth } from "@src/contexts/AuthContext";
 
 const DashboardBrand: React.FC = () => {
-    const { userProfile } = useAuth();
+  const { userProfile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("Panier");
   const [selectedEmoji, setSelectedEmoji] = useState({
     emoji: "😔",
@@ -34,15 +34,11 @@ const DashboardBrand: React.FC = () => {
   const [currentCommentIndex, setCurrentCommentIndex] = useState(0);
 
   const goToNextComment = () => {
-    setCurrentCommentIndex((prevIndex) =>
-      prevIndex === comments.length - 1 ? 0 : prevIndex + 1
-    );
+    setCurrentCommentIndex(prevIndex => (prevIndex === comments.length - 1 ? 0 : prevIndex + 1));
   };
 
   const goToPrevComment = () => {
-    setCurrentCommentIndex((prevIndex) =>
-      prevIndex === 0 ? comments.length - 1 : prevIndex - 1
-    );
+    setCurrentCommentIndex(prevIndex => (prevIndex === 0 ? comments.length - 1 : prevIndex - 1));
   };
 
   return (
@@ -63,10 +59,7 @@ const DashboardBrand: React.FC = () => {
       <main className="dashboard-main">
         <header className="dashboard-header">
           <div className="header-left">
-            <span className="user-name">
-              {" "}
-              Hello {userProfile?.name || "Brand"} ▼
-            </span>
+            <span className="user-name"> Hello {userProfile?.name || "Brand"} ▼</span>
           </div>
           <div className="header-right">
             <button className="btn-new-user">New user +</button>
@@ -113,9 +106,9 @@ const DashboardBrand: React.FC = () => {
               <div className="signalements-filters">
                 <select
                   value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  onChange={e => setSelectedCategory(e.target.value)}
                 >
-                  {categories.map((category) => (
+                  {categories.map(category => (
                     <option key={category} value={category}>
                       {category}
                     </option>
@@ -124,14 +117,12 @@ const DashboardBrand: React.FC = () => {
 
                 <select
                   value={selectedEmoji.name}
-                  onChange={(e) => {
-                    const selected = emojis.find(
-                      (emoji) => emoji.name === e.target.value
-                    );
+                  onChange={e => {
+                    const selected = emojis.find(emoji => emoji.name === e.target.value);
                     if (selected) setSelectedEmoji(selected);
                   }}
                 >
-                  {emojis.map((emoji) => (
+                  {emojis.map(emoji => (
                     <option key={emoji.name} value={emoji.name}>
                       {emoji.emoji} {emoji.name} ({emoji.count})
                     </option>

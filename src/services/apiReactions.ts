@@ -2,8 +2,7 @@ import { User } from "@src/types/Reports";
 import { getAccessToken } from "@src/utils/tokenUtils";
 import axios from "axios";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const API_VERSION = import.meta.env.VITE_API_VERSION || "api/v1";
 
 // Crée une instance d'axios avec la configuration de base
@@ -40,10 +39,7 @@ export const addReactionToReport = async (reportId: string, emoji: string) => {
     throw error;
   }
 };
-export const fetchReportReactions = async (
-  reportId: string,
-  emoji?: string
-) => {
+export const fetchReportReactions = async (reportId: string, emoji?: string) => {
   try {
     const url = emoji
       ? `/reports/${reportId}/reactions/${emoji}` // 🔥 Filtre par emoji
@@ -62,18 +58,11 @@ export const fetchReportReactionUsers = async (
   emoji?: string
 ): Promise<{ users: User[] }> => {
   try {
-    const response = await apiService.get(
-      `/reports/${reportId}/reactions/${emoji}`
-    );
+    const response = await apiService.get(`/reports/${reportId}/reactions/${emoji}`);
 
     // ✅ Transforme la réponse en `User[]`
     const formattedUsers: User[] = response.data.users.map(
-      (user: {
-        id: string;
-        pseudo: string;
-        avatar: string;
-        email?: string;
-      }) => ({
+      (user: { id: string; pseudo: string; avatar: string; email?: string }) => ({
         id: user.id,
         pseudo: user.pseudo,
         avatar: user.avatar,
@@ -83,19 +72,12 @@ export const fetchReportReactionUsers = async (
 
     return { users: formattedUsers }; // ✅ Retourne un `User[]`
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la récupération des utilisateurs :",
-      error
-    );
+    console.error("❌ Erreur lors de la récupération des utilisateurs :", error);
     return { users: [] }; // ✅ Retourne un tableau vide en cas d'erreur
   }
 };
 
-
-export const addReactionToCdc = async (
-  coupdecoeurId: string,
-  emoji: string
-) => {
+export const addReactionToCdc = async (coupdecoeurId: string, emoji: string) => {
   try {
     const token = getAccessToken();
     if (!token) throw new Error("Utilisateur non authentifié.");
@@ -122,10 +104,7 @@ export const addReactionToCdc = async (
   }
 };
 
-export const fetchCdcReactions = async (
-  coupdecoeurId: string,
-  emoji?: string
-) => {
+export const fetchCdcReactions = async (coupdecoeurId: string, emoji?: string) => {
   try {
     const url = emoji
       ? `/cdc/${coupdecoeurId}/reactions/${emoji}` // 🔥 Filtre par emoji
@@ -149,12 +128,7 @@ export const fetchCdcReactionUsers = async (
     const response = await apiService.get(`/cdc/${cdcId}/reactions/${emoji}`);
 
     const formattedUsers: User[] = response.data.users.map(
-      (user: {
-        id: string;
-        pseudo: string;
-        avatar: string;
-        email?: string;
-      }) => ({
+      (user: { id: string; pseudo: string; avatar: string; email?: string }) => ({
         id: user.id,
         pseudo: user.pseudo,
         avatar: user.avatar,
@@ -164,18 +138,12 @@ export const fetchCdcReactionUsers = async (
 
     return { users: formattedUsers };
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la récupération des utilisateurs :",
-      error
-    );
+    console.error("❌ Erreur lors de la récupération des utilisateurs :", error);
     return { users: [] };
   }
 };
 
-export const fetchSuggestionReactions = async (
-  suggestionId: string,
-  emoji?: string
-) => {
+export const fetchSuggestionReactions = async (suggestionId: string, emoji?: string) => {
   try {
     const url = emoji
       ? `/suggestion/${suggestionId}/reactions/${emoji}`
@@ -191,16 +159,8 @@ export const fetchSuggestionReactions = async (
   }
 };
 
-
-export const addReactionToSuggestion = async (
-  suggestionId: string,
-  emoji: string
-) => {
-  console.log(
-    "📤 Envoi de la requête API pour Suggestion :",
-    suggestionId,
-    emoji
-  );
+export const addReactionToSuggestion = async (suggestionId: string, emoji: string) => {
+  console.log("📤 Envoi de la requête API pour Suggestion :", suggestionId, emoji);
 
   try {
     const token = getAccessToken();
@@ -225,23 +185,15 @@ export const addReactionToSuggestion = async (
   }
 };
 
-
 export const fetchSuggestionReactionUsers = async (
   suggestionId: string,
   emoji?: string
 ): Promise<{ users: User[] }> => {
   try {
-    const response = await apiService.get(
-      `/suggestion/${suggestionId}/reactions/${emoji}`
-    );
+    const response = await apiService.get(`/suggestion/${suggestionId}/reactions/${emoji}`);
 
     const formattedUsers: User[] = response.data.users.map(
-      (user: {
-        id: string;
-        pseudo: string;
-        avatar: string;
-        email?: string;
-      }) => ({
+      (user: { id: string; pseudo: string; avatar: string; email?: string }) => ({
         id: user.id,
         pseudo: user.pseudo,
         avatar: user.avatar,
@@ -251,10 +203,7 @@ export const fetchSuggestionReactionUsers = async (
 
     return { users: formattedUsers };
   } catch (error) {
-    console.error(
-      "❌ Erreur lors de la récupération des utilisateurs :",
-      error
-    );
+    console.error("❌ Erreur lors de la récupération des utilisateurs :", error);
     return { users: [] };
   }
 };

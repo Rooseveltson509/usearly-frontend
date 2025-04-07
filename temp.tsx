@@ -1,26 +1,33 @@
 import React from "react";
-import ReportCard from "../reportCard/ReportCard";
+//import ReportCard from "../reportCard/ReportCard";
 import CoupDeCoeurCard from "../cdc/CoupDeCoeurCard";
 import SuggestionCard from "../suggestion/SuggestionCard";
-import { Reports, Cdc, Suggestion } from "@src/types/Reports";
+import { Cdc, Suggestion, GroupedReport } from "@src/types/Reports";
+import "./ReportFeed.scss";
+import GroupedReportCard from "../group-report-card/GroupedReportCard";
 
 interface ReportFeedProps {
   selectedFilter: string;
-  reports: Reports[];
+  groupedReports: GroupedReport[];
   coupDeCoeurs: Cdc[];
   suggestions: Suggestion[];
   loading: boolean;
   error: string | null;
-  getIconByFilter: (filter: string) => string; // Ajout de la fonction en prop
+  getIconByFilter: (filter: string) => string;
+  activeSubCategory: string | null;
+  handleToggle: (subCategory: string) => void;
+  totalCount?: number;
 }
 
 const ReportFeed: React.FC<ReportFeedProps> = ({
   selectedFilter,
-  reports,
+  groupedReports,
   coupDeCoeurs,
   suggestions,
   loading,
   error,
+  activeSubCategory,
+  handleToggle,
   getIconByFilter, // Récupération de la fonction ici
 }) => {
   return (
@@ -29,7 +36,7 @@ const ReportFeed: React.FC<ReportFeedProps> = ({
       {error && <p className="error-message">{error}</p>}
 
       {selectedFilter === "Coup de Cœur" && coupDeCoeurs.length > 0 ? (
-        coupDeCoeurs.map((coupDeCoeur) => (
+        coupDeCoeurs.map(coupDeCoeur => (
           <CoupDeCoeurCard
             key={coupDeCoeur.id}
             coupDeCoeur={coupDeCoeur}
@@ -38,7 +45,7 @@ const ReportFeed: React.FC<ReportFeedProps> = ({
           />
         ))
       ) : selectedFilter === "Suggestions" && suggestions.length > 0 ? (
-        suggestions.map((suggestion) => (
+        suggestions.map(suggestion => (
           <SuggestionCard
             key={suggestion.id}
             suggestion={suggestion}
@@ -46,17 +53,18 @@ const ReportFeed: React.FC<ReportFeedProps> = ({
             getIconByFilter={getIconByFilter}
           />
         ))
-      ) : selectedFilter === "Signalements" && reports.length > 0 ? (
-        reports.map((report) => (
-          <ReportCard
-            key={report.id}
+      ) : selectedFilter === "Signalements" && groupedReports.length > 0 ? (
+        groupedReports.map(report => (
+          <GroupedReportCard
+            key={report.reportingId}
             report={report}
-            selectedFilter={selectedFilter}
-            getIconByFilter={getIconByFilter}
+            activeSubCategory={activeSubCategory}
+            handleToggle={handleToggle}
+            totalCount={report.totalCount}
           />
         ))
       ) : (
-        <p>Aucun {selectedFilter.toLowerCase()} trouvé.</p>
+        <p>Aucun {selectedFilter.toLowerCase()} trouvé</p>
       )}
     </div>
   );

@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./MainContent.scss";
 import {
-  fetchReports,
+  //fetchReports,
   fetchCoupsdeCoeur,
   fetchSuggestions,
   fetchPosts,
   fetchBrands,
+  getAllGroupedReports,
 } from "../../services/apiService";
-import { Cdc, Reports, Suggestion } from "../../types/Reports";
+import { Cdc, GroupedReport, Reports, Suggestion } from "../../types/Reports";
 import signalIcon from "../../assets/images/signals.svg";
 import baguette from "../../assets/images/baguette.svg";
 import cdc from "../../assets/images/cdc.svg";
@@ -17,12 +18,12 @@ import defaultAvatar from "../../assets/images/user.png";
 import CreatePostPopup from "../posts/createPostPopup/CreatePostPopup";
 import FilterBar from "../filter-bar/FilterBar";
 import PostFeed from "../post-feed/PostFeed";
-import ReportFeed from "../report-feed/reportFeed";
 import Pagination from "../commons/pagination/Pagination";
+import ReportFeed from "../report-feed/ReportFeed"; 
 
 const MainContent: React.FC = () => {
   const { userProfile } = useAuth();
-  const [reports, setReports] = useState<Reports[]>([]);
+  const [, setReports] = useState<Reports[]>([]);
   const [coupDeCoeurs, setCoupDeCoeurs] = useState<Cdc[]>([]);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [, setSelectedType] = useState("report"); // Par défaut, affiche les reports
@@ -40,6 +41,27 @@ const MainContent: React.FC = () => {
   const [brands, setBrands] = useState<Brand[]>([]);
   const [, setSearchTerm] = useState("");
   const [, setSelectedSort] = useState("Date");
+  const [groupedReports, setGroupedReports] = useState<GroupedReport[]>([]);
+
+  const mergeGroupedReports = (reports: GroupedReport[]): GroupedReport[] => {
+    const map = new Map<string, GroupedReport>();
+
+    for (const report of reports) {
+      const existing = map.get(report.reportingId);
+
+      if (existing) {
+        existing.subCategories.push(...report.subCategories);
+        existing.totalCount += report.totalCount;
+      } else {
+        map.set(report.reportingId, {
+          ...report,
+          subCategories: [...report.subCategories],
+        });
+      }
+    }
+
+    return Array.from(map.values());
+  };
 
   // 📌 Fonction pour récupérer l'icône du filtre sélectionné
   const getIconByFilter = (filter: string) => {
@@ -107,7 +129,9 @@ const MainContent: React.FC = () => {
             setSelectedType("suggestion"); // ✅ Définir le type pour le rendu
             setTotalPages(data.totalPages);
           } else {
-            const data = await fetchReports(currentPage, 5);
+            const data = await getAllGroupedReports(currentPage, 5);
+            const merged = mergeGroupedReports(data.results); // 🔁 regroupe les doublons
+            setGroupedReports(merged);
             setReports(data.reports);
             setTotalPages(data.totalPages);
             setSelectedType("report"); // ✅ Définir le type pour le rendu
@@ -137,6 +161,12 @@ const MainContent: React.FC = () => {
     loadBrands();
   }, []);
 
+  const [activeSubCategory, setActiveSubCategory] = useState<string | null>(null);
+
+  const handleToggle = (subCategory: string) => {
+    setActiveSubCategory(prev => (prev === subCategory ? null : subCategory));
+  };
+
   // 📌 Charger les posts quand "Actualité" est sélectionné
   useEffect(() => {
     if (selectedFilter === "Actualité") {
@@ -145,10 +175,7 @@ const MainContent: React.FC = () => {
           setLoading(true);
           console.log("📥 Chargement des posts...");
           const fetchedPosts = await fetchPosts(postsPage, 5);
-          console.log(
-            "✅ Posts récupérés après changement de filtre :",
-            fetchedPosts.posts
-          );
+          console.log("✅ Posts récupérés après changement de filtre :", fetchedPosts.posts);
           setPosts(fetchedPosts.posts); // ✅ Recharge les posts avec leurs réactions
           setPostsTotalPages(fetchedPosts.totalPages);
         } catch (error) {
@@ -174,12 +201,8 @@ const MainContent: React.FC = () => {
       isLoading: true,
       author: {
         id: newPost.author?.id ?? userProfile?.id ?? "unknown_id",
-        pseudo:
-          newPost.author?.pseudo ??
-          userProfile?.pseudo ??
-          "Utilisateur inconnu",
-        avatar:
-          newPost.author?.avatar ?? userProfile?.avatar ?? "default-avatar.png",
+        pseudo: newPost.author?.pseudo ?? userProfile?.pseudo ?? "Utilisateur inconnu",
+        avatar: newPost.author?.avatar ?? userProfile?.avatar ?? "default-avatar.png",
       },
       brand: {
         id: newPost.brand?.id ?? "unknown_brand",
@@ -188,7 +211,7 @@ const MainContent: React.FC = () => {
       },
     };
 
-    setPosts((prevPosts) => [tempPost, ...prevPosts]);
+    setPosts(prevPosts => [tempPost, ...prevPosts]);
 
     // ✅ Si on est déjà sur "Actualité", on force une mise à jour des posts après un petit délai
     if (selectedFilter === "Actualité") {
@@ -197,10 +220,7 @@ const MainContent: React.FC = () => {
           const updatedPosts = await fetchPosts(1, 5); // 🔥 Recharge les posts à jour
           setPosts(updatedPosts.posts);
         } catch (error) {
-          console.error(
-            "❌ Erreur lors du rafraîchissement des posts :",
-            error
-          );
+          console.error("❌ Erreur lors du rafraîchissement des posts :", error);
         }
       }, 1000); // 🔥 Délai court pour donner un effet de transition
     } else {
@@ -209,10 +229,8 @@ const MainContent: React.FC = () => {
   };
 
   const handleReactionUpdate = (postId: string, reactions: Reaction[]) => {
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId ? { ...post, reactions } : post
-      )
+    setPosts(prevPosts =>
+      prevPosts.map(post => (post.id === postId ? { ...post, reactions } : post))
     );
   };
 
@@ -235,11 +253,7 @@ const MainContent: React.FC = () => {
           }
           alt=""
         />
-        <input
-          type="text"
-          placeholder="C'est moi ou 'nom de la marque' bug ?"
-          readOnly
-        />
+        <input type="text" placeholder="C'est moi ou 'nom de la marque' bug ?" readOnly />
       </div>
       {showPopup && (
         <CreatePostPopup
@@ -261,22 +275,22 @@ const MainContent: React.FC = () => {
       ) : (
         <ReportFeed
           selectedFilter={selectedFilter}
-          reports={reports}
+          groupedReports={groupedReports}
           coupDeCoeurs={coupDeCoeurs}
           suggestions={suggestions}
           loading={loading}
           error={error}
-          getIconByFilter={getIconByFilter} // ✅ On passe la fonction en prop
+          getIconByFilter={getIconByFilter}
+          activeSubCategory={activeSubCategory}
+          handleToggle={handleToggle}
         />
       )}
 
       {/* 📌 Pagination */}
       <Pagination
         currentPage={selectedFilter === "Actualité" ? postsPage : currentPage}
-        totalPages={
-          selectedFilter === "Actualité" ? postsTotalPages : totalPages
-        }
-        onPageChange={(newPage) => {
+        totalPages={selectedFilter === "Actualité" ? postsTotalPages : totalPages}
+        onPageChange={newPage => {
           if (selectedFilter === "Actualité") {
             setPostsPage(newPage);
           } else {

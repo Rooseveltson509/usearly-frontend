@@ -9,9 +9,7 @@ import {
 } from "@src/services/apiService";
 import defaultAvatar from "../../assets/images/user.png";
 import { CommentType } from "@src/types/types";
-import {
-  fetchReportReactions,
-} from "@src/services/apiReactions";
+import { fetchReportReactions } from "@src/services/apiReactions";
 import signalIcon from "../../assets/images/signals.svg";
 import defaultBrandAvatar from "../../assets/images/img-setting.jpeg";
 import { AnimatePresence, motion } from "framer-motion";
@@ -60,10 +58,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
           setBrandLogo(defaultBrandAvatar); // Avatar par défaut si marque inconnue
         }
       } catch (error) {
-        console.error(
-          `❌ Erreur lors de la récupération de la marque ${brandName}:`,
-          error
-        );
+        console.error(`❌ Erreur lors de la récupération de la marque ${brandName}:`, error);
         setBrandLogo(defaultBrandAvatar);
       }
     };
@@ -118,15 +113,14 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
     loadCommentCount();
   }, [report.id]);
 
-
   const toggleExpand = (postId: string) => {
-    setExpandedPosts((prev) => ({
+    setExpandedPosts(prev => ({
       ...prev,
       [postId]: !prev[postId], // ✅ Clé en `string`
     }));
   };
 
-
+  console.log("ddlfdfdmlflmdkfldklmdklf: ", report);
   return (
     <div className="report-card">
       <div className="report-header">
@@ -134,24 +128,20 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
         <div className="user-info">
           <img
             src={
-              report.User?.avatar
-                ? `${import.meta.env.VITE_API_BASE_URL}/${report.User.avatar}`
+              report.User?.[0]?.avatar
+                ? `${import.meta.env.VITE_API_BASE_URL}/${report.User?.[0]?.avatar}`
                 : defaultAvatar
             }
             alt="Avatar"
             className="user-avatar"
           />
-
           <span className="report-author">
-            <strong>{report.User?.pseudo}</strong>
+            <strong>{report.User?.[0]?.pseudo ?? "Utilisateur inconnu"}</strong>
           </span>{" "}
           <span className="post-author">
-            Connecté à{" "}
-            <strong>{extractBrandName(report.marque)}</strong>
+            Connecté à <strong>{extractBrandName(report.marque)}</strong>
           </span>
-          <span className="report-time">
-            ・ {formatRelativeTime(report.createdAt)}
-          </span>
+          <span className="report-time">・ {formatRelativeTime(report.createdAt)}</span>
         </div>
 
         {/* Les 3 petits points “⋮” tout à droite, avant le logo */}
@@ -160,11 +150,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
         {/* Ensuite le logo de la marque */}
         {brandLogo && (
           <div className="img-round">
-            <img
-              src={brandLogo}
-              alt={extractBrandName(report.marque)}
-              className="brand-logo"
-            />
+            <img src={brandLogo} alt={extractBrandName(report.marque)} className="brand-logo" />
           </div>
         )}
       </div>
@@ -198,9 +184,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                       src={report.capture}
                       alt="Capture"
                       className="report-image"
-                      onClick={() =>
-                        report.capture && setSelectedImage(report.capture)
-                      }
+                      onClick={() => report.capture && setSelectedImage(report.capture)}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.3 }}
@@ -223,7 +207,6 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
                 </>
               )}
             </AnimatePresence>
-
 
             {/* 📌 Bouton "Voir plus" ou "Voir moins" avec chevron dynamique */}
             {(report.description.length > 150 || report.capture) && (
@@ -278,13 +261,8 @@ const ReportCard: React.FC<ReportCardProps> = ({ report }) => {
               <span className="system-label">Mac</span>
             </div>
           </div>
-
         </div>
-
-
       </div>
-
-
 
       <ReactionSection
         parentId={report.id}

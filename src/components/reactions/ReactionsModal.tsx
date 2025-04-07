@@ -8,11 +8,7 @@ interface ReactionModalProps {
   postId: string;
 }
 
-const ReactionsModal: React.FC<ReactionModalProps> = ({
-  isOpen,
-  onClose,
-  postId,
-}) => {
+const ReactionsModal: React.FC<ReactionModalProps> = ({ isOpen, onClose, postId }) => {
   const [reactionUsers, setReactionUsers] = useState<
     Record<string, { id: string; pseudo: string; avatar: string }[]>
   >({});
@@ -24,14 +20,12 @@ const ReactionsModal: React.FC<ReactionModalProps> = ({
       const fetchAllReactions = async () => {
         try {
           const emojisToFetch = ["👍", "❤️", "😂", "😮", "😡", "🤬", "🥵"]; // Ajoute tes emojis ici
-          const usersByReaction: Record<
-            string,
-            { id: string; pseudo: string; avatar: string }[]
-          > = {};
+          const usersByReaction: Record<string, { id: string; pseudo: string; avatar: string }[]> =
+            {};
           for (const emoji of emojisToFetch) {
             const response = await fetchReactionUsers(postId, emoji);
             usersByReaction[emoji] =
-              response.users.map((user) => ({
+              response.users.map(user => ({
                 id: user.id,
                 pseudo: user.pseudo,
                 avatar: user.avatar ?? "", // ✅ Assure que `avatar` est une string
@@ -41,10 +35,7 @@ const ReactionsModal: React.FC<ReactionModalProps> = ({
           console.log("📢 Utilisateurs par réaction :", usersByReaction);
           setReactionUsers(usersByReaction);
         } catch (error) {
-          console.error(
-            "❌ Erreur lors de la récupération des utilisateurs :",
-            error
-          );
+          console.error("❌ Erreur lors de la récupération des utilisateurs :", error);
         }
       };
 
@@ -56,14 +47,14 @@ const ReactionsModal: React.FC<ReactionModalProps> = ({
     if (selectedEmoji === "all") {
       return Object.values(reactionUsers)
         .flat()
-        .map((user) => ({
+        .map(user => ({
           ...user,
           avatar: user.avatar
             ? `${import.meta.env.VITE_API_BASE_URL}/${user.avatar}`
             : "/images/defaultAvatar.png",
         }));
     }
-    return (reactionUsers[selectedEmoji] || []).map((user) => ({
+    return (reactionUsers[selectedEmoji] || []).map(user => ({
       ...user,
       avatar: user.avatar
         ? `${import.meta.env.VITE_API_BASE_URL}/${user.avatar}`
@@ -102,8 +93,8 @@ const ReactionsModal: React.FC<ReactionModalProps> = ({
                 Tous {Object.values(reactionUsers).flat().length}
               </button>
               {Object.keys(reactionUsers)
-                .filter((emoji) => reactionUsers[emoji]?.length > 0)
-                .map((emoji) => (
+                .filter(emoji => reactionUsers[emoji]?.length > 0)
+                .map(emoji => (
                   <button
                     key={emoji}
                     className={selectedEmoji === emoji ? "active" : ""}
@@ -125,7 +116,7 @@ const ReactionsModal: React.FC<ReactionModalProps> = ({
                 className="user-list"
               >
                 {getFilteredUsers().length > 0 ? (
-                  getFilteredUsers().map((user) => (
+                  getFilteredUsers().map(user => (
                     <motion.div
                       key={user.id}
                       className="user-item"

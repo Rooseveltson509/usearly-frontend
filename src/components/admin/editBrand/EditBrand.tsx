@@ -19,11 +19,7 @@ type EditBrandFormData = {
   offres: string;
 };
 
-const EditBrand: React.FC<EditBrandProps> = ({
-  brand,
-  onUpdateSuccess,
-  onClose,
-}) => {
+const EditBrand: React.FC<EditBrandProps> = ({ brand, onUpdateSuccess, onClose }) => {
   const [formData, setFormData] = useState<EditBrandFormData>({
     name: brand.name,
     email: brand.email,
@@ -37,9 +33,7 @@ const EditBrand: React.FC<EditBrandProps> = ({
   const [success, setSuccess] = useState<string | null>(null);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -49,41 +43,41 @@ const EditBrand: React.FC<EditBrandProps> = ({
     }
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setLoading(true);
-  setError(null);
-  setSuccess(null);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
 
-  try {
-    const dataToSend = new FormData();
-    dataToSend.append("name", formData.name);
-    dataToSend.append("email", formData.email);
-    dataToSend.append("offres", formData.offres);
+    try {
+      const dataToSend = new FormData();
+      dataToSend.append("name", formData.name);
+      dataToSend.append("email", formData.email);
+      dataToSend.append("offres", formData.offres);
 
-    if (formData.avatar) {
-      console.log("📤 Avatar ajouté au FormData :", formData.avatar.name);
-      dataToSend.append("avatar", formData.avatar);
+      if (formData.avatar) {
+        console.log("📤 Avatar ajouté au FormData :", formData.avatar.name);
+        dataToSend.append("avatar", formData.avatar);
+      }
+
+      const response = await updateBrand(brand.id, dataToSend);
+      console.log("🛠️ Réponse reçue :", response);
+
+      if (response.success && response.updatedBrand) {
+        setSuccess("Marque mise à jour avec succès !");
+        onUpdateSuccess(response.updatedBrand);
+        setTimeout(() => onClose(), 1500);
+      } else {
+        setError(response.error || "Une erreur est survenue.");
+      }
+    } catch (err) {
+      console.error("Erreur lors de la mise à jour de la marque :", err);
+      setError("Erreur inattendue. Veuillez réessayer.");
+    } finally {
+      setLoading(false);
+      console.log("🔽 Fin de la mise à jour.");
     }
-
-    const response = await updateBrand(brand.id, dataToSend);
-    console.log("🛠️ Réponse reçue :", response);
-
-    if (response.success && response.updatedBrand) {
-      setSuccess("Marque mise à jour avec succès !");
-      onUpdateSuccess(response.updatedBrand);
-      setTimeout(() => onClose(), 1500);
-    } else {
-      setError(response.error || "Une erreur est survenue.");
-    }
-  } catch (err) {
-    console.error("Erreur lors de la mise à jour de la marque :", err);
-    setError("Erreur inattendue. Veuillez réessayer.");
-  } finally {
-    setLoading(false);
-    console.log("🔽 Fin de la mise à jour.");
-  }
-};
+  };
 
   return (
     <div className="edit-brand-modal">
@@ -94,13 +88,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         <form onSubmit={handleSubmit}>
           <label>Nom :</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
 
           <label>Email :</label>
           <input
@@ -113,7 +101,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
           <label>Offre :</label>
           <select name="offres" value={formData.offres} onChange={handleChange}>
-            {OFFER_OPTIONS.map((option) => (
+            {OFFER_OPTIONS.map(option => (
               <option key={option} value={option}>
                 {option}
               </option>

@@ -6,8 +6,7 @@ const ProblemesCritiques: React.FC = () => {
     <div className="problemes-critiques">
       <div className="header">
         <h3>
-          Problèmes critiques 🔥,{" "}
-          <span className="highlight">impact et recommandations</span>
+          Problèmes critiques 🔥, <span className="highlight">impact et recommandations</span>
         </h3>
         <button className="btn-filter">
           Filtrer
@@ -15,9 +14,8 @@ const ProblemesCritiques: React.FC = () => {
         </button>
       </div>
       <p className="description">
-        Les signalements critiques ont diminué de{" "}
-        <span className="highlight">10%</span> par rapport à la semaine
-        dernière.
+        Les signalements critiques ont diminué de <span className="highlight">10%</span> par rapport
+        à la semaine dernière.
       </p>
 
       <div className="table-container">
