@@ -1,0 +1,31 @@
+.landing-footer {
+  width: 100%;
+}
+
+.footer-cgpu {
+  list-style: none;
+  display: flex;
+
+  li {
+    list-style: none;
+    color: #000;
+
+    p > a {
+      color: #000;
+      text-decoration: none;
+      font-size: 12px;
+      font-family: "Raleway";
+      font-weight: 400;
+    }
+
+    p {
+      color: #000;
+      margin: 0;
+      text-decoration: none;
+      font-size: 12px;
+      padding: 0 10px;
+      font-weight: 600;
+      font-family: "Raleway";
+    }
+  }
+}
