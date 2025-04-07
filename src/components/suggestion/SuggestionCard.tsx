@@ -153,7 +153,7 @@ const SuggestionCard: React.FC<SuggestionCardProps> = ({ suggestion }) => {
         setShowCommentInput={setShowCommentInput}
         commentCount={commentCount}
         brandLogo={brandLogo}
-        onReactionUpdate={(parentId, updatedReactions) => setReactionCount(updatedReactions.length)} // 🔥 AJOUT
+        onReactionUpdate={(_parentId, updatedReactions) => setReactionCount(updatedReactions.length)} // 🔥 AJOUT
       />
       {/* ✅ Affichage de `CommentSection` si `showCommentInput` est activé */}
       {showCommentInput && (
