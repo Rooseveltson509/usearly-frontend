@@ -19,7 +19,7 @@ import CreatePostPopup from "../posts/createPostPopup/CreatePostPopup";
 import FilterBar from "../filter-bar/FilterBar";
 import PostFeed from "../post-feed/PostFeed";
 import Pagination from "../commons/pagination/Pagination";
-import ReportFeed from "../report-feed/ReportFeed";
+import ReportFeed from "../report-feed/ReportFeed"; 
 
 const MainContent: React.FC = () => {
   const { userProfile } = useAuth();
