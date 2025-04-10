@@ -19,6 +19,36 @@ $dark-input-bg: #282828;
 $dark-border: #4a4949;
 $dark-text: #4a4949;
 $dark-disabled: #afaaaa;
+// 🎨 Couleurs
+$white: #ffffff;
+$gray-50: #f9f9f9;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-800: #1f2937;
+$gray-900: #111827;
+
+$primary: #3b82f6; // Bleu principal (peut être adapté à ta marque)
+$primary-light: #dbeafe;
+$primary-dark: #1e40af;
+
+// 🧱 Rayons
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+// 📐 Autres si besoin
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+// 📏 Espacements
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 1.5rem;
+$spacing-lg: 2rem;
+
 
 // 🎨 Couleurs de base
 $white: #ffffff;
@@ -61,6 +91,37 @@ $font-weight-bold: 600;
 $shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
 $shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
 $shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+// 🎨 Couleurs
+$gray-100: #f8f9fa;
+$gray-200: #f1f3f5;
+$gray-300: #e9ecef;
+$gray-600: #868e96;
+$gray-900: #212529;
+
+$text-dark: #212529;
+
+// 💠 Thème principal (adaptable)
+$primary: #3BC9DB;
+$primary-light: #E3FAFC;
+
+// 🔠 Typo
+$font-family: "Raleway", sans-serif;
+
+// 🟦 Radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+// 🧱 Breakpoints (si tu les utilises)
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// 🧩 Ombres (si tu veux centraliser)
+$card-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
 
 // ✨ Mixins utiles (optionnels si tu veux les inclure)
 @mixin heading {

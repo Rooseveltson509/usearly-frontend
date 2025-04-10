@@ -865,12 +865,22 @@ export const fetchBrandProfile = async () => {
     throw new Error("Aucun token trouvé pour la marque.");
   }
 
-  const { data } = await apiService.get(`/brand/profile`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  console.log("🔵 Tentative de récupération du profil de la marque avec token :", token); // Ajoutez un log pour vérifier le token
 
-  return data;
+  try {
+    const { data } = await apiService.get(`/brand/profile`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log("🟢 Profil de la marque récupéré :", data); // Log pour vérifier la réponse
+
+    return data;
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération du profil de la marque :", error);
+    throw new Error("Erreur lors de la récupération du profil de la marque.");
+  }
 };
+
 
 export const updateUserProfile = async (
   formData: FormData

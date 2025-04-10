@@ -8,16 +8,16 @@ import { getAccessToken, storeTokenInCurrentStorage } from "@src/utils/tokenUtil
 interface AuthContextType {
   isAuthenticated: boolean;
   username: string | null;
-  isLoadingProfile: boolean | null;
+  isLoadingProfile: boolean;
   flashMessage: string | null;
   flashType: "success" | "error" | "info" | null;
   userProfile: UserProfile | null;
   userType: "user" | "brand" | null;
-  setIsAuthenticated: (authState: boolean) => void; // Ajout de la fonction ici
+  setIsAuthenticated: (authState: boolean) => void;
   login: (username: string, type?: "user" | "brand") => void;
-  //login: (username: string) => void;
   setUserType: (type: "user" | "brand" | null) => void;
   logout: () => void;
+  handleLogout: () => void;
   setUserProfile: (profile: UserProfile | null) => void;
   setFlashMessage: (message: string, type: "success" | "error" | "info") => void;
   clearFlashMessage: () => void;
@@ -26,7 +26,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  //const navigate = useNavigate()
+  //const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [flashMessage, setFlashMessageState] = useState<string | null>(null);
@@ -43,9 +43,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (!token || isTokenExpired(token)) {
         console.log("🔄 Aucun token valide, tentative de refresh...");
         try {
-          token = await refreshToken(); // ✅ Appelle ton `refreshToken()`
+          token = await refreshToken();
           if (token) {
-            storeTokenInCurrentStorage(token); // ✅ Stocke dans le bon emplacement
+            storeTokenInCurrentStorage(token);
           } else {
             console.warn("⚠️ Échec du refresh, utilisateur non authentifié.");
             setIsAuthenticated(false);
@@ -64,18 +64,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const storedUserType =
           localStorage.getItem("userType") || sessionStorage.getItem("userType");
 
-        if (storedUserType === "user" || storedUserType === "brand") {
+        if (storedUserType === "brand" || storedUserType === "user") {
           setUserType(storedUserType);
         } else {
-          console.error("⚠️ Type d'utilisateur invalide !");
           setUserType(null);
           setIsAuthenticated(false);
           setIsLoadingProfile(false);
           return;
         }
 
-        const profile =
-          storedUserType === "brand" ? await fetchBrandProfile() : await fetchUserProfile();
+        let profile;
+        if (storedUserType === "brand") {
+          const response = await fetchBrandProfile();
+          profile = response.brand;
+        } else {
+          profile = await fetchUserProfile();
+        }
 
         setUserProfile(profile);
         setIsAuthenticated(true);
@@ -88,8 +92,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isAuthenticated]); // Ajoute isAuthenticated à la dépendance pour relancer fetchData à chaque connexion
 
   // Effacement automatique des messages flash
   useEffect(() => {
@@ -101,42 +104,81 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [flashMessage]);
 
+  // Connexion d'un utilisateur
   const login = (username: string, type: "user" | "brand" = "user") => {
-    setIsAuthenticated(true);
-    setUsername(username);
-    setUserType(type);
-    localStorage.setItem("userType", type);
-    setFlashMessage("Connexion réussie!", "success");
+    const existingUserType = localStorage.getItem("userType");
+
+    if (existingUserType && existingUserType !== type) {
+      setFlashMessage(
+        `Vous êtes déjà connecté en tant que ${existingUserType}. Déconnectez-vous d'abord pour vous connecter sous ce rôle.`,
+        "error"
+      );
+
+      // Appel de la fonction logout pour déconnecter l'utilisateur actuel
+      performLogout(); // Remplace performLogout() par logout()
+
+      setTimeout(() => {
+        setIsAuthenticated(true);
+        setUsername(username);
+        setUserType(type);
+        localStorage.setItem("userType", type);
+        setFlashMessage("Connexion réussie!", "success");
+      }, 500); // Attendre un petit moment pour être sûr que le logout est terminé
+    } else {
+      setIsAuthenticated(true);
+      setUsername(username);
+      setUserType(type);
+      localStorage.setItem("userType", type);
+      setFlashMessage("Connexion réussie!", "success");
+    }
   };
 
-  const handleLogout = async () => {
+  // Fonction de déconnexion
+const handleLogout = async () => {
+  try {
+    await performLogout(); // Déconnexion côté serveur
+
+    // Réinitialisation de l'état d'authentification
+    setIsAuthenticated(false);
+    setUserType(null);
+    setUserProfile(null);
+
+    // Suppression des cookies et localStorage
+    localStorage.removeItem("accessToken");
+    sessionStorage.removeItem("accessToken");
+    localStorage.removeItem("userType");
+    document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Supprimer le cookie de refreshToken
+
+    // Afficher un message de succès
+    setFlashMessage("Déconnexion réussie.", "success");
+
+    // Ne pas effectuer la redirection ici, juste laisser la gestion de l'état dans App.tsx
+  } catch (error) {
+    console.error("Erreur lors de la déconnexion :", error);
+    setFlashMessage("Erreur lors de la déconnexion.", "error");
+  }
+};
+
+
+
+
+  // Fonction de déconnexion
+  const logout = async () => {
     try {
-      performLogout(); // Déconnexion côté serveur (supprime le refreshToken côté back)
+      await performLogout(); // Cette méthode est responsable de la déconnexion côté back-end et front-end
 
-      // Supprimer les tokens stockés localement
-      localStorage.removeItem("accessToken");
-      sessionStorage.removeItem("accessToken");
-
-      // Réinitialiser les états d'authentification
+      // Réinitialiser les états d'authentification dans le contexte
       setIsAuthenticated(false);
-      setUsername(null);
+      setUserType(null);
       setUserProfile(null);
+      setFlashMessage("Déconnexion réussie.", "success");
 
-      // Optionnel : Supprimer le cookie manuellement côté frontend (si applicable)
-      document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-      setFlashMessage("Vous avez été déconnecté avec succès.", "success");
-
-      // Rediriger l'utilisateur vers la page de connexion
-      //window.location.href = "/login";
+      // Redirection vers la page de connexion
+     // navigate("/login", { replace: true });
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
       setFlashMessage("Erreur lors de la déconnexion.", "error");
     }
-  };
-
-  const logout = () => {
-    handleLogout();
   };
 
   const setFlashMessage = (message: string, type: "success" | "error" | "info") => {
@@ -164,6 +206,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUserType,
         login,
         logout,
+        handleLogout,
         setFlashMessage,
         clearFlashMessage,
       }}
@@ -173,7 +216,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

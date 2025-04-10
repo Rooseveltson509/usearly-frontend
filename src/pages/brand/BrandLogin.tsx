@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loginBrand } from "../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
 import backgroundImage from "../../assets/Usearly.png";
 import "./BrandLogin.scss";
 import { useAuth } from "@src/contexts/AuthContext";
-import { storeToken } from "@src/utils/tokenUtils";
+import { getAccessToken, storeToken } from "@src/utils/tokenUtils";
 import { fetchBrandProfile } from "@src/services/apiService";
 
 const BrandLogin = () => {
@@ -15,53 +15,46 @@ const BrandLogin = () => {
   const navigate = useNavigate();
   const [rememberMe, setRememberMe] = useState(false);
 
+  useEffect(() => {
+    const token = getAccessToken();
+    if (token) {
+      // Si un token est trouvé, redirige vers le dashboard de la marque
+      navigate("/brand-dash");
+    }
+  }, [navigate]);
+
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
 
     try {
-      const response: { accessToken: string; user?: { type: string } } = await loginBrand(
-        email,
-        mdp,
-        rememberMe
-      );
-
-      console.log("Réponse de l'API login :", response);
+      const response = await loginBrand(email, mdp, rememberMe);
+      if (!response || !response.accessToken || !response.user) {
+        throw new Error("Réponse de l'API invalide");
+      }
 
       const { accessToken, user } = response;
 
-      if (user?.type) {
-        console.log("Utilisateur connecté en tant que :", user.type);
+      if (user.type !== "brand") {
+        throw new Error("Erreur : L'utilisateur connecté n'est pas une marque.");
       }
 
-      // Stocker le token
+      // Stockage du token et du type dans le bon endroit
       storeToken(accessToken, rememberMe, "brand");
+      localStorage.setItem("userType", "brand");
 
-      // Vérification immédiate du token stocké
-      const storedUserType = localStorage.getItem("userType") || sessionStorage.getItem("userType");
-      console.log("Vérification après stockage - UserType:", storedUserType);
-
-      if (!storedUserType || storedUserType !== "brand") {
-        throw new Error("Erreur : le userType n'est pas correctement stocké.");
-      }
-
+      // Mettre à jour le profil de la marque immédiatement après la connexion
       const profile = await fetchBrandProfile();
-      console.log("Profil de la marque récupéré :", profile);
-
       setUserProfile(profile);
       setUserType("brand");
       setIsAuthenticated(true);
-
       setFlashMessage("Connexion réussie !", "success");
 
-      // 🔥 Correction potentielle : Mettre un petit timeout avant la redirection
-      setTimeout(() => {
-        navigate("/roose", { replace: true });
-        //navigate("/dashboard-brand", { replace: true });
-      }, 100);
+      // Rediriger immédiatement vers le dashboard
+      navigate("/brand-dash", { replace: true });
     } catch (error: unknown) {
+      console.log("error: ", error);
       setFlashMessage("Erreur de connexion", "error");
-      console.error("Erreur inattendue :", error);
     } finally {
       setIsLoading(false);
     }

@@ -7,11 +7,24 @@ import { getCsrfToken } from "./csrfService";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 const API_VERSION = import.meta.env.VITE_API_VERSION || "api/v1";
 
+// ✅ Interface pour la réponse
+interface LoginResponse {
+  success: boolean;
+  message: string;
+  accessToken: string;
+  refreshToken?: string; // normalement plus nécessaire si cookie
+  user: {
+    avatar: string;
+    type: "user" | "brand";
+  };
+}
+
 export const apiService = axios.create({
   baseURL: `${API_BASE_URL}/${API_VERSION}`,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true, // ✅ C’est ça qu’on ajoute ici
 });
 
 /**
@@ -21,7 +34,67 @@ export const apiService = axios.create({
  * @param rememberMe
  * @returns
  */
-export const login = async (email: string, password: string, rememberMe: boolean) => {
+export const loginAA = async (email: string, password: string, rememberMe: boolean) => {
+  const csrfToken = await getCsrfToken();
+
+  if (!csrfToken) {
+    throw new Error("CSRF Token manquant.");
+  }
+
+   const { data } = await apiService.post(
+     "/user/login",
+     { email, password, rememberMe },
+     {
+       headers: {
+         "X-CSRF-Token": csrfToken, // ✅ essentiel
+       },
+     }
+   );
+
+
+  if (!data.success || !data.accessToken) {
+    throw new Error(data.message || "Erreur inconnue lors de la connexion");
+  }
+
+  storeToken(data.accessToken, rememberMe, "user");
+
+  return {
+    accessToken: data.accessToken,
+    refreshToken: data.refreshToken,
+    message: data.message,
+  };
+};
+/**
+ * 🔐 Login user avec gestion de "Se souvenir de moi"
+ */
+export const login = async (
+  email: string,
+  password: string,
+  rememberMe: boolean
+): Promise<LoginResponse> => {
+  try {
+    const { data } = await apiService.post<LoginResponse>(
+      `/user/login`,
+      { email, password, rememberMe },
+      { withCredentials: true } // ✅ essentiel pour recevoir les cookies
+    );
+
+    if (!data.success || !data.accessToken) {
+      throw new Error(data.message || "Erreur de connexion");
+    }
+
+    // 🗃️ Stockage local du accessToken
+    storeToken(data.accessToken, rememberMe, data.user.type);
+
+    return data;
+  } catch (error) {
+    console.error("❌ Erreur lors de la connexion :", error);
+    throw new Error("Échec de la connexion.");
+  }
+};
+
+
+/* export const login = async (email: string, password: string, rememberMe: boolean) => {
   const { data } = await apiService.post(
     `/user/login`,
     { email, password, rememberMe },
@@ -40,7 +113,7 @@ export const login = async (email: string, password: string, rememberMe: boolean
     refreshToken: data.refreshToken, // si applicable
     message: data.message,
   };
-};
+}; */
 
 /* Login en tant que marque */
 export const loginBrand = async (email: string, mdp: string, rememberMe: boolean) => {
@@ -59,12 +132,29 @@ export const loginBrand = async (email: string, mdp: string, rememberMe: boolean
       throw new Error(data.message || "Erreur inconnue lors de la connexion");
     }
 
-    storeToken(data.accessToken, rememberMe, "brand");
+    // Vérification de la présence de l'objet 'user' et de son type
+    if (!data.user || !data.user.type) {
+      throw new Error("Erreur : L'utilisateur n'a pas de type défini.");
+    }
 
+    const userType = data.user.type;
+    console.log("Utilisateur connecté en tant que :", userType); // Afficher le type de l'utilisateur
+
+    // Stocker le token et le type d'utilisateur (marque ou autre)
+    if (rememberMe) {
+      localStorage.setItem("accessToken", data.accessToken); // Utilisation d'un seul token pour tous
+    } else {
+      sessionStorage.setItem("accessToken", data.accessToken);
+    }
+
+    localStorage.setItem("userType", userType); // Enregistrer le type dans localStorage pour utilisation ultérieure
+
+    // Retourner les informations importantes pour le frontend
     return {
       accessToken: data.accessToken,
       refreshToken: data.refreshToken,
       message: data.message,
+      user: data.user, // Retourner 'user' complet si nécessaire
     };
   } catch (error) {
     console.error("🔴 Erreur de connexion marque :", error);
@@ -76,11 +166,15 @@ export const loginBrand = async (email: string, mdp: string, rememberMe: boolean
  *
  * @returns
  */
-export const refreshToken = async () => {
+/**
+ * 🔁 Refresh le token d'accès en utilisant le cookie HTTP-only
+ */
+export const refreshToken = async (): Promise<string> => {
   try {
     console.log("🔄 Tentative de refresh token...");
 
     const csrfToken = await getCsrfToken();
+
     if (!csrfToken) {
       console.error("❌ CSRF Token introuvable !");
       throw new Error("CSRF Token manquant.");
@@ -90,20 +184,26 @@ export const refreshToken = async () => {
 
     const response = await apiService.post(
       "/user/refresh-token",
-      {},
+      {}, // aucun body requis
       {
-        withCredentials: true,
-        headers: { "X-CSRF-Token": csrfToken },
+        withCredentials: true, // ✅ on envoie les cookies (refreshToken)
+        headers: {
+          "X-CSRF-Token": csrfToken,
+        },
       }
     );
 
-    console.log("✅ Token d'accès rafraîchi :", response.data.accessToken);
-    return response.data.accessToken;
+    const accessToken = response.data.accessToken;
+
+    console.log("✅ Token d'accès rafraîchi :", accessToken);
+
+    return accessToken;
   } catch (error) {
     console.error("❌ Erreur lors du rafraîchissement du token :", error);
     throw new Error("Impossible de rafraîchir le token.");
   }
 };
+
 
 export const clearToken = () => {
   localStorage.removeItem("accessToken");
@@ -221,7 +321,7 @@ export const forgetPassword = async (email: string): Promise<void> => {
 };
 
 // logout the user
-export const logout = () => {
+/* export const logout = () => {
   localStorage.removeItem("accessToken");
   sessionStorage.removeItem("accessToken");
   localStorage.removeItem("user");
@@ -231,4 +331,55 @@ export const logout = () => {
 
   // Rediriger l'utilisateur vers la page de connexion
   window.location.href = "/login";
+}; */
+
+export const logout = async () => {
+  try {
+    // Appel à l'API de déconnexion
+    const response = await apiService.post("/user/logout", {}, { withCredentials: true });
+
+    // Suppression des tokens et des données d'utilisateur stockées localement
+    localStorage.removeItem("accessToken");
+    sessionStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Supprimer le cookie du refresh token
+
+    // Retourner la réponse pour que le composant puisse l'utiliser si besoin
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la déconnexion :", error);
+    throw error;
+  }
 };
+
+
+/* export const logout = () => {
+  // Supprimer les tokens de localStorage et sessionStorage
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("brandAccessToken"); // Supprime également le token de la marque
+  sessionStorage.removeItem("accessToken");
+  sessionStorage.removeItem("brandAccessToken");
+
+  // Supprimer les cookies si utilisés
+  document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+  // Rediriger l'utilisateur vers la page de connexion
+  window.location.href = "/login";
+}; */
+/* export const logout = () => {
+  // Supprimer les tokens de localStorage et sessionStorage
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("brandAccessToken"); // Supprime également le token de la marque
+  sessionStorage.removeItem("accessToken");
+  sessionStorage.removeItem("brandAccessToken");
+
+  // Supprimer le cookie refreshToken
+  document.cookie =
+    "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; samesite=strict;";
+
+  // Vérification de la suppression du cookie (log)
+  console.log("Cookie 'refreshToken' supprimé.");
+
+  // Rediriger l'utilisateur vers la page de connexion
+  window.location.href = "/login";
+}; */

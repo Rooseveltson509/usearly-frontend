@@ -1,0 +1,59 @@
+.chart-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-block-start: 1rem;
+
+  .left-filters {
+    display: flex;
+    gap: 10px;
+
+    .filter-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 20px;
+      background-color: #f1f3f5;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+
+      &:hover {
+        opacity: 0.9;
+      }
+
+      &.active.signalement {
+        background-color: #e3fafc;
+        color: #1098ad;
+        border: 1px solid #3bc9db;
+      }
+
+      &.active.coeur {
+        background-color: #ffe3e3;
+        color: #c92a2a;
+        border: 1px solid #ff6b6b;
+      }
+
+      &.active.suggestion {
+        background-color: #fff3bf;
+        color: #f08c00;
+        border: 1px solid #fab005;
+      }
+    }
+  }
+
+  .period-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+
+    select {
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: 1px solid #dee2e6;
+      background-color: #ffffff;
+      font-size: 0.9rem;
+    }
+  }
+}

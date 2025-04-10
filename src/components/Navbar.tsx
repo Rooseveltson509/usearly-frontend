@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import logoUsearly from "../assets/images/logo-usearly.svg";
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated, logout, userProfile, isLoadingProfile } = useAuth();
+  const { isAuthenticated, handleLogout, userProfile, isLoadingProfile } = useAuth();
   const [isSticky, setIsSticky] = useState(false);
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -125,7 +125,7 @@ const Navbar: React.FC = () => {
                     >
                       Mon compte
                     </NavLink>
-                    <button className="menu-item" onClick={logout}>
+                    <button className="menu-item" onClick={handleLogout}>
                       Se déconnecter
                     </button>
                   </div>
