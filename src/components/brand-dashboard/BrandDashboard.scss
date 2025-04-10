@@ -1,0 +1,309 @@
+@use "../../styles/variables" as *;
+
+.brand-dashboard {
+  padding: 2rem;
+  font-family: "Raleway", sans-serif;
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-block-end: 0.5rem;
+  }
+
+  .subtitle {
+    color: #666;
+    font-size: 1rem;
+    margin-block-end: 2rem;
+  }
+
+  .cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-block-end: 2rem;
+  }
+
+  .info-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+    .emoji {
+      font-size: 1.5rem;
+    }
+
+    .count {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .label {
+      font-size: 0.9rem;
+      color: #666;
+      margin: 0;
+    }
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: start;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .chart-container {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    h3 {
+      margin-block-end: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .chart-filters {
+      display: flex;
+      gap: 0.5rem;
+      margin-block-end: 1rem;
+
+      button {
+        background: #e9ecef;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+
+        &.active {
+          background: #3bc9db;
+          color: white;
+          font-weight: 600;
+          margin-inline-end: 10px;
+        }
+      }
+    }
+  }
+  .brand-info {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-block-end: 20px;
+    gap: 10px;
+  }
+
+  .brand-avatar {
+    inline-size: 50px;
+    block-size: 50px;
+    border-radius: 50%; /* Cercle pour l'avatar */
+    overflow: hidden; /* Assurer que l'image reste dans le cercle */
+  }
+
+  .brand-logo {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover; /* Garde le ratio de l'image sans la déformer */
+  }
+
+  .brand-details {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .brand-name {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .brand-offre {
+    color: #777;
+    font-size: 14px;
+  }
+
+  .brand-avatar {
+    inline-size: 50px; /* Taille contrôlée de l'avatar */
+    block-size: 50px;
+    border-radius: 50%;
+    overflow: hidden; /* Évite que l'image dépasse du cercle */
+  }
+
+  .brand-logo {
+    inline-size: 50px; /* Ajuster selon la taille souhaitée */
+    block-size: 50px;
+    object-fit: cover; /* Cela permet à l'image de garder son ratio sans déformation */
+    border-radius: 50%; /* Pour rendre l'avatar circulaire */
+  }
+
+  .brand-details {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .brand-name {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .brand-offre {
+    color: #777;
+    font-size: 14px;
+  }
+
+  .latest-reports {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    h3 {
+      margin-block-end: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .report-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      border-block-end: 1px solid #f1f3f5;
+
+      .emoji {
+        font-size: 1.2rem;
+      }
+
+      .text {
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+.latest-feedbacks-wrapper {
+  margin-block-start: 32px;
+}
+
+.brand-dashboard {
+  padding: 2rem;
+
+  .dashboard-switch {
+    display: flex;
+    gap: 1rem;
+    margin-block-end: 2rem;
+
+    button {
+      padding: 0.6rem 1.2rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f8f8f8;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.active {
+        background-color: #3bc9db;
+        color: white;
+        border-color: #3bc9db;
+      }
+
+      &:hover {
+        background-color: #e0f7fa;
+      }
+    }
+  }
+
+  .cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-block-end: 2rem;
+
+    .info-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+
+      .emoji {
+        font-size: 1.8rem;
+      }
+
+      .count {
+        font-size: 1.6rem;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .label {
+        font-size: 0.9rem;
+        color: #666;
+        margin: 0;
+      }
+    }
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .chart-container {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .latest-feedbacks-wrapper {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    max-block-size: 400px;
+    overflow-y: auto;
+  }
+}
+
+.subtitle {
+  margin-block-start: -1rem;
+  margin-block-end: 2rem;
+  color: #777;
+  font-size: 1rem;
+}
+
+.period-range {
+  font-size: 0.9rem;
+  color: #999;
+  font-weight: normal;
+  margin-inline-start: 0.5rem;
+}
+.no-data {
+  margin-block-start: 1rem;
+  font-size: 1rem;
+  color: #888;
+  text-align: center;
+}
+.empty-chart {
+  margin-block-start: 1rem;
+  text-align: center;
+  font-style: italic;
+  color: #999;
+}

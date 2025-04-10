@@ -1,9 +1,16 @@
+// ✅ Variable en mémoire (utile pour éviter les lectures répétées)
 let accessToken: string | null = null;
 
+/**
+ * ✅ Définit le token dans la mémoire locale uniquement
+ */
 export const setAccessToken = (token: string | null) => {
   accessToken = token;
 };
 
+/**
+ * ✅ Récupère le token depuis la mémoire ou le stockage
+ */
 export const getAccessToken = (): string | null => {
   return (
     accessToken || localStorage.getItem("accessToken") || sessionStorage.getItem("accessToken")
@@ -11,109 +18,59 @@ export const getAccessToken = (): string | null => {
 };
 
 /**
- *
- * @param token
- * @param rememberMe
+ * ✅ Stocke le token en fonction du rememberMe + userType
  */
-/* export const storeToken = (token: string, rememberMe?: boolean) => {
-  if (rememberMe !== undefined) {
-    // Lorsque rememberMe est fourni (par exemple dans login)
-    if (rememberMe) {
-      localStorage.setItem("accessToken", token);
-      console.log("Token stocké dans localStorage :", token);
-    } else {
-      sessionStorage.setItem("accessToken", token);
-      console.log("Token stocké dans sessionStorage :", token);
-    }
-  } else {
-    // Lorsque rememberMe n'est pas fourni (par exemple dans l'intercepteur)
-    if (localStorage.getItem("accessToken") !== null) {
-      localStorage.setItem("accessToken", token);
-    } else {
-      sessionStorage.setItem("accessToken", token);
-    }
-  }
-}; */
-
-export const storeToken = (token: string, rememberMe?: boolean, userType?: "user" | "brand") => {
-  console.log("storeToken appelé avec :", { token, rememberMe, userType });
-
+export const storeToken = (
+  token: string,
+  rememberMe: boolean = false,
+  userType: "user" | "brand" = "user"
+) => {
   const storageKey = userType === "brand" ? "brandAccessToken" : "accessToken";
-  console.log(`Stockage du token pour ${userType}:`, {
-    token,
-    rememberMe,
-    storageKey,
-  });
 
-  if (rememberMe !== undefined) {
-    if (rememberMe) {
-      localStorage.setItem(storageKey, token);
-      console.log(`Token stocké dans localStorage (${storageKey}):`, token);
-    } else {
-      sessionStorage.setItem(storageKey, token);
-      console.log(`Token stocké dans sessionStorage (${storageKey}):`, token);
-    }
+  if (rememberMe) {
+    localStorage.setItem(storageKey, token);
+    console.log(`✅ Token stocké dans localStorage (${storageKey})`);
   } else {
-    if (localStorage.getItem(storageKey) !== null) {
-      localStorage.setItem(storageKey, token);
-    } else {
-      sessionStorage.setItem(storageKey, token);
-    }
+    sessionStorage.setItem(storageKey, token);
+    console.log(`✅ Token stocké dans sessionStorage (${storageKey})`);
   }
 
-  console.log(
-    "Token final enregistré :",
-    localStorage.getItem(storageKey) || sessionStorage.getItem(storageKey)
-  );
+  setAccessToken(token);
 };
 
-/* export const storeToken = (
-  token: string,
-  rememberMe?: boolean,
-  type: "user" | "brand" = "user"
-) => {
-  const tokenKey = type === "user" ? "userAccessToken" : "brandAccessToken";
-
-  if (rememberMe !== undefined) {
-    // Lorsque rememberMe est fourni (par exemple dans login)
-    if (rememberMe) {
-      localStorage.setItem(tokenKey, token);
-      console.log(`Token stocké dans localStorage pour ${type} :`, token);
-    } else {
-      sessionStorage.setItem(tokenKey, token);
-      console.log(`Token stocké dans sessionStorage pour ${type} :`, token);
-    }
-  } else {
-    // Lorsque rememberMe n'est pas fourni (par exemple dans l'intercepteur)
-    if (localStorage.getItem(tokenKey) !== null) {
-      localStorage.setItem(tokenKey, token);
-    } else {
-      sessionStorage.setItem(tokenKey, token);
-    }
-  }
-}; */
-
 /**
- *
- * @param token
+ * ✅ Met à jour le token dans le stockage déjà utilisé
  */
 export const storeTokenInCurrentStorage = (token: string) => {
   if (localStorage.getItem("accessToken") !== null) {
     localStorage.setItem("accessToken", token);
-    console.log("Token mis à jour dans localStorage :", token);
+    console.log("🔁 Token mis à jour dans localStorage");
   } else {
     sessionStorage.setItem("accessToken", token);
-    console.log("Token mis à jour dans sessionStorage :", token);
+    console.log("🔁 Token mis à jour dans sessionStorage");
   }
+
+  setAccessToken(token);
 };
 
+/**
+ * ✅ Supprime le token des deux stockages
+ */
 export const removeToken = () => {
   localStorage.removeItem("accessToken");
   sessionStorage.removeItem("accessToken");
+  setAccessToken(null);
 };
 
+/**
+ * ✅ Supprime tous les tokens (y compris ceux des marques)
+ */
 export const clearTokens = () => {
   localStorage.removeItem("accessToken");
+  localStorage.removeItem("brandAccessToken");
   sessionStorage.removeItem("accessToken");
-  console.log("Tokens supprimés de localStorage et sessionStorage");
+  sessionStorage.removeItem("brandAccessToken");
+  setAccessToken(null);
+
+  console.log("🧹 Tous les tokens ont été supprimés");
 };

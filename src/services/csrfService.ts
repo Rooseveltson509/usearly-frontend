@@ -1,19 +1,13 @@
 import { apiService } from "./authService";
 
-export const getCsrfToken = async () => {
+export const getCsrfToken = async (): Promise<string | null> => {
   try {
-    console.log("🔄 Requête pour récupérer le CSRF token...");
-
     const response = await apiService.get("/csrf-token", {
-      withCredentials: true, // ✅ Nécessaire pour les cookies
+      withCredentials: true,
     });
-
-    console.log("✅ Réponse CSRF reçue :", response.data);
-    console.log("✅ Token CSRF récupéré :", response.data.csrfToken);
-
     return response.data.csrfToken;
-  } catch (error) {
-    console.error("❌ Erreur lors de la récupération du CSRF Token :", error);
+  } catch (err) {
+    console.error("❌ Erreur CSRF :", err);
     return null;
   }
 };
