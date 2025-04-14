@@ -11,10 +11,10 @@ import Dashboard from "./components/dashboard/Dashboard";
 import VerifyCode from "./pages/verifyCode/VerifyCode";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MyAccount from "./components/profile/MyAccount";
-import ForgotPassword from "./components/forgotPassword/ForgotPassword";
-import PasswordChecker from "./components/passwordChecker/PasswordChecker";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
+import PasswordChecker from "./pages/passwordChecker/PasswordChecker";
 import LoadingScreen from "./components/LoadingScreen";
-import ResetPassword from "./components/resetpwd/ResetPassword";
+import ResetPassword from "./pages/resetpwd/ResetPassword";
 import DashboardBrand from "./components/dashboard-brands/DashbordBrand";
 import BrandLogin from "./pages/brand/BrandLogin";
 

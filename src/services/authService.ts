@@ -343,6 +343,9 @@ export const logout = async () => {
     sessionStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Supprimer le cookie du refresh token
+    localStorage.removeItem("userType");
+    sessionStorage.removeItem("userType");
+
 
     // Retourner la réponse pour que le composant puisse l'utiliser si besoin
     return response.data;

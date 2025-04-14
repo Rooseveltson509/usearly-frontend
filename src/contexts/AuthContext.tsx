@@ -3,6 +3,7 @@ import { logout as performLogout, refreshToken } from "../services/authService";
 import { fetchBrandProfile, fetchUserProfile, isTokenExpired } from "../services/apiService";
 import { UserProfile } from "../types/types";
 import { getAccessToken, storeTokenInCurrentStorage } from "@src/utils/tokenUtils";
+import { useNavigate } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
@@ -26,7 +27,6 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  //const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [flashMessage, setFlashMessageState] = useState<string | null>(null);
@@ -34,6 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [userType, setUserType] = useState<"user" | "brand" | null>(null);
+  const navigate = useNavigate();
 
   // Récupérer et valider les tokens au chargement
   useEffect(() => {
@@ -136,45 +137,46 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Fonction de déconnexion
 const handleLogout = async () => {
   try {
-    await performLogout(); // Déconnexion côté serveur
+    const lastType = userType; // 🧠 sauvegarde avant reset
+    await performLogout();
 
-    // Réinitialisation de l'état d'authentification
     setIsAuthenticated(false);
-    setUserType(null);
     setUserProfile(null);
+    setUserType(null);
 
-    // Suppression des cookies et localStorage
+    // 🧹 Nettoyage
     localStorage.removeItem("accessToken");
     sessionStorage.removeItem("accessToken");
     localStorage.removeItem("userType");
-    document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Supprimer le cookie de refreshToken
+    sessionStorage.removeItem("userType");
+    document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-    // Afficher un message de succès
     setFlashMessage("Déconnexion réussie.", "success");
 
-    // Ne pas effectuer la redirection ici, juste laisser la gestion de l'état dans App.tsx
+    // 🔁 Redirection dynamique
+    navigate(lastType === "brand" ? "/brand-login" : "/login", { replace: true });
   } catch (error) {
     console.error("Erreur lors de la déconnexion :", error);
     setFlashMessage("Erreur lors de la déconnexion.", "error");
   }
 };
 
-
-
-
   // Fonction de déconnexion
   const logout = async () => {
     try {
+      const lastType = userType; // 🧠 sauvegarde avant reset
       await performLogout(); // Cette méthode est responsable de la déconnexion côté back-end et front-end
 
       // Réinitialiser les états d'authentification dans le contexte
       setIsAuthenticated(false);
       setUserType(null);
       setUserProfile(null);
+      localStorage.removeItem("userType");
+      sessionStorage.removeItem("userType");
       setFlashMessage("Déconnexion réussie.", "success");
 
-      // Redirection vers la page de connexion
-     // navigate("/login", { replace: true });
+      // 🔁 Redirection dynamique
+      navigate(lastType === "brand" ? "/brand-login" : "/login", { replace: true });
     } catch (error) {
       console.error("Erreur lors de la déconnexion :", error);
       setFlashMessage("Erreur lors de la déconnexion.", "error");

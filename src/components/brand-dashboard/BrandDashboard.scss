@@ -102,12 +102,26 @@
     gap: 10px;
   }
 
-  .brand-avatar {
-    inline-size: 50px;
-    block-size: 50px;
-    border-radius: 50%; /* Cercle pour l'avatar */
-    overflow: hidden; /* Assurer que l'image reste dans le cercle */
-  }
+.brand-avatar {
+  inline-size: 50px;
+  block-size: 50px;
+  border-radius: 50%; /* Cercle pour l'avatar */
+  overflow: hidden; /* Assurer que l'image reste dans le cercle */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.brand-avatar img {
+  object-fit: contain; /* L'image reste entièrement visible sans être coupée */
+  object-position: center; /* Centrer l'image si elle est plus petite que le cercle */
+  width: 100%; /* L'image occupe toute la largeur du conteneur */
+  height: 100%; /* L'image occupe toute la hauteur du conteneur */
+}
+
+
+
+
 
   .brand-logo {
     inline-size: 100%;
@@ -129,14 +143,6 @@
     color: #777;
     font-size: 14px;
   }
-
-  .brand-avatar {
-    inline-size: 50px; /* Taille contrôlée de l'avatar */
-    block-size: 50px;
-    border-radius: 50%;
-    overflow: hidden; /* Évite que l'image dépasse du cercle */
-  }
-
   .brand-logo {
     inline-size: 50px; /* Ajuster selon la taille souhaitée */
     block-size: 50px;
@@ -307,3 +313,32 @@
   font-style: italic;
   color: #999;
 }
+
+.cards-grid {
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.2rem;
+    height: 100%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+
+    .emoji {
+      font-size: 1.8rem;
+      margin-right: 1rem;
+    }
+
+    .count {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .label {
+      font-size: 0.95rem;
+      color: #555;
+    }
+  }
+}
+
+

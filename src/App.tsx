@@ -1,26 +1,33 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/home/Home";
+import { Routes, Route } from "react-router-dom"; // ✅ on enlève BrowserRouter ici
 import About from "./pages/About";
-import Login from "./pages/login/Login";
-import Signup from "./pages/signup/Signup";
 import Navbar from "./components/Navbar";
 import FlashMessage from "./hooks/FlashMessage";
 import Dashboard from "./components/dashboard/Dashboard";
-import VerifyCode from "./pages/verifyCode/VerifyCode";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./contexts/AuthContext";
 import MyAccount from "./components/profile/MyAccount";
-import ForgotPassword from "./components/forgotPassword/ForgotPassword";
-import PasswordChecker from "./components/passwordChecker/PasswordChecker";
 import LoadingScreen from "./components/LoadingScreen";
-import ResetPassword from "./components/resetpwd/ResetPassword";
 import DashboardBrand from "./components/dashboard-brands/DashbordBrand";
-import BrandLogin from "./pages/brand/BrandLogin";
 import BrandList from "./components/admin/brandList/BrandList";
 import BrandDashboard from "./components/brand-dashboard/BrandDashboard";
 import NavbarBrand from "./components/NavbarBrand";
-//import { AuthProvider } from "./contexts/AuthContext"; // Importer AuthProvider ici
+import {
+  BrandProfile,
+  BrandReports,
+  BrandRewards,
+  BrandStatistics,
+  BrandLogin,
+} from "./pages/brand";
+import {
+  ForgotPassword,
+  Home,
+  Login,
+  PasswordChecker,
+  ResetPassword,
+  Signup,
+  VerifyCode,
+} from "./pages";
 
 const App: React.FC = () => {
   const {
@@ -33,24 +40,14 @@ const App: React.FC = () => {
     isLoadingProfile,
   } = useAuth();
 
-
-    //const navigate = useNavigate();
-
- /*    if (!isAuthenticated) {
-      navigate("/login", { replace: true }); // Redirection automatique vers la page de login
-    } */
   if (isLoadingProfile) {
-    return <LoadingScreen />; // Affiche un écran de chargement
+    return <LoadingScreen />;
   }
 
   return (
-    <Router>
-      {/* AuthProvider doit être ici, à l'intérieur de Router */}
-      {/* <AuthProvider> */}
-      {/* Navbar affichant l'avatar uniquement si l'utilisateur est authentifié */}
+    <>
       {userType === "brand" ? <NavbarBrand /> : <Navbar />}
 
-      {/* Afficher le message flash si présent */}
       {flashMessage && (
         <FlashMessage
           message={flashMessage}
@@ -58,31 +55,30 @@ const App: React.FC = () => {
           onClose={clearFlashMessage}
         />
       )}
+
       <Routes>
         {/* Routes publiques */}
         <Route path="/" element={<Home />} />
-        <Route path="/check" element={<PasswordChecker />} />
         <Route path="/about" element={<About />} />
+        <Route path="/check" element={<PasswordChecker />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:userId/:token" element={<ResetPassword />} />
+        <Route path="/verify-code" element={<VerifyCode />} />
 
-        {/* Routes accessibles uniquement pour les utilisateurs connectés */}
+        {/* Routes user classique */}
         <Route
           path="/home"
           element={
             <ProtectedRoute
-              condition={isAuthenticated && userType === "user"} // Assure que seul un "user" accède à cette route
-              redirectTo="/brand-dash" // Redirige vers /brand-dash si l'utilisateur est une marque
+              condition={isAuthenticated && userType === "user"}
+              redirectTo={userType === "brand" ? "/brand-dash" : "/login"}
             >
-              {userProfile ? (
-                <Dashboard
-                  userProfile={{
-                    ...userProfile,
-                    avatar: userProfile.avatar || "/path/to/default-avatar.png",
-                  }}
-                />
-              ) : (
-                <p>Chargement du profil...</p>
-              )}
+              <Dashboard
+                userProfile={{
+                  ...userProfile!,
+                  avatar: userProfile?.avatar || "/path/to/default-avatar.png",
+                }}
+              />
             </ProtectedRoute>
           }
         />
@@ -97,60 +93,128 @@ const App: React.FC = () => {
         />
 
         <Route
-          path="/brand-dash"
-          element={
-            <ProtectedRoute condition={isAuthenticated} redirectTo="/brand-login">
-              <BrandDashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Routes accessibles uniquement pour les non-connectés */}
-        <Route
           path="/login"
           element={
-            <ProtectedRoute condition={!isAuthenticated} redirectTo="/home">
+            <ProtectedRoute
+              condition={!isAuthenticated}
+              redirectTo={userType === "brand" ? "/brand-dash" : "/home"}
+            >
               <Login />
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/signup"
           element={
-            <ProtectedRoute condition={!isAuthenticated} redirectTo="/home">
+            <ProtectedRoute
+              condition={!isAuthenticated}
+              redirectTo={userType === "brand" ? "/brand-dash" : "/home"}
+            >
               <Signup />
             </ProtectedRoute>
           }
         />
 
-        {/* Route protégée pour la page brand-dash */}
+        {/* Routes brand uniquement */}
+        <Route
+          path="/brand-login"
+          element={
+            <ProtectedRoute condition={!isAuthenticated} redirectTo="/brand-dash">
+              <BrandLogin />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/brand-dash"
           element={
             <ProtectedRoute
-              condition={isAuthenticated && userType === "brand"} // Assure que seul une marque peut accéder à cette route
-              redirectTo="/home" // Redirige vers /home si l'utilisateur n'est pas une marque
+              condition={isAuthenticated && userType === "brand"}
+              redirectTo="/brand-login"
             >
               <BrandDashboard />
             </ProtectedRoute>
           }
         />
-        <Route path="/brand-login" element={<BrandLogin />} />
 
-        <Route path="/dashboard-brand" element={<DashboardBrand />} />
+        <Route
+          path="/dashboard-brand"
+          element={
+            <ProtectedRoute
+              condition={isAuthenticated && userType === "brand"}
+              redirectTo="/brand-login"
+            >
+              <DashboardBrand />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/brand-reports"
+          element={
+            <ProtectedRoute
+              condition={isAuthenticated && userType === "brand"}
+              redirectTo="/brand-login"
+            >
+              <BrandReports />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/brand-statistics"
+          element={
+            <ProtectedRoute
+              condition={isAuthenticated && userType === "brand"}
+              redirectTo="/brand-login"
+            >
+              <BrandStatistics />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/brand-rewards"
+          element={
+            <ProtectedRoute
+              condition={isAuthenticated && userType === "brand"}
+              redirectTo="/brand-login"
+            >
+              <BrandRewards />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/brand-profile"
+          element={
+            <ProtectedRoute
+              condition={isAuthenticated && userType === "brand"}
+              redirectTo="/brand-login"
+            >
+              <BrandProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Admin uniquement */}
         <Route
           path="/admin/brands"
           element={
-            <ProtectedRoute condition={userProfile?.role === "admin"} redirectTo="/home">
+            <ProtectedRoute
+              condition={isAuthenticated && userProfile?.role === "admin"}
+              redirectTo="/home"
+            >
               <BrandList />
             </ProtectedRoute>
           }
         />
-        <Route path="/reset-password/:userId/:token" element={<ResetPassword />} />
-        <Route path="/verify-code" element={<VerifyCode />} />
+
+        {/* Route catch-all */}
+        {/* <Route path="*" element={<NotFoundPage />} /> */}
       </Routes>
-      {/*   </AuthProvider> */}
-    </Router>
+    </>
   );
 };
 

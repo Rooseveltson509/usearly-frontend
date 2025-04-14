@@ -20,25 +20,37 @@ const Login: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response: { accessToken: string } = await apiLogin(email, password, rememberMe);
+      const response = await apiLogin(email, password, rememberMe);
       console.log("Réponse de l'API login :", response);
 
-      const { accessToken } = response;
+      const { accessToken, user } = response;
 
-      // Toujours stocker le token, même si "Se souvenir de moi" n'est pas coché
-      storeToken(accessToken, rememberMe, "user");
+      // ✅ Stocker accessToken avec le bon userType
+      storeToken(accessToken, rememberMe, user.type);
+
+      // ✅ Stocker le userType pour AuthContext
+      if (rememberMe) {
+        localStorage.setItem("userType", user.type);
+      } else {
+        sessionStorage.setItem("userType", user.type);
+      }
 
       console.log("Token dans sessionStorage :", sessionStorage.getItem("accessToken"));
       console.log("Token dans localStorage :", localStorage.getItem("accessToken"));
+      console.log(
+        "UserType stocké :",
+        localStorage.getItem("userType") || sessionStorage.getItem("userType")
+      );
 
-      const profile = await fetchUserProfile(); // Récupère les données utilisateur
+      // ✅ Récupération du profil utilisateur
+      const profile = await fetchUserProfile();
       console.log("Profil utilisateur :", profile);
 
       setUserProfile(profile);
-      login(email, "user");
+      login(email, user.type); // ✅ mise à jour du contexte avec le bon type
 
       setFlashMessage("Connexion réussie !", "success");
-      navigate("/");
+      navigate(user.type === "brand" ? "/brand-dash" : "/home");
     } catch (error: unknown) {
       if (error instanceof (await import("axios")).AxiosError) {
         if (error.response?.status === 401) {

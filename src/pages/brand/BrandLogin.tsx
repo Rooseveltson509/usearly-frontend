@@ -11,14 +11,13 @@ const BrandLogin = () => {
   const [email, setEmail] = useState("");
   const [mdp, setMdp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setUserProfile, setUserType, setIsAuthenticated, setFlashMessage } = useAuth();
+  const { setUserProfile, login, setFlashMessage } = useAuth();
   const navigate = useNavigate();
   const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
     const token = getAccessToken();
     if (token) {
-      // Si un token est trouvé, redirige vers le dashboard de la marque
       navigate("/brand-dash");
     }
   }, [navigate]);
@@ -39,21 +38,27 @@ const BrandLogin = () => {
         throw new Error("Erreur : L'utilisateur connecté n'est pas une marque.");
       }
 
-      // Stockage du token et du type dans le bon endroit
-      storeToken(accessToken, rememberMe, "brand");
-      localStorage.setItem("userType", "brand");
+      // ✅ Stockage du token et du userType
+      storeToken(accessToken, rememberMe, user.type);
+      if (rememberMe) {
+        localStorage.setItem("userType", user.type);
+      } else {
+        sessionStorage.setItem("userType", user.type);
+      }
 
-      // Mettre à jour le profil de la marque immédiatement après la connexion
+      // ✅ Récupération immédiate du profil
       const profile = await fetchBrandProfile();
       setUserProfile(profile);
-      setUserType("brand");
-      setIsAuthenticated(true);
+
+      // ✅ Mise à jour du AuthContext
+      login(email, user.type);
+
       setFlashMessage("Connexion réussie !", "success");
 
-      // Rediriger immédiatement vers le dashboard
+      // ✅ Redirection
       navigate("/brand-dash", { replace: true });
     } catch (error: unknown) {
-      console.log("error: ", error);
+      console.error("🔴 Erreur lors de la connexion :", error);
       setFlashMessage("Erreur de connexion", "error");
     } finally {
       setIsLoading(false);

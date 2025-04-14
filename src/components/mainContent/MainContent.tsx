@@ -130,6 +130,7 @@ const MainContent: React.FC = () => {
             setTotalPages(data.totalPages);
           } else {
             const data = await getAllGroupedReports(currentPage, 5);
+            console.log("dataaaaa: ", data);
             const merged = mergeGroupedReports(data.results); // 🔁 regroupe les doublons
             setGroupedReports(merged);
             setReports(data.reports);
