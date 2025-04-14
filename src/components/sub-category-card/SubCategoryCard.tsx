@@ -8,7 +8,6 @@ import defaultAvatar from "../../assets/images/user.png";
 import { fetchBrandByName } from "@src/services/apiService";
 import { stringToColor } from "@src/utils/stringToColor";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from "lucide-react";
-//import EmojiUsersPopup from "../emojis-popup/EmojiUsersPopup";
 import EmojiReactionsPopup from "../emojis-popup/EmojiReactionsPopup";
 
 interface User {
@@ -51,14 +50,13 @@ const SubCategoryCard: React.FC<SubCategoryCardProps> = ({
   const [showCommentInput, setShowCommentInput] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
   const [brandLogo, setBrandLogo] = useState<string | null>(null);
-
   const [showEmojiPopup, setShowEmojiPopup] = useState(false);
 
-  // Regrouper les users par emoji
   const reactionsByEmoji: Record<string, { pseudo: string; avatar: string | null }[]> = {};
+  const allDescriptions = [mainDescription, ...otherDescriptions].filter(Boolean);
 
-  [mainDescription, ...otherDescriptions].forEach(desc => {
-    if (desc.emoji) {
+  allDescriptions.forEach(desc => {
+    if (desc?.emoji && desc?.user?.pseudo) {
       if (!reactionsByEmoji[desc.emoji]) {
         reactionsByEmoji[desc.emoji] = [];
       }
@@ -69,19 +67,12 @@ const SubCategoryCard: React.FC<SubCategoryCardProps> = ({
     }
   });
 
-  // Liste résumée pour affichage (emoji + nombre de personnes)
-  /* const emojiSummary = Object.entries(reactionsByEmoji).map(([emoji, users]) => ({
-  emoji,
-  count: users.length,
-})); */
-
   useEffect(() => {
     const loadBrandLogo = async () => {
       if (!brandName) return;
       const brand = await fetchBrandByName(brandName);
       setBrandLogo(brand?.avatar || null);
     };
-
     loadBrandLogo();
   }, [brandName]);
 
@@ -92,45 +83,19 @@ const SubCategoryCard: React.FC<SubCategoryCardProps> = ({
   const prevSlide = () => {
     setCurrentIndex(prev => (prev === 0 ? otherDescriptions.length - 1 : prev - 1));
   };
-  const emojiMap: Record<string, { pseudo: string; avatar: string | null }[]> = {};
+  // Sécurité : si aucune description ou pas d'utilisateur, ne pas afficher la carte
+  if (!mainDescription || !mainDescription.user) {
+    return null; // Ou tu peux afficher un <p>Aucune description</p>
+  }
 
-  [mainDescription, ...otherDescriptions].forEach(desc => {
-    if (desc.emoji) {
-      if (!emojiMap[desc.emoji]) emojiMap[desc.emoji] = [];
-      emojiMap[desc.emoji].push({
-        pseudo: desc.user.pseudo,
-        avatar: desc.user.avatar,
-      });
-    }
-  });
-  /* const getGroupedEmojiSummary = () => {
-  const emojiCount: Record<string, number> = {};
-  [...otherDescriptions, mainDescription].forEach((desc) => {
-    if (desc.emoji) {
-      emojiCount[desc.emoji] = (emojiCount[desc.emoji] || 0) + 1;
-    }
-  });
-
-  const sortedEmojis = Object.entries(emojiCount).sort((a, b) => b[1] - a[1]);
-
-  const total = sortedEmojis.reduce((acc, [, count]) => acc + count, 0);
-  const displayed = sortedEmojis.slice(0, 3);
-  const remaining = sortedEmojis.length - displayed.length;
-
-  return {
-    displayed,
-    remaining,
-    total,
-  };
-};
-
-const { displayed, remaining, total } = getGroupedEmojiSummary(); */
   return (
     <div className="subcategory-card">
       <div className="subcategory-header" onClick={onToggle}>
         <div className="subcategory-left">
           <h3 className="subcategory-title">{title}</h3>
-          <span className="count">{count} signalements</span>
+          <span className="count">
+            {count} signalement{count > 1 ? "s" : ""}
+          </span>
         </div>
 
         <div className="avatar-brand-wrapper">
@@ -220,7 +185,6 @@ const { displayed, remaining, total } = getGroupedEmojiSummary(); */
                 )}
               </div>
 
-              {/* 🔢 Compteur déplacé ici */}
               {otherDescriptions.length > 1 && (
                 <div className="slider-counter">
                   {currentIndex + 1} / {otherDescriptions.length}
@@ -228,24 +192,6 @@ const { displayed, remaining, total } = getGroupedEmojiSummary(); */
               )}
             </>
           )}
-          {/*           {emojiSummary.length > 0 && (
-            <div
-              className="emoji-summary"
-              onClick={() => setShowEmojiPopup(true)}
-            >
-              {displayed.map(([emoji]) => (
-                <span key={emoji} className="emoji-icon">
-                  {emoji}
-                </span>
-              ))}
-
-              {remaining > 0 && (
-                <span className="emoji-more">+{remaining} autres</span>
-              )}
-
-              <span className="emoji-total">({total})</span>
-            </div>
-          )} */}
 
           <ReactionSection
             parentId={reportId}
@@ -255,6 +201,7 @@ const { displayed, remaining, total } = getGroupedEmojiSummary(); */
             commentCount={commentCount}
             brandLogo={null}
           />
+
           {showCommentInput && (
             <CommentSection
               parentId={reportId}
@@ -266,7 +213,6 @@ const { displayed, remaining, total } = getGroupedEmojiSummary(); */
           )}
         </div>
       )}
-      {/* Emoji popup */}
 
       {showEmojiPopup && (
         <EmojiReactionsPopup
