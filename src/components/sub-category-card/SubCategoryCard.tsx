@@ -21,6 +21,7 @@ interface Description {
   user: User;
   createdAt: string;
   emoji?: string;
+  capture?: string | null;
 }
 
 interface SubCategoryCardProps {
@@ -155,6 +156,13 @@ const SubCategoryCard: React.FC<SubCategoryCardProps> = ({
                 <span className="date">・{formatRelativeTime(mainDescription.createdAt)}</span>
               )}
               <p className="description">{mainDescription.description}</p>
+              {mainDescription.capture && (
+                <img
+                  src={mainDescription.capture}
+                  alt="Capture d’écran"
+                  className="screenshot-preview"
+                />
+              )}
             </div>
           </div>
 
